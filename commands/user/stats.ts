@@ -1,16 +1,27 @@
 import SlashCommand from "../../models/SlashCommand"
-import { APIMessage, CommandInteraction, MessageAttachment, MessageEmbed, User } from 'discord.js'
-import getUserStatsUseCase from "../../useCases/getUserStatsUseCase"
-import Repository from "../../api/Repository"
-import LoungeUserStats from "../../models/LoungeUserStats"
+import { CommandInteraction, MessageAttachment, MessageEmbed, User } from 'discord.js'
+import Repository from "../../api/loungeApi"
 import ErrorMessage from "../../models/ErrorMessage"
-import Canvas from "canvas"
+import Canvas from "../../domain/loungeCanvas"
+import UserStats from "../../models/UserStats"
+import getUserStatsUseCase from "../../useCases/user/getUserStatsUseCase"
 
-async function getCanvas(stats: LoungeUserStats) : Promise<Buffer> {
+async function getCanvas(stats: UserStats) : Promise<Buffer> {
     const canvas = Canvas.createCanvas(1000, 365)
     const ctx = canvas.getContext('2d')
 
-    const attachment = new MessageAttachment(canvas.toBuffer(), `${stats.name}-stats.jpg`)
+    var grd = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
+    grd.addColorStop(0, '#08172A')
+    grd.addColorStop(0.66, '#359ED5')
+    grd.addColorStop(1, '#08172A')
+
+    ctx.fillStyle = grd
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+    ctx.fillStyle = '#ffffff'
+    ctx.font = '48px Boldsand'
+    ctx.fillText(stats.nickanme, 50, 50)
+    ctx.fillText(stats.titleString, 50, 100)
 
     return canvas.toBuffer()
 }
@@ -23,21 +34,17 @@ const command = new SlashCommand(
     (interaction: CommandInteraction) => {
         if (interaction.member !== null) {
             getUserStatsUseCase(interaction.member.user.id, Repository)
-                .then((response: LoungeUserStats | ErrorMessage) => {
-                    if (response instanceof LoungeUserStats) {
+                .then((response: UserStats | ErrorMessage) => {
+                    if (response instanceof UserStats) {
                         getCanvas(response)
                             .then((attachment: Buffer) => {
-                                //interaction.channel.send({files: attachment, split: false})
+                                interaction.reply({files: [{ attachment: attachment }]})
                             })
                     } else if (response instanceof ErrorMessage) {
                         interaction.reply({content: `There was an error: ${response.message}`, ephemeral: true})
                     }
                 })
         }
-        interaction.reply('Pong!')
-            .catch((err: any) => {
-                console.error(err)
-            })
     }
 )
 

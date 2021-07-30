@@ -4,7 +4,8 @@ import { ApplicationCommandData, Client, CommandInteraction, Intents, Interactio
 import CommandModule from './models/CommandModule'
 import SlashCommand from './models/SlashCommand'
 const Discord = require('discord.js')
-const client : Client = new Discord.Client({intents: [Intents.ALL]})
+const client : Client = new Discord.Client({intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES]})
+require('./api/userRoutes')
 
 client.once('ready', () => {
     console.log('Ready!')
@@ -16,7 +17,7 @@ var commandModules = [
     userCommands
 ]
 
-client.on('message', async (message : Message) => {
+client.on('messageCreate', async (message : Message) => {
     if (!client.application?.owner) await client.application?.fetch()
 
     if (message.content.toLowerCase() === '!deploy' && message.author.id == client.application?.owner?.id) {
@@ -34,7 +35,7 @@ client.on('message', async (message : Message) => {
     }
 })
 
-client.on('interaction', (interaction : Interaction) => {
+client.on('interactionCreate', (interaction : Interaction) => {
     if (!interaction.isCommand()) return
 
     commandModules.forEach((cModule: CommandModule) => {
