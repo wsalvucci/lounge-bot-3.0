@@ -15,3 +15,7 @@ export function updateUserValue(discordId: string, statName: string, statValue: 
 export function incrementUserValue(discordId: string, statName: string, amount: number) {
     return query(`UPDATE users SET ${statName} = ${statName} + ${amount} WHERE discordId = ${discordId}`)
 }
+
+export function getLeaderboard(statName: string, order: string) {
+    return query(`SELECT discordId, ${statName} FROM users ORDER BY ${statName} ${order}`)
+}

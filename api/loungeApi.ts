@@ -1,4 +1,6 @@
+import { OrderType } from "../domain/loungeFunctions";
 import LoungeUser from "../models/LoungeUser";
+import { LeaderboardResponse } from "../models/response/LeaderboardResponse";
 import UserTitle from "../models/UserTitle";
 import SqlResponse from "../responseModels/SqlResponse";
 
@@ -15,19 +17,24 @@ function apiCall(path: string) {
 }
 
 class TheLoungeApi {
-    getUser(discordId: string): Promise<LoungeUser> {
+    async getUser(discordId: string): Promise<LoungeUser> {
         return apiCall(`/user/${discordId}`)
             .then((data: any) => LoungeUser.toDomainModel(data[0]))
     }
 
-    getTitle(titleId: number): Promise<UserTitle> {
+    async getTitle(titleId: number): Promise<UserTitle> {
         return apiCall(`/title/${titleId}`)
             .then((data: any) => UserTitle.toDomainModel(data[0]))
     }
 
-    setNickname(discordId: string, nickname: string) : Promise<SqlResponse> {
+    async setNickname(discordId: string, nickname: string) : Promise<SqlResponse> {
         return apiCall(`/updateUser?discordId=${discordId}&nickname=${nickname}`)
             .then((data: any) => SqlResponse.dataToModel(data))
+    }
+
+    async getLeaderboard(statName: string, order: OrderType) : Promise<LeaderboardResponse> {
+        return apiCall(`/leaderboard/${statName}?order=${order}`)
+            .then((data: any) => LeaderboardResponse.dataToResponse(data, statName))
     }
 }
 
