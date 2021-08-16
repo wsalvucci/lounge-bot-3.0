@@ -17,5 +17,5 @@ export function incrementUserValue(discordId: string, statName: string, amount: 
 }
 
 export function getLeaderboard(statName: string, order: string) {
-    return query(`SELECT discordId, ${statName} FROM users ORDER BY ${statName} ${order}`)
+    return query(`SELECT discordId, name, ${statName} FROM users ORDER BY ${statName} ${order}`)
 }

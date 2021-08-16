@@ -1,10 +1,10 @@
 require('dotenv').config()
 
-import { ApplicationCommandData, Client, CommandInteraction, Intents, Interaction, Message } from 'discord.js'
+import { ApplicationCommandData, Client, Collection, CommandInteraction, Intents, Interaction, Message } from 'discord.js'
 import CommandModule from './models/CommandModule'
 import SlashCommand from './models/SlashCommand'
-const Discord = require('discord.js')
-const client : Client = new Discord.Client({intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES]})
+import { REST } from '@discordjs/rest'
+const client = new Client({intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES]})
 require('./api/userRoutes')
 
 client.once('ready', () => {
@@ -12,26 +12,47 @@ client.once('ready', () => {
 })
 
 import userCommands from './commands/user'
+import { Routes } from 'discord-api-types/v9'
+import { SlashCommandBuilder } from '@discordjs/builders'
 
 var commandModules = [
     userCommands
 ]
 
+const token: string = process.env.BOT_TOKEN || ""
+
 client.on('messageCreate', async (message : Message) => {
     if (!client.application?.owner) await client.application?.fetch()
 
     if (message.content.toLowerCase() === '!deploy' && message.author.id == client.application?.owner?.id) {
-        const data : ApplicationCommandData[] = []
+        const data: any = []
 
         commandModules.forEach((cModule: CommandModule) => {
             cModule.commands.forEach((command: SlashCommand) => {
-                data.push(command.details)
+                data.push(command.details.toJSON())
             })
         })
 
+        const rest: REST = new REST({ version: '9' }).setToken(token);
+
+        (async () => {
+            try {
+                console.log('Started refreshing application (/) commands.');
+
+                await rest.put(
+                    Routes.applicationGuildCommands('695402691622338601', '695403120758489181'),
+                    {body: data}
+                )
+
+                console.log('Successfully reloaded application (/) commands.');
+            } catch (error) {
+                console.error(error)
+            }
+        })()
+
         //const commands = await client.application.commands.set(data)
-        const commands = await client.guilds.cache.get('695403120758489181')?.commands.set(data)
-        console.log(commands)
+        //const commands = await client.guilds.cache.get('695403120758489181')?.commands.set(data)
+        //console.log(commands)
     }
 })
 

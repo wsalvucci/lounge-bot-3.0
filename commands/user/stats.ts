@@ -7,11 +7,11 @@ import UserStats from "../../models/UserStats"
 import getUserStatsUseCase from "../../useCases/user/getUserStatsUseCase"
 import getStatLeaderboardUseCase from "../../useCases/user/getStatLeaderboardUseCase"
 import { NodeCanvasRenderingContext2D } from "canvas"
-import { OrderType, secondsToTimeString, UserStat } from '../../domain/loungeFunctions'
+import { OrderType, secondsToTimeString, StatType, UserStat } from '../../domain/loungeFunctions'
 import Color from 'color'
 import '../../domain/numberExtensions' //Can this be imported once from a central module?
 import { LeaderboardResponse, LeaderboardUserResponse } from "../../models/response/LeaderboardResponse"
-import { SlashCommandBuilder, SlashCommandUserOption } from "@discordjs/builders"
+import { SlashCommandBuilder } from "@discordjs/builders"
 
 function createText(
     ctx: NodeCanvasRenderingContext2D,
@@ -142,8 +142,8 @@ async function getCanvas(user: User, stats: UserStats) : Promise<Buffer> {
     createText(ctx, `#ffffff`, statsTextStyle, `Messages`, 550, 410)
     createText(ctx, `#ffffff`, statsTextStyle, `Voice`, 550, 440) 
 
-    var messagePromise = getStatLeaderboardUseCase(UserStat.messagesSent, OrderType.DESC, Repository)
-    var voicePromise = getStatLeaderboardUseCase(UserStat.secondsVoice, OrderType.DESC, Repository)
+    var messagePromise = getStatLeaderboardUseCase(StatType.TotalMessages, OrderType.DESC, Repository)
+    var voicePromise = getStatLeaderboardUseCase(StatType.TotalVoice, OrderType.DESC, Repository)
     await Promise.all([messagePromise, voicePromise]).then((value: [LeaderboardResponse, LeaderboardResponse]) => {
         var messageRank = value[0].members.findIndex((leaderboardUser: LeaderboardUserResponse) => {
             return leaderboardUser.discordId == user.id.toString()
@@ -170,15 +170,13 @@ async function getCanvas(user: User, stats: UserStats) : Promise<Buffer> {
 
 
 const command = new SlashCommand(
-    {
-        name: 'stats',
-        description: 'Retrives Lounge stats for either you or an indicated user',
-        options: [{
-            name: 'user',
-            type: 'USER',
-            description: 'A specific user to get Lounge Stats for'
-        }]
-    },
+    new SlashCommandBuilder()
+        .setName('stats')
+        .setDescription('Retrives Lounge stats for either you or an indicated user')
+        .addUserOption(option => 
+            option.setName('user')
+                .setDescription('A specific user to get Lounge Stats for')
+        ),
     (interaction: CommandInteraction) => {
         if (interaction.member !== null) {
             var targetId: string = interaction.member.user.id
