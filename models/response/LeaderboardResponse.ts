@@ -13,6 +13,7 @@ export class LeaderboardResponse {
             list.push(
                 new LeaderboardUserResponse(
                     user.discordId,
+                    user.name,
                     user[statName]
                 )
             )
@@ -23,13 +24,16 @@ export class LeaderboardResponse {
 
 export class LeaderboardUserResponse {
     discordId: string
+    name: string
     statValue: number
 
     constructor(
         discordId: string,
+        name: string,
         statValue: number
     ) {
         this.discordId = discordId
+        this.name = name
         this.statValue = statValue
     }
 }

@@ -481,6 +481,25 @@ export enum StatType {
     Coins = 'coins'
 }
 
+export function StatTypeToString(statType: StatType | string) {
+    if (statType === StatType.TotalMessages) return 'Total Messages'
+    if (statType === StatType.TotalVoice) return 'Total Voice'
+    if (statType === StatType.DailyMessages) return 'Daily Messages'
+    if (statType === StatType.DailyVoice) return 'Daily Voice'
+    if (statType === StatType.WeeklyMessages) return 'Weekly Messages'
+    if (statType === StatType.WeeklyVoice) return 'Weekly Voice'
+    if (statType === StatType.MonthlyMessages) return 'Monthly Messages'
+    if (statType === StatType.MonthlyVoice) return 'Monthly Voice'
+    if (statType === StatType.Luck) return 'Luck'
+    if (statType === StatType.UsersSlapped) return 'Users Slapped'
+    if (statType === StatType.BeenSlapped) return 'Been Slapped'
+    if (statType === StatType.TimesGulaged) return 'Times Gulaged'
+    if (statType === StatType.UsersGulaged) return 'Users Gulaged'
+    if (statType === StatType.TimeInGulag) return 'Time In Gulag'
+    if (statType === StatType.Coins) return 'Coins'
+    return ''
+}
+
 export enum GachaStatType {
     Luck = 1,
     LuckAcquired = 2,

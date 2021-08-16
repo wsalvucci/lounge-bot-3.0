@@ -1,3 +1,4 @@
+import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, GuildMember } from "discord.js";
 import Repository from "../../api/loungeApi";
 import SlashCommand from "../../models/SlashCommand";
@@ -5,16 +6,14 @@ import SqlResponse from "../../responseModels/SqlResponse";
 import setUserNicknameUseCase from "../../useCases/user/setUserNicknameUseCase";
 
 const command = new SlashCommand(
-    {
-        name: "nickname",
-        description: "Changes your nickname in the server",
-        options: [{
-            name: 'newname',
-            type: 'STRING',
-            description: 'Your new nickname',
-            required: true
-        }]
-    },
+    new SlashCommandBuilder()
+        .setName('nickname')
+        .setDescription('Changes your nickname in the server')
+        .addStringOption(option =>
+            option.setName('newname')
+                .setDescription('Your new nickname')
+                .setRequired(true)
+        ),
     (interaction: CommandInteraction) => {
         if (interaction.member !== null) {
             var nickname = interaction.options.get('newname')?.value
