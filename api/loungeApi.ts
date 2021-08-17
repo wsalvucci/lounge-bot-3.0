@@ -36,6 +36,11 @@ class TheLoungeApi {
         return apiCall(`/leaderboard/${statName}?order=${order}`)
             .then((data: any) => LeaderboardResponse.dataToResponse(data, statName))
     }
+
+    async setUserProperty(discordId: string, propertyName: string, value: string | number) : Promise<SqlResponse> {
+        return apiCall(`/updateUser?discordId=${discordId}&propertyName=${propertyName}&value=${value}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
+    }
 }
 
 export default new TheLoungeApi

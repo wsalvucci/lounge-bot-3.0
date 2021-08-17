@@ -64,3 +64,19 @@ app.get(`/updateUser`, (req: any, res: any) => {
         res.end()
     })
 })
+
+app.get(`/updateUserProperty`, (req: any, res: any) => {
+    updateUserValue(req.query.discordId, req.query.propertyName, req.query.value)
+        .then((data: any) => {
+            if (data.err) {
+                console.error(data.err)
+                res.end()
+            } else {
+                res.send(data)
+                res.end()
+            }
+        }).catch((error: any) => {
+            console.error(error)
+            res.end()
+        })
+})
