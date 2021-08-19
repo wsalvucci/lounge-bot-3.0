@@ -1,4 +1,4 @@
-import { getLeaderboard, getTitle, getUser, updateUserValue } from "../domain/databaseRequests";
+import { createUser, getLeaderboard, getTitle, getUser, updateUserValue } from "../domain/databaseRequests";
 import app from "../domain/expressModule";
 
 function processDatabaseRequest(request: Promise<any>, res: any) {
@@ -12,6 +12,7 @@ function processDatabaseRequest(request: Promise<any>, res: any) {
         }
     }).catch((error: any) => {
         console.error(error)
+        res.send(error)
         res.end()
     })
 }
@@ -79,4 +80,8 @@ app.get(`/updateUserProperty`, (req: any, res: any) => {
             console.error(error)
             res.end()
         })
+})
+
+app.get(`/createUser`, (req: any, res: any) => {
+    processDatabaseRequest(createUser(req.query.discordId, req.query.name, req.query.timeAdded), res)
 })

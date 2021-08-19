@@ -41,6 +41,11 @@ class TheLoungeApi {
         return apiCall(`/updateUser?discordId=${discordId}&propertyName=${propertyName}&value=${value}`)
             .then((data: any) => SqlResponse.dataToModel(data))
     }
+
+    async createAccount(discordId: string, name: string, timeAdded: number) : Promise<SqlResponse> {
+        return apiCall(`/createUser?discordId=${discordId}&name=${name}&timeAdded=${timeAdded}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
+    }
 }
 
 export default new TheLoungeApi

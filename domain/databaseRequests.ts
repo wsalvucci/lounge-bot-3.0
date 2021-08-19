@@ -19,3 +19,7 @@ export function incrementUserValue(discordId: string, statName: string, amount: 
 export function getLeaderboard(statName: string, order: string) {
     return query(`SELECT discordId, name, ${statName} FROM users ORDER BY ${statName} ${order}`)
 }
+
+export function createUser(discordId: string, name: string, timeAdded: number) {
+    return query(`INSERT INTO users (discordId, name, timeAdded) VALUES ('${discordId}', '${name}', ${timeAdded})`)
+}
