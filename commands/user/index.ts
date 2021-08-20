@@ -5,6 +5,7 @@ import nickname from './nickname'
 import leaderboard from './leaderboard'
 import color from './color'
 import createAccount from './createAccount'
+import personalRecords from './personalRecords'
 
 const moduleList = new CommandModule(
     [
@@ -12,7 +13,8 @@ const moduleList = new CommandModule(
         nickname,
         leaderboard,
         color,
-        createAccount
+        createAccount,
+        personalRecords
     ]
 )
 

@@ -1,6 +1,7 @@
 import { OrderType } from "../domain/loungeFunctions";
 import LoungeUser from "../models/LoungeUser";
 import { LeaderboardResponse } from "../models/response/LeaderboardResponse";
+import { PersonalRecordsResponse } from "../models/response/PersonalRecordsResponse";
 import UserTitle from "../models/UserTitle";
 import SqlResponse from "../responseModels/SqlResponse";
 
@@ -45,6 +46,11 @@ class TheLoungeApi {
     async createAccount(discordId: string, name: string, timeAdded: number) : Promise<SqlResponse> {
         return apiCall(`/createUser?discordId=${discordId}&name=${name}&timeAdded=${timeAdded}`)
             .then((data: any) => SqlResponse.dataToModel(data))
+    }
+
+    async getPersonalRecords(discordId: string) : Promise<PersonalRecordsResponse> {
+        return apiCall(`/personalRecords?discordId=${discordId}`)
+            .then((data: any) => PersonalRecordsResponse.parseData(data))
     }
 }
 

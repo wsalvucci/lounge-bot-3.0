@@ -1,4 +1,4 @@
-import { createUser, getLeaderboard, getTitle, getUser, updateUserValue } from "../domain/databaseRequests";
+import { createUser, getLeaderboard, getPersonalRecord, getTitle, getUser, updateUserValue } from "../domain/databaseRequests";
 import app from "../domain/expressModule";
 
 function processDatabaseRequest(request: Promise<any>, res: any) {
@@ -84,4 +84,8 @@ app.get(`/updateUserProperty`, (req: any, res: any) => {
 
 app.get(`/createUser`, (req: any, res: any) => {
     processDatabaseRequest(createUser(req.query.discordId, req.query.name, req.query.timeAdded), res)
+})
+
+app.get(`/personalRecords`, (req: any, res: any) => {
+    processDatabaseRequest(getPersonalRecord(req.query.discordId), res)
 })

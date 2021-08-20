@@ -23,3 +23,7 @@ export function getLeaderboard(statName: string, order: string) {
 export function createUser(discordId: string, name: string, timeAdded: number) {
     return query(`INSERT INTO users (discordId, name, timeAdded) VALUES ('${discordId}', '${name}', ${timeAdded})`)
 }
+
+export function getPersonalRecord(discordId: string) {
+    return query(`SELECT * FROM daily_personal_records WHERE discordId = ${discordId}`)
+}
