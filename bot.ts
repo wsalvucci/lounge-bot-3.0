@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-import { ApplicationCommandData, Client, Collection, CommandInteraction, Intents, Interaction, Message } from 'discord.js'
+import { Client, Intents, Interaction, Message } from 'discord.js'
 import CommandModule from './models/CommandModule'
 import SlashCommand from './models/SlashCommand'
 import { REST } from '@discordjs/rest'
@@ -12,11 +12,12 @@ client.once('ready', () => {
 })
 
 import userCommands from './commands/user'
+import weatherCommands from './commands/weather'
 import { Routes } from 'discord-api-types/v9'
-import { SlashCommandBuilder } from '@discordjs/builders'
 
 var commandModules = [
-    userCommands
+    userCommands,
+    weatherCommands
 ]
 
 const token: string = process.env.BOT_TOKEN || ""
@@ -49,10 +50,6 @@ client.on('messageCreate', async (message : Message) => {
                 console.error(error)
             }
         })()
-
-        //const commands = await client.application.commands.set(data)
-        //const commands = await client.guilds.cache.get('695403120758489181')?.commands.set(data)
-        //console.log(commands)
     }
 })
 
