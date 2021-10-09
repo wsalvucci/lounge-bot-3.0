@@ -6,6 +6,7 @@ import SlashCommand from './models/SlashCommand'
 import { REST } from '@discordjs/rest'
 const client = new Client({intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES]})
 require('./api/userRoutes')
+require('./api/gulag/gulagRoutes')
 
 client.once('ready', () => {
     console.log('Ready!')
@@ -13,11 +14,13 @@ client.once('ready', () => {
 
 import userCommands from './commands/user'
 import weatherCommands from './commands/weather'
+import gulagCommands from './commands/gulag'
 import { Routes } from 'discord-api-types/v9'
 
 var commandModules = [
     userCommands,
-    weatherCommands
+    weatherCommands,
+    gulagCommands
 ]
 
 const token: string = process.env.BOT_TOKEN || ""
