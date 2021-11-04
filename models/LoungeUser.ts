@@ -40,7 +40,16 @@ class LoungeUser {
                 ),
                 data.timesGulaged,
                 data.usersGulaged,
-                data.coins
+                data.coins,
+                data.atk,
+                data.def,
+                data.matk,
+                data.mdef,
+                data.agi,
+                data.hp,
+                data.char,
+                data.respecTimestamp,
+                data.specPoints
             )
         )
     }
@@ -83,6 +92,15 @@ class LoungeUserStats {
     timesGulaged: number
     usersGulaged: number
     coins: number
+    atk: number
+    def: number
+    matk: number
+    mdef: number
+    agi: number
+    hp: number
+    char: number
+    respecTimestamp: number
+    specPoints: number
 
     constructor(
         messagesSent: number,
@@ -95,7 +113,16 @@ class LoungeUserStats {
         monthlyStats: LoungeUserMonthlyStats,
         timesGulaged: number,
         usersGulaged: number,
-        coins: number
+        coins: number,
+        atk: number,
+        def: number,
+        matk: number,
+        mdef: number,
+        agi: number,
+        hp: number,
+        char: number,
+        respecTimestamp: number,
+        specPoints: number
     ) {
         this.messagesSent = messagesSent
         this.secondsVoice = secondsVoice
@@ -108,6 +135,15 @@ class LoungeUserStats {
         this.timesGulaged = timesGulaged
         this.usersGulaged = usersGulaged
         this.coins = coins
+        this.atk = atk
+        this.def = def
+        this.matk = matk
+        this.mdef = mdef
+        this.agi = agi
+        this.hp = hp
+        this.char = char
+        this.respecTimestamp = respecTimestamp
+        this.specPoints = specPoints
     }
 }
 

@@ -12,20 +12,22 @@ import Color from 'color'
 import '../../domain/numberExtensions' //Can this be imported once from a central module?
 import { LeaderboardResponse, LeaderboardUserResponse } from "../../models/response/LeaderboardResponse"
 import { SlashCommandBuilder } from "@discordjs/builders"
+import { createText } from "../../domain/loungeCanvas"
 
-function createText(
-    ctx: NodeCanvasRenderingContext2D,
-    fillStyle: string,
-    font: string,
-    text: string,
-    x: number,
-    y: number,
-    alignment: CanvasTextAlign = 'left') {
-    ctx.fillStyle = fillStyle
-    ctx.font = font
-    ctx.textAlign = alignment
-    ctx.fillText(text, x, y)
-}
+// function createText(
+//     ctx: NodeCanvasRenderingContext2D,
+//     fillStyle: string,
+//     font: string,
+//     text: string,
+//     x: number,
+//     y: number,
+//     alignment: CanvasTextAlign = 'left')
+//     {
+//         ctx.fillStyle = fillStyle
+//         ctx.font = font
+//         ctx.textAlign = alignment
+//         ctx.fillText(text, x, y)
+//     }
 
 function createDivider(
     ctx: NodeCanvasRenderingContext2D,
@@ -76,7 +78,30 @@ async function getCanvas(user: User, stats: UserStats) : Promise<Buffer> {
     createText(ctx, '#ffffff', '72px Quicksand', stats.levelStats.level.toString(), 25, 100)
 
     createText(ctx, '#ffffff', '32px Quicksand', stats.tier.title, 550, 75)
-    createText(ctx, '#ffffff', '38px Quicksand', stats.nickanme.toUpperCase(), 550, 120)
+    createText(ctx, '#ffffff', '38px Quicksand', stats.nickanme.toUpperCase(), 550, 120, 'left', 350)
+
+    createDivider(ctx, "#C0C0C0", 150, (canvas.height / 2) + 175, 300)
+
+    const userStatsTextStyle = '18px Quicksand'
+    const userStatsNameY = (canvas.height / 2) + 200
+    const userStatsValueY = (canvas.height / 2) + 225
+    createText(ctx, '#ffffff', userStatsTextStyle, "ATK", 150, userStatsNameY, 'center')
+    createText(ctx, '#ffffff', userStatsTextStyle, stats.atk.toString(), 150, userStatsValueY, 'center')
+    createText(ctx, '#ffffff', userStatsTextStyle, "DEF", 200, userStatsNameY, 'center')
+    createText(ctx, '#ffffff', userStatsTextStyle, stats.def.toString(), 200, userStatsValueY, 'center')
+    createText(ctx, '#ffffff', userStatsTextStyle, "MAT", 250, userStatsNameY, 'center')
+    createText(ctx, '#ffffff', userStatsTextStyle, stats.matk.toString(), 250, userStatsValueY, 'center')
+    createText(ctx, '#ffffff', userStatsTextStyle, "MDE", 300, userStatsNameY, 'center')
+    createText(ctx, '#ffffff', userStatsTextStyle, stats.mdef.toString(), 300, userStatsValueY, 'center')
+    createText(ctx, '#ffffff', userStatsTextStyle, "AGI", 350, userStatsNameY, 'center')
+    createText(ctx, '#ffffff', userStatsTextStyle, stats.agi.toString(), 350, userStatsValueY, 'center')
+    createText(ctx, '#ffffff', userStatsTextStyle, "HP", 400, userStatsNameY, 'center')
+    createText(ctx, '#ffffff', userStatsTextStyle, stats.hp.toString(), 400, userStatsValueY, 'center')
+    createText(ctx, '#ffffff', userStatsTextStyle, "CHA", 450, userStatsNameY, 'center')
+    createText(ctx, '#ffffff', userStatsTextStyle, stats.char.toString(), 450, userStatsValueY, 'center')
+
+    createText(ctx, '#ffffff', userStatsTextStyle, `Spec Points Available: ${stats.specPoints}`, 300, userStatsValueY + 25, 'center')
+
 
     createDivider(ctx, '#C0C0C0', 525, 145, 425, 1, 'Progression')
 
@@ -187,10 +212,15 @@ const command = new SlashCommand(
             getUserStatsUseCase(targetId, Repository)
                 .then((response: UserStats | ErrorMessage) => {
                     if (response instanceof UserStats && interaction.member?.user instanceof User) {
-                        getCanvas(interaction.member.user, response)
-                            .then((attachment: Buffer) => {
-                                interaction.reply({files: [{ attachment: attachment }]})
-                            })
+                        var canvasBuffer : Promise<Buffer>
+                        if (optionalTarget !== null) {
+                            canvasBuffer = getCanvas(optionalTarget, response)
+                        } else {
+                            canvasBuffer = getCanvas(interaction.member.user, response)
+                        }
+                        canvasBuffer.then((attachment: Buffer) => {
+                            interaction.reply({files: [{ attachment: attachment }]})
+                        })
                     } else if (response instanceof ErrorMessage) {
                         interaction.reply({content: `There was an error: ${response.message}`, ephemeral: true})
                     }
