@@ -10,10 +10,9 @@ import gulagApi from "../../api/gulag/gulagApi"
 import Trial from "../../models/gulag/Trial"
 import addTrialUseCase from "../../useCases/gulag/addTrialUseCase"
 import { DateTime } from "luxon"
+import checkIfUserExistsUseCase from "../../useCases/user/checkIfUserExistsUseCase"
 
-const votingReactionFilter = (reaction: MessageReaction, user: User) => {
-    return reaction.emoji.name == 'upwards button' || reaction.emoji.name == 'downwards button'
-}
+const accusationCost : number = 10000
 
 const command = new SlashCommand(
     new SlashCommandBuilder()
@@ -35,9 +34,26 @@ const command = new SlashCommand(
         var accusation = interaction.options.getString('accusation')
         if (member == null || accused == null || accusation == null) return
 
+        if (member.user.id == accused.id) {
+            interaction.reply({content: 'You can\'t accuse yourself!', ephemeral: true})
+            return
+        }
+
+        var memberExists = await checkIfUserExistsUseCase(member.user.id, Repository)
+        if (!memberExists) {
+            interaction.reply({content: 'You need an account to make an accusation', ephemeral: true})
+            return
+        }
+
+        var targetExists = await checkIfUserExistsUseCase(accused.id, Repository)
+        if (!targetExists) {
+            interaction.reply({content: 'You cannot accuse someone that doesn\'t have an account', ephemeral: true})
+            return
+        }
+
         var userStats = await getUserStatsUseCase(member.user.id, Repository)
-        if (userStats.coins < 10000) {
-            interaction.reply({content: 'You need at least 10,000 Lounge Coins to make an accusation', ephemeral: true})
+        if (userStats.coins < accusationCost) {
+            interaction.reply({content: `You need at least ${accusationCost.withCommas()} Lounge Coins to make an accusation`, ephemeral: true})
             return
         }
 
@@ -51,16 +67,14 @@ const command = new SlashCommand(
             return
         }
 
-        await setUserPropertyUseCase(member !== null ? member.user.id : "", StatType.Coins, userStats.coins - 0, Repository)
+        await setUserPropertyUseCase(member !== null ? member.user.id : "", StatType.Coins, userStats.coins - accusationCost, Repository)
 
         interaction.reply(`${member.user} has accused ${accused} of ${accusation}!!!`)
 
-        // Create trial here in database and return id and judge type
         await addTrialUseCase(member.user.id, accused.id, accusation, DateTime.now().toSeconds(), 0, gulagApi)
 
-
         interaction.channel?.send(
-            'The trial is underway! Use `/vote 00 yea/nea` to participate!\nUse `/bribe 00 amount` to bribe the judge!\nThe judge for this trial is -personality-'
+            `The trial is underway! Use \`/vote ${member.user} yea/nea\` to participate!\nUse \`/bribe ${member.user} amount\` to bribe the judge!\nThe judge for this trial is -personality-`
             )
     }
 )

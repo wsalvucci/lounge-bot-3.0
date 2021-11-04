@@ -52,6 +52,13 @@ class TheLoungeApi {
         return apiCall(`/personalRecords?discordId=${discordId}`)
             .then((data: any) => PersonalRecordsResponse.parseData(data))
     }
+
+    async checkIfUserExists(discordId: string) : Promise<Boolean> {
+        return apiCall(`/user/${discordId}`)
+            .then((data: any) => {
+                if (data.length == 0) {return false} else {return true}
+            })
+    }
 }
 
 export default new TheLoungeApi

@@ -27,7 +27,7 @@ class Trial {
 
     static toDomainModel(data: any) : Trial {
         return new Trial(
-            data.id,
+            data.trialId,
             data.accuserId,
             data.targetId,
             data.accusation,
