@@ -43,6 +43,11 @@ class TheLoungeApi {
             .then((data: any) => SqlResponse.dataToModel(data))
     }
 
+    async incrementUserProperty(discordId: string, statName: string, amount: number) : Promise<SqlResponse> {
+        return apiCall(`/incrementUserStat?discordId=${discordId}&statName=${statName}&amount=${amount}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
+    }
+
     async createAccount(discordId: string, name: string, timeAdded: number) : Promise<SqlResponse> {
         return apiCall(`/createUser?discordId=${discordId}&name=${name}&timeAdded=${timeAdded}`)
             .then((data: any) => SqlResponse.dataToModel(data))

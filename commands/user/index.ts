@@ -6,6 +6,7 @@ import leaderboard from './leaderboard'
 import color from './color'
 import createAccount from './createAccount'
 import personalRecords from './personalRecords'
+import spec from './spec'
 
 const moduleList = new CommandModule(
     [
@@ -14,7 +15,8 @@ const moduleList = new CommandModule(
         leaderboard,
         color,
         createAccount,
-        personalRecords
+        personalRecords,
+        spec
     ]
 )
 

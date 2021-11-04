@@ -1,4 +1,4 @@
-import { createUser, getLeaderboard, getPersonalRecord, getTitle, getUser, updateUserValue } from "../domain/databaseRequests";
+import { createUser, getLeaderboard, getPersonalRecord, getTitle, getUser, incrementUserValue, updateUserValue } from "../domain/databaseRequests";
 import app from "../domain/expressModule";
 
 function processDatabaseRequest(request: Promise<any>, res: any) {
@@ -51,6 +51,9 @@ app.get(`/title/:titleId`, (req: any, res: any) => {
     })
 })
 
+/**
+ * Wat. Seems like an outdated usage?
+ */
 app.get(`/updateUser`, (req: any, res: any) => {
     updateUserValue(req.query.discordId, 'nickname', req.query.nickname).then((data: any) => {
         if (data.err) {
@@ -64,6 +67,10 @@ app.get(`/updateUser`, (req: any, res: any) => {
         console.error(error)
         res.end()
     })
+})
+
+app.get(`/incrementUserStat`, (req: any, res: any) => {
+    processDatabaseRequest(incrementUserValue(req.query.discordId, req.query.statName, req.query.amount), res)
 })
 
 app.get(`/updateUserProperty`, (req: any, res: any) => {
