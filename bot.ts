@@ -1,12 +1,15 @@
 require('dotenv').config()
 
-import { Client, Intents, Interaction, Message } from 'discord.js'
+import { Client, Guild, Intents, Interaction, Message } from 'discord.js'
 import CommandModule from './models/CommandModule'
 import SlashCommand from './models/SlashCommand'
 import { REST } from '@discordjs/rest'
 const client = new Client({intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES]})
+
+// Load APIs
 require('./api/userRoutes')
 require('./api/gulag/gulagRoutes')
+require('./api/bot/botRoutes')
 
 client.once('ready', () => {
     console.log('Ready!')
@@ -16,6 +19,7 @@ import userCommands from './commands/user'
 import weatherCommands from './commands/weather'
 import gulagCommands from './commands/gulag'
 import { Routes } from 'discord-api-types/v9'
+import { startPersonalityController } from './chron'
 
 var commandModules = [
     userCommands,
@@ -68,7 +72,11 @@ client.on('interactionCreate', (interaction : Interaction) => {
     })
 })
 
-
-client.login(process.env.BOT_TOKEN)
+client.login(process.env.BOT_TOKEN).then((value: string) => {
+    // Load Chron Tasks
+    client.guilds.cache.forEach((guild: Guild) => {
+        startPersonalityController(guild.id)
+    })
+})
 
 export default client
