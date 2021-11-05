@@ -15,6 +15,11 @@ class BotApi {
             })
     }
 
+    async getCurrentPersonality() : Promise<BotPersonality> {
+        return apiCall('/bot/getPersonality')
+            .then((data: any) => BotPersonality.toDomainModel(data))
+    }
+
     async updatePersonality(id: number) : Promise<SqlResponse> {
         return apiCall(`/bot/updatePersonality?personalityId=${id}`)
             .then((data: any) => SqlResponse.dataToModel(data))

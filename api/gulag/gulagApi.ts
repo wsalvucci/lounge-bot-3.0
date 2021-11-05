@@ -1,3 +1,4 @@
+import Bribe from "../../models/gulag/Bribe"
 import Trial from "../../models/gulag/Trial"
 import SqlResponse from "../../responseModels/SqlResponse"
 import apiCall from "../apiCall"
@@ -27,6 +28,27 @@ class GulagApi {
                 });
                 return trialList
             })
+    }
+
+    async getTrialBribes(trialId: number): Promise<Bribe[]> {
+        return apiCall(`/gulag/getTrialBribes?trialId=${trialId}`)
+            .then((data: any) => {
+                var bribeList : Bribe[] = []
+                data.forEach((bribe: Bribe) => {
+                    bribeList.push(Bribe.toDomainModel(bribe))
+                });
+                return bribeList
+            })
+    }
+
+    async addTrialBribe(trialId: number, discordId: string, amount: number, vote: number) : Promise<SqlResponse> {
+        return apiCall(`/gulag/addTrialBribe?trialId=${trialId}&discordId=${discordId}&amount=${amount}&vote=${vote}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
+    }
+
+    async removeTrialBribe(trialId: number, discordId: string) : Promise<SqlResponse> {
+        return apiCall(`/gulag/removeTrialBribe?trialId=${trialId}&discordId=${discordId}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
     }
 }
 

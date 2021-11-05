@@ -68,12 +68,17 @@ const command = new SlashCommand(
             var hp = interaction.options.getInteger('hp', true)
             var cha = interaction.options.getInteger('cha', true)
 
-            var userStats = await getUserStatsUseCase(member.user.id, Repository)
-
-            if (DateTime.now().toSeconds() - userStats.respecTimestamp < TIME_BETWEEN_RESPECS) {
-                interaction.reply({content: `You cannot respec again until <t:${userStats.respecTimestamp + TIME_BETWEEN_RESPECS}>`, ephemeral: true})
+            if (atk < 0 || def < 0 || matk < 0 || mdef < 0 || agi < 0 || hp < 0 || cha < 0) {
+                interaction.reply({content: 'You cannot set a stat negative', ephemeral: true})
                 return
             }
+
+            var userStats = await getUserStatsUseCase(member.user.id, Repository)
+
+            // if (DateTime.now().toSeconds() - userStats.respecTimestamp < TIME_BETWEEN_RESPECS) {
+            //     interaction.reply({content: `You cannot respec again until <t:${userStats.respecTimestamp + TIME_BETWEEN_RESPECS}>`, ephemeral: true})
+            //     return
+            // }
 
             var atkDiff = userStats.atk - atk
             var defDiff = userStats.def - def

@@ -15,3 +15,15 @@ export function getTrial(trialId: number) {
 export function getActiveTrials() {
     return query(`SELECT * FROM trials WHERE concluded = 0`)
 }
+
+export function getTrialBribes(trialId: number) {
+    return query(`SELECT * FROM trial_bribes WHERE trialId = ${trialId}`)
+}
+
+export function addTrialBribe(trialId: number, discordId: string, amount: number, vote: number) {
+    return query(`INSERT INTO trial_bribes (trialId, discordId, bribeAmount, bribeVote) VALUES (${trialId}, ${discordId}, ${amount}, ${vote}) ON DUPLICATE KEY UPDATE bribeAmount = ${amount}, bribeVote = ${vote}`)
+}
+
+export function removeTrialBribe(trialId: number, discordId: string) {
+    return query(`DELETE FROM trial_bribes WHERE trialId = ${trialId} and discordId = ${discordId}`)
+}
