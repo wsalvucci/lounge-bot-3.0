@@ -9,6 +9,7 @@ import respecUserUseCase from "../../useCases/user/respecUserUseCase";
 import { DateTime } from "luxon";
 
 const COST_PER_SPEC_POINT = 1000
+const TIME_BETWEEN_RESPECS = 604800
 
 const command = new SlashCommand(
     new SlashCommandBuilder()
@@ -69,6 +70,11 @@ const command = new SlashCommand(
 
             var userStats = await getUserStatsUseCase(member.user.id, Repository)
 
+            if (DateTime.now().toSeconds() - userStats.respecTimestamp < TIME_BETWEEN_RESPECS) {
+                interaction.reply({content: `You cannot respec again until <t:${userStats.respecTimestamp + TIME_BETWEEN_RESPECS}>`, ephemeral: true})
+                return
+            }
+
             var atkDiff = userStats.atk - atk
             var defDiff = userStats.def - def
             var matkDiff = userStats.matk - matk
@@ -119,7 +125,8 @@ const command = new SlashCommand(
                     {name: 'Agility', value: `${agi} (-${agiDiff})`},
                     {name: 'Health', value: `${hp} (-${hpDiff})`},
                     {name: 'Charisma', value: `${cha} (-${chaDiff})`},
-                    {name: 'TOTAL COST', value: `${totalCost.withCommas()}`}
+                    {name: 'TOTAL COST', value: `${totalCost.withCommas()}`},
+                    {name: 'Next Respec', value: `<t:${userStats.respecTimestamp + TIME_BETWEEN_RESPECS}>`}
                 )
             
             var previewMessage = await interaction.channel?.send({embeds: [respecPreview]})
