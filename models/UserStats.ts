@@ -12,7 +12,7 @@ class UserStats {
     mdef: number
     agi: number
     hp: number
-    char: number
+    cha: number
     respecTimestamp: number
     specPoints: number
 
@@ -28,7 +28,7 @@ class UserStats {
         mdef: number,
         agi: number,
         hp: number,
-        char: number,
+        cha: number,
         respecTimestamp: number,
         specPoints: number
     ) {
@@ -43,7 +43,7 @@ class UserStats {
         this.mdef = mdef
         this.agi = agi
         this.hp = hp
-        this.char = char
+        this.cha = cha
         this.respecTimestamp = respecTimestamp
         this.specPoints = specPoints
     }

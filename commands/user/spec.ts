@@ -22,7 +22,7 @@ const command = new SlashCommand(
                     ['Magic Defense', 'mdef'],
                     ['Agility', 'agi'],
                     ['Health', 'hp'],
-                    ['Charisma', 'char']
+                    ['Charisma', 'cha']
                 ])
         )
         .addIntegerOption(option =>

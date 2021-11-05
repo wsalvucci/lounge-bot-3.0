@@ -55,7 +55,7 @@ app.get(`/title/:titleId`, (req: any, res: any) => {
  * Wat. Seems like an outdated usage?
  */
 app.get(`/updateUser`, (req: any, res: any) => {
-    updateUserValue(req.query.discordId, 'nickname', req.query.nickname).then((data: any) => {
+    updateUserValue(req.query.discordId, req.query.propertyName, req.query.value).then((data: any) => {
         if (data.err) {
             console.error(data.err)
             res.end()

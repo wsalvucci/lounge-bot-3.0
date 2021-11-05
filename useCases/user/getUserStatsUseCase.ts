@@ -27,7 +27,7 @@ export default function getUserStatsUseCase(discordId: string, repository: typeo
                 user.stats.mdef,
                 user.stats.agi,
                 user.stats.hp,
-                user.stats.char,
+                user.stats.cha,
                 user.stats.respecTimestamp,
                 user.stats.specPoints
             )

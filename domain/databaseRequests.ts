@@ -9,7 +9,11 @@ export function getTitle(titleId: number) {
 }
 
 export function updateUserValue(discordId: string, statName: string, statValue: any) {
-    return query(`UPDATE users SET ${statName} = '${statValue}' WHERE discordId = ${discordId}`)
+    if (statValue instanceof String) {
+        return query(`UPDATE users SET ${statName} = '${statValue}' WHERE discordId = ${discordId}`)
+    } else {
+        return query(`UPDATE users SET ${statName} = ${statValue} WHERE discordId = ${discordId}`)
+    }
 }
 
 export function incrementUserValue(discordId: string, statName: string, amount: number) {

@@ -47,7 +47,7 @@ class LoungeUser {
                 data.mdef,
                 data.agi,
                 data.hp,
-                data.char,
+                data.cha,
                 data.respecTimestamp,
                 data.specPoints
             )
@@ -98,7 +98,7 @@ class LoungeUserStats {
     mdef: number
     agi: number
     hp: number
-    char: number
+    cha: number
     respecTimestamp: number
     specPoints: number
 
@@ -120,7 +120,7 @@ class LoungeUserStats {
         mdef: number,
         agi: number,
         hp: number,
-        char: number,
+        cha: number,
         respecTimestamp: number,
         specPoints: number
     ) {
@@ -141,7 +141,7 @@ class LoungeUserStats {
         this.mdef = mdef
         this.agi = agi
         this.hp = hp
-        this.char = char
+        this.cha = cha
         this.respecTimestamp = respecTimestamp
         this.specPoints = specPoints
     }

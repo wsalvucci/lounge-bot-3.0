@@ -7,6 +7,7 @@ import color from './color'
 import createAccount from './createAccount'
 import personalRecords from './personalRecords'
 import spec from './spec'
+import respec from './respec'
 
 const moduleList = new CommandModule(
     [
@@ -16,7 +17,8 @@ const moduleList = new CommandModule(
         color,
         createAccount,
         personalRecords,
-        spec
+        spec,
+        respec
     ]
 )
 

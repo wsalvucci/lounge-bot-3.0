@@ -98,7 +98,7 @@ async function getCanvas(user: User, stats: UserStats) : Promise<Buffer> {
     createText(ctx, '#ffffff', userStatsTextStyle, "HP", 400, userStatsNameY, 'center')
     createText(ctx, '#ffffff', userStatsTextStyle, stats.hp.toString(), 400, userStatsValueY, 'center')
     createText(ctx, '#ffffff', userStatsTextStyle, "CHA", 450, userStatsNameY, 'center')
-    createText(ctx, '#ffffff', userStatsTextStyle, stats.char.toString(), 450, userStatsValueY, 'center')
+    createText(ctx, '#ffffff', userStatsTextStyle, stats.cha.toString(), 450, userStatsValueY, 'center')
 
     createText(ctx, '#ffffff', userStatsTextStyle, `Spec Points Available: ${stats.specPoints}`, 300, userStatsValueY + 25, 'center')
 
