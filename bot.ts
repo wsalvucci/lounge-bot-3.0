@@ -10,6 +10,7 @@ const client = new Client({intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_M
 require('./api/userRoutes')
 require('./api/gulag/gulagRoutes')
 require('./api/bot/botRoutes')
+require('./api/bets/betsRoutes')
 
 client.once('ready', () => {
     console.log('Ready!')
@@ -18,13 +19,15 @@ client.once('ready', () => {
 import userCommands from './commands/user'
 import weatherCommands from './commands/weather'
 import gulagCommands from './commands/gulag'
+import betsCommands from './commands/bets'
 import { Routes } from 'discord-api-types/v9'
 import { startPersonalityController, startTrialController } from './chron'
 
 var commandModules = [
     userCommands,
     weatherCommands,
-    gulagCommands
+    gulagCommands,
+    betsCommands
 ]
 
 const token: string = process.env.BOT_TOKEN || ""

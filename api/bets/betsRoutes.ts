@@ -3,7 +3,7 @@ import processDatabaseRequest from "../processDatabaseRequest";
 import { addBet, addBetOption, getBet, getBetOption, getBetOptions, getBets, getUserBet, getUserBets, placeBet, updateBet, updateBetOption } from "./betsRequests";
 
 app.get(`/bets/getBets`, (req: any, res: any) => {
-    processDatabaseRequest(getBets(req.query.startingTimestamp, req.query.endingTimestamp), res)
+    processDatabaseRequest(getBets(req.query.timestamp), res)
 })
 
 app.get(`/bets/getBet`, (req: any, res: any) => {

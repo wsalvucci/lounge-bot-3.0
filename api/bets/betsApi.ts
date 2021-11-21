@@ -5,8 +5,8 @@ import SqlResponse from "../../responseModels/SqlResponse";
 import apiCall from "../apiCall"
 
 class BetApi {
-    async getBets(startingTimestamp: number, endingTimestamp: number) : Promise<Bet[]> {
-        return apiCall(`/bets/getBets?startingTimestamp=${startingTimestamp}&endingTimestamp=${endingTimestamp}`)
+    async getBets(timestamp: number) : Promise<Bet[]> {
+        return apiCall(`/bets/getBets?timestamp=${timestamp}`)
             .then((data: any) => {
                 var betList : Bet[] = []
                 data.forEach((bet: Bet) => {
@@ -33,7 +33,7 @@ class BetApi {
     }
 
     async getBetOptions(betId: number) : Promise<BetOption[]> {
-        return apiCall(`/bets/getBetOptions`)
+        return apiCall(`/bets/getBetOptions?betId=${betId}`)
             .then((data: any) => {
                 var optionsList : BetOption[] = []
                 data.forEach((option: BetOption) => {
