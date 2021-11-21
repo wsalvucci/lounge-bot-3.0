@@ -9,6 +9,7 @@ import checkAllBets from './checkAllbets'
 import deleteBet from './deleteBet'
 import createBet from './createBet'
 import createBetOption from './createBetOption'
+import concludeBet from './concludeBet'
 
 const command = new SlashCommand(
     new SlashCommandBuilder()
@@ -115,6 +116,20 @@ const command = new SlashCommand(
                         .setDescription('The betting line of the option')
                         .setRequired(true)
                 )
+        )
+        .addSubcommand(subcommand =>
+            subcommand.setName('concludebet')
+                .setDescription('Concludes a bet and pays out the winners')
+                .addIntegerOption(option =>
+                    option.setName('betid')
+                        .setDescription('The ID of the bet you want to conclude')
+                        .setRequired(true)
+                )
+                .addIntegerOption(option =>
+                    option.setName('winningoption')
+                        .setDescription('The winning option that will be paid out from the bet. Set to -1 for no winner.')
+                        .setRequired(true)
+                )
         ),
     async (interaction: CommandInteraction) => {
         switch(interaction.options.getSubcommand(true)) {
@@ -126,6 +141,7 @@ const command = new SlashCommand(
             case 'placebet': placeBet.method(interaction); break
             case 'createbet': createBet.method(interaction); break
             case 'createbetoption': createBetOption.method(interaction); break
+            case 'concludebet': concludeBet.method(interaction); break
         }
     }
 )

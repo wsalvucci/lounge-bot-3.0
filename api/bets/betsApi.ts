@@ -32,6 +32,11 @@ class BetApi {
         
     }
 
+    async concludeBet(betId: number) : Promise<SqlResponse> {
+        return apiCall(`/bets/concludeBet?betId=${betId}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
+    }
+
     async getBetOptions(betId: number) : Promise<BetOption[]> {
         return apiCall(`/bets/getBetOptions?betId=${betId}`)
             .then((data: any) => {
@@ -85,6 +90,17 @@ class BetApi {
     async deleteUserBet(userId: string, betId: number) : Promise<SqlResponse> {
         return apiCall(`/bets/deleteUserBet?userId=${userId}&betId=${betId}`)
             .then((data: any) => SqlResponse.dataToModel(data))
+    }
+
+    async getAllUserBetsForBet(betId: number) : Promise<UserBet[]> {
+        return apiCall(`/bets/getAllUserBetsForBet?betId=${betId}`)
+            .then((data: any) => {
+                var userBets : UserBet[] = []
+                data.forEach((userBet: UserBet) => {
+                    userBets.push(UserBet.toDomainModel(userBet))
+                });
+                return userBets
+            })
     }
 }
 

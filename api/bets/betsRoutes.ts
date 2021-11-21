@@ -1,6 +1,6 @@
 import app from "../../domain/expressModule";
 import processDatabaseRequest from "../processDatabaseRequest";
-import { addBet, addBetOption, deleteUserBet, getBet, getBetOption, getBetOptions, getBets, getUserBet, getUserBets, placeBet, updateBet, updateBetOption } from "./betsRequests";
+import { addBet, addBetOption, concludeBet, deleteUserBet, getAllUserBetsForBet, getBet, getBetOption, getBetOptions, getBets, getUserBet, getUserBets, placeBet, updateBet, updateBetOption } from "./betsRequests";
 
 app.get(`/bets/getBets`, (req: any, res: any) => {
     processDatabaseRequest(getBets(req.query.timestamp), res)
@@ -16,6 +16,10 @@ app.get(`/bets/addBet`, (req: any, res: any) => {
 
 app.get(`/bets/updateBet`, (req: any, res: any) => {
     processDatabaseRequest(updateBet(req.query.betId, req.query.betName, req.query.betDescription, req.query.openingTimestamp, req.query.closingTimestamp), res)
+})
+
+app.get(`/bets/concludeBet`, (req: any, res: any) => {
+    processDatabaseRequest(concludeBet(req.query.betId), res)
 })
 
 app.get(`/bets/getBetOptions`, (req: any, res: any) => {
@@ -48,4 +52,8 @@ app.get(`/bets/placeBet`, (req: any, res: any) => {
 
 app.get(`/bets/deleteUserBet`, (req: any, res: any) => {
     processDatabaseRequest(deleteUserBet(req.query.userId, req.query.betId), res)
+})
+
+app.get(`/bets/getAllUserBetsForBet`, (req: any, res: any) => {
+    processDatabaseRequest(getAllUserBetsForBet(req.query.betId), res)
 })

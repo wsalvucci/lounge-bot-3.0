@@ -16,6 +16,10 @@ export function updateBet(betId: number, betName: string, betDescription: string
     return query(`UPDATE bets SET betName = '${betName}', betDescription = '${betDescription}', openingTimestamp = ${openingTimestamp}, closingTimestamp = ${closingTimestamp} WHERE betId = ${betId}`)
 }
 
+export function concludeBet(betId: number) {
+    return query(`UPDATE bets SET concluded = 1 WHERE betId = ${betId}`)
+}
+
 export function getBetOptions(betId: number) {
     return query(`SELECT * FROM bet_options WHERE betId = ${betId}`)
 }
@@ -46,4 +50,8 @@ export function placeBet(userId: string, betId: number, betSelection: number, be
 
 export function deleteUserBet(userId: string, betId: number) {
     return query(`DELETE FROM user_bets WHERE userId = ${userId} and betId = ${betId}`)
+}
+
+export function getAllUserBetsForBet(betId: number) {
+    return query(`SELECT * FROM user_bets WHERE betId = ${betId}`)
 }
