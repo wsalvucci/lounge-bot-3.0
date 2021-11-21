@@ -1,4 +1,5 @@
 import Bribe from "../../models/gulag/Bribe"
+import Gulag from "../../models/gulag/Gulag"
 import Trial from "../../models/gulag/Trial"
 import TrialVote from "../../models/gulag/Vote"
 import SqlResponse from "../../responseModels/SqlResponse"
@@ -29,6 +30,11 @@ class GulagApi {
                 });
                 return trialList
             })
+    }
+
+    async concludeTrial(trialId: number): Promise<SqlResponse> {
+        return apiCall(`/gulag/concludeTrial?trialId=${trialId}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
     }
 
     async getTrialVotes(trialId: number): Promise<TrialVote[]> {
@@ -71,6 +77,22 @@ class GulagApi {
     async unGulagUser(userId: string) : Promise<SqlResponse> {
         return apiCall(`/gulag/unGulagUser?userId=${userId}`)
             .then((data: any) => SqlResponse.dataToModel(data))
+    }
+
+    async mineGulag(userId: string, points: number): Promise<SqlResponse> {
+        return apiCall(`/gulag/mineGulag?userId=${userId}&points=${points}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
+    }
+
+    async getActiveGulags(): Promise<Gulag[]> {
+        return apiCall(`/gulag/activeGulags`)
+            .then((data: any) => {
+                var gulagList : Gulag[] = []
+                data.forEach((gulag: Gulag) => {
+                    gulagList.push(Gulag.toDomainModel(gulag))
+                });
+                return gulagList
+            })
     }
 }
 

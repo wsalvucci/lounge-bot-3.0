@@ -18,6 +18,7 @@ import { TrialLineType, TrialResultLine } from "../models/bot/TrialResultLine";
 import { gulagUser } from "../domain/loungeFunctions";
 import getUserStatsUseCase from "../useCases/user/getUserStatsUseCase";
 import loungeApi from "../api/loungeApi";
+import concludeTrialUseCase from "../useCases/gulag/concludeTrialUseCase";
 
 const TRIAL_DURATION = 86400
 const MINIMUM_REQUIRED_YEA_VOTES = 3
@@ -131,6 +132,8 @@ async function executeTrial(trial: Trial) {
             resultChannel.send(trialLines.find((line: TrialResultLine) => {return line.lineType == TrialLineType.BotHungHung})!.trialLine)
         }
     }
+
+    concludeTrialUseCase(trial.id, gulagApi)
 }
 
 function checkTrials() {

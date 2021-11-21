@@ -1,7 +1,8 @@
 import { LevelStats, TierData } from "../domain/loungeFunctions"
 
 class UserStats {
-    nickanme: string
+    username: string
+    nickname: string
     titleString: string
     levelStats: LevelStats
     tier: TierData
@@ -17,6 +18,7 @@ class UserStats {
     specPoints: number
 
     constructor(
+        username: string,
         nickanme: string,
         titleString: string,
         levelStats: LevelStats,
@@ -32,7 +34,8 @@ class UserStats {
         respecTimestamp: number,
         specPoints: number
     ) {
-        this.nickanme = nickanme
+        this.username = username
+        this.nickname = nickanme
         this.titleString = titleString
         this.levelStats = levelStats
         this.tier = tier

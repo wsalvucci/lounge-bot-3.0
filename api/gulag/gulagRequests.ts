@@ -20,6 +20,10 @@ export function getActiveTrials() {
     return query(`SELECT * FROM trials WHERE concluded = 0`)
 }
 
+export function concludeTrial(trialId: number) {
+    return query(`UPDATE trials SET concluded = 1 WHERE trialId = ${trialId}`)
+}
+
 export function getTrialBribes(trialId: number) {
     return query(`SELECT * FROM trial_bribes WHERE trialId = ${trialId}`)
 }
@@ -33,9 +37,18 @@ export function removeTrialBribe(trialId: number, discordId: string) {
 }
 
 export function gulagUser(userId: string, attackerId: string, timestamp: number, points: number) {
+    query(`INSERT INTO gulag_archive (victimId, attackerId, timestamp) VALUES (${userId}, ${attackerId}, ${timestamp})`)
     return query(`INSERT INTO gulag (victimId, attackerId, timestamp, points) VALUES (${userId}, ${attackerId}, ${timestamp}, ${points}) ON DUPLICATE KEY UPDATE points = ${points}`)
 }
 
 export function unGulagUser(userId: string) {
     return query(`DELETE FROM gulag WHERE victimId = ${userId}`)
+}
+
+export function mineGulag(userId: string, points: number) {
+    return query(`UPDATE gulag SET points = points - ${points} WHERE victimId = ${userId}`)
+}
+
+export function getActiveGulags() {
+    return query(`SELECT * FROM gulag`)
 }

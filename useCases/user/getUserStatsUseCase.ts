@@ -9,6 +9,7 @@ export default function getUserStatsUseCase(discordId: string, repository: typeo
     return repository.getUser(discordId)
         .then((user: LoungeUser) => {
             var stats = new UserStats(
+                user.attributes.name,
                 user.attributes.nickname,
                 "",
                 getLevelStats(

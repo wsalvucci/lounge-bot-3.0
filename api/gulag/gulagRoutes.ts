@@ -1,6 +1,6 @@
 import app from "../../domain/expressModule";
 import processDatabaseRequest from "../processDatabaseRequest";
-import { addTrial, addTrialBribe, addTrialVote, getActiveTrials, getTrial, getTrialBribes, getTrialVotes, gulagUser, removeTrialBribe, unGulagUser } from "./gulagRequests";
+import { addTrial, addTrialBribe, addTrialVote, concludeTrial, getActiveGulags, getActiveTrials, getTrial, getTrialBribes, getTrialVotes, gulagUser, mineGulag, removeTrialBribe, unGulagUser } from "./gulagRequests";
 
 app.get(`/gulag/addTrial`, (req: any, res: any) => {
     processDatabaseRequest(addTrial(req.query.guildId, req.query.accuserId, req.query.targetId, req.query.accusation, req.query.timestamp, req.query.judgeType), res)
@@ -22,6 +22,10 @@ app.get(`/gulag/getActiveTrials`, (req: any, res: any) => {
     processDatabaseRequest(getActiveTrials(), res)
 })
 
+app.get(`/gulag/concludeTrial`, (req: any, res: any) => {
+    processDatabaseRequest(concludeTrial(req.query.trialId), res)
+})
+
 app.get(`/gulag/getTrialBribes`, (req: any, res: any) => {
     processDatabaseRequest(getTrialBribes(req.query.trialId), res)
 })
@@ -40,4 +44,12 @@ app.get(`/gulag/gulagUser`, (req: any, res: any) => {
 
 app.get(`/gulag/unGulagUser`, (req: any, res: any) => {
     processDatabaseRequest(unGulagUser(req.query.userId), res)
+})
+
+app.get(`/gulag/mineGulag`, (req: any, res: any) => {
+    processDatabaseRequest(mineGulag(req.query.userId, req.query.points), res)
+})
+
+app.get(`/gulag/activeGulags`, (req: any, res: any) => {
+    processDatabaseRequest(getActiveGulags(), res)
 })

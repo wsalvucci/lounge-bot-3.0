@@ -79,7 +79,7 @@ async function getCanvas(user: User, stats: UserStats) : Promise<Buffer> {
     createText(ctx, '#ffffff', '72px Quicksand', stats.levelStats.level.toString(), 25, 100)
 
     createText(ctx, '#ffffff', '32px Quicksand', stats.tier.title, 550, 75)
-    createText(ctx, '#ffffff', '38px Quicksand', stats.nickanme.toUpperCase(), 550, 120, 'left', 350)
+    createText(ctx, '#ffffff', '38px Quicksand', stats.nickname.toUpperCase(), 550, 120, 'left', 350)
 
     createDivider(ctx, "#C0C0C0", 150, (canvas.height / 2) + 175, 300)
 

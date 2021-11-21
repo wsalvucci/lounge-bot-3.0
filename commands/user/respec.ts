@@ -75,10 +75,10 @@ const command = new SlashCommand(
 
             var userStats = await getUserStatsUseCase(member.user.id, Repository)
 
-            // if (DateTime.now().toSeconds() - userStats.respecTimestamp < TIME_BETWEEN_RESPECS) {
-            //     interaction.reply({content: `You cannot respec again until <t:${userStats.respecTimestamp + TIME_BETWEEN_RESPECS}>`, ephemeral: true})
-            //     return
-            // }
+            if (DateTime.now().toSeconds() - userStats.respecTimestamp < TIME_BETWEEN_RESPECS) {
+                interaction.reply({content: `You cannot respec again until <t:${userStats.respecTimestamp + TIME_BETWEEN_RESPECS}>`, ephemeral: true})
+                return
+            }
 
             var atkDiff = userStats.atk - atk
             var defDiff = userStats.def - def

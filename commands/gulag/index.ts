@@ -5,6 +5,8 @@ import vote from './vote'
 import bribe from './bribe'
 import removeBribe from './removeBribe'
 import checkBribe from './checkBribe'
+import mine from './mine'
+import checkGulag from './checkGulag'
 
 const moduleList = new CommandModule(
     [
@@ -12,7 +14,9 @@ const moduleList = new CommandModule(
         vote,
         bribe,
         removeBribe,
-        checkBribe
+        checkBribe,
+        mine,
+        checkGulag
     ]
 )
 
