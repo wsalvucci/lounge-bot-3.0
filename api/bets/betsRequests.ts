@@ -43,3 +43,7 @@ export function getUserBet(userId: string, betId: number) {
 export function placeBet(userId: string, betId: number, betSelection: number, betAmount: number) {
     return query(`INSERT INTO user_bets (userId, betId, betSelection, betAmount) VALUES (${userId}, ${betId}, ${betSelection}, ${betAmount}) ON DUPLICATE KEY UPDATE betSelection = ${betSelection}, betAmount = ${betAmount}`)
 }
+
+export function deleteUserBet(userId: string, betId: number) {
+    return query(`DELETE FROM user_bets WHERE userId = ${userId} and betId = ${betId}`)
+}

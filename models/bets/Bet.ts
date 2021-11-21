@@ -20,13 +20,23 @@ class Bet {
     }
 
     static toDomainModel(data: any) : Bet {
-        return new Bet(
-            data.betId,
-            data.betName,
-            data.betDescription,
-            data.openingTimestamp,
-            data.closingTimestamp
-        )
+        if (data !== undefined) {
+            return new Bet(
+                data.betId,
+                data.betName,
+                data.betDescription,
+                data.openingTimestamp,
+                data.closingTimestamp
+            )
+        } else {
+            return new Bet(
+                -1,
+                "",
+                "",
+                -1,
+                -1
+            )
+        }
     }
 }
 

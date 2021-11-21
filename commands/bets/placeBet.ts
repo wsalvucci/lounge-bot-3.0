@@ -69,7 +69,7 @@ const command = new SlashCommand(
 
         await placeBetUseCase(member.id, betOptionData.betId, betOptionData.betOptionId, betAmount, betsApi)
 
-        interaction.reply({content: `Your bet of ${betAmount} for option ${betOptionData.betOptionId} - ${betOptionData.optionName} (${betOptionData.optionLine} in the event ${betData.betName} has been placed!)`})
+        interaction.reply({content: `Your bet of \`${betAmount}\` for bet option ID \`${betOptionData.betOptionId} - ${betOptionData.optionName} (${betOptionData.optionLine})\` in the event \`${betData.betName}\` has been placed!`})
     }
 )
 

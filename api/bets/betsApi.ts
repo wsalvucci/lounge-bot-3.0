@@ -81,6 +81,11 @@ class BetApi {
             .then((data: any) => SqlResponse.dataToModel(data))
         
     }
+
+    async deleteUserBet(userId: string, betId: number) : Promise<SqlResponse> {
+        return apiCall(`/bets/deleteUserBet?userId=${userId}&betId=${betId}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
+    }
 }
 
 export default new BetApi
