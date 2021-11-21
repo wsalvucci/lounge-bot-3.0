@@ -11,7 +11,7 @@ app.get(`/bets/getBet`, (req: any, res: any) => {
 })
 
 app.get(`/bets/addBet`, (req: any, res: any) => {
-    processDatabaseRequest(addBet(req.query.betName, req.query.betDescription, req.query.openingTimestamp, req.query.closingTimestamp), res)
+    processDatabaseRequest(addBet(req.query.betName, req.query.betDescription, req.query.openingTimestamp, req.query.closingTimestamp, req.query.hiddenTimestamp), res)
 })
 
 app.get(`/bets/updateBet`, (req: any, res: any) => {

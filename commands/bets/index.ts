@@ -1,20 +1,10 @@
 import CommandModule from "../../models/CommandModule";
 
-import activeBets from './activeBets'
-import getBet from './getBet'
-import placeBet from './placeBet'
-import checkBet from './checkBet'
-import checkAllBets from './checkAllbets'
-import deleteBet from './deleteBet'
+import betsMain from './betsMain'
 
 const moduleList = new CommandModule(
     [
-        activeBets,
-        getBet,
-        placeBet,
-        checkBet,
-        checkAllBets,
-        deleteBet
+        betsMain
     ]
 )
 

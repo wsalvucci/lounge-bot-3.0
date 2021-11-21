@@ -21,8 +21,8 @@ class BetApi {
             .then((data: any) => Bet.toDomainModel(data[0]))
     }
 
-    async addBet(betName: string, betDescription: string, openingTimestamp: number, closingTimestamp: number) : Promise<SqlResponse> {
-        return apiCall(`/bets/addBet?betName=${betName}&betDescription=${betDescription}&openingTimestamp=${openingTimestamp}&closingTimestamp=${closingTimestamp}`)
+    async addBet(betName: string, betDescription: string, openingTimestamp: number, closingTimestamp: number, hiddenTimestamp: number) : Promise<SqlResponse> {
+        return apiCall(`/bets/addBet?betName=${betName}&betDescription=${betDescription}&openingTimestamp=${openingTimestamp}&closingTimestamp=${closingTimestamp}&hiddenTimestamp=${hiddenTimestamp}`)
             .then((data: any) => SqlResponse.dataToModel(data))
     }
 
