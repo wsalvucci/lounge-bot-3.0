@@ -11,7 +11,7 @@ import TrialVote from "../models/gulag/Vote";
 import Bribe from "../models/gulag/Bribe";
 import getGuildConfigUseCase from "../useCases/bot/getGuildConfigUseCase";
 import client from "../bot";
-import { Guild, GuildChannel, TextChannel, ThreadChannel } from "discord.js";
+import { Guild, GuildChannel, MessageEmbed, TextChannel, ThreadChannel } from "discord.js";
 import BotPersonality from "../models/bot/BotPersonality";
 import getBotTrialLinesUseCase from "../useCases/bot/getBotTrialLinesUseCase";
 import { TrialLineType, TrialResultLine } from "../models/bot/TrialResultLine";
@@ -72,7 +72,9 @@ async function executeTrial(trial: Trial) {
     })
 
     var netBribes = 0
+    var totalBribes = 0
     trialBribes.map((bribe: Bribe) => {
+        totalBribes = totalBribes + bribe.bribeAmount
         switch (bribe.bribeVote) {
             case -1: netBribes = netBribes - bribe.bribeAmount
             break
@@ -132,6 +134,20 @@ async function executeTrial(trial: Trial) {
             resultChannel.send(trialLines.find((line: TrialResultLine) => {return line.lineType == TrialLineType.BotHungHung})!.trialLine)
         }
     }
+
+    var trialDetailsEmbed = new MessageEmbed()
+        .setTitle(`${accuserMember.displayName} vs. ${targetMember.displayName}`)
+        .setDescription(`<t:${Math.round(DateTime.now().toSeconds())}>`)
+        .addField(
+            'Yea - Abstain - Nea',
+            `${trialVotes.filter((vote: TrialVote) => {return vote.vote == 1}).length} - ${trialVotes.filter((vote: TrialVote) => {return vote.vote == 0}).length} - ${trialVotes.filter((vote: TrialVote) => {return vote.vote == -1}).length}`
+        )
+        .addField(
+            'Total Bribes',
+            `${totalBribes}`
+        )
+    
+    resultChannel.send({embeds: [trialDetailsEmbed]})
 
     concludeTrialUseCase(trial.id, gulagApi)
 }

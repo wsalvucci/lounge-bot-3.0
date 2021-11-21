@@ -27,3 +27,7 @@ export function getIntroLines(id: number) {
 export function getTrialResultLines(personalityId: number) {
     return query(`SELECT * FROM bot_trial_lines WHERE personalityId = ${personalityId}`)
 }
+
+export function getSlapResponseLines(personalityId: number, responseType: number) {
+    return query(`SELECT * FROM bot_slap_responses WHERE personalityId = ${personalityId} and responseType = ${responseType}`)
+}

@@ -1,5 +1,6 @@
 import BotPersonality from "../../models/bot/BotPersonality";
 import GuildConfig from "../../models/bot/Guild";
+import SlapResponseLine from "../../models/bot/SlapResponseLine";
 import { TrialResultLine } from "../../models/bot/TrialResultLine";
 import SqlResponse from "../../responseModels/SqlResponse";
 import apiCall from "../apiCall"
@@ -48,6 +49,17 @@ class BotApi {
                 var lines : TrialResultLine[] = []
                 data.forEach((lineData : any) => {
                     lines.push(TrialResultLine.toDomainModel(lineData))
+                });
+                return lines
+            })
+    }
+
+    async getSlapResponseLines(personalityId: number, responseType: number) : Promise<SlapResponseLine[]> {
+        return apiCall(`/bot/slapResponseLines?personalityId=${personalityId}&responseType=${responseType}`)
+            .then((data: any) => {
+                var lines : SlapResponseLine[] = []
+                data.forEach((lineData : any) => {
+                    lines.push(SlapResponseLine.toDomainModel(lineData))
                 });
                 return lines
             })

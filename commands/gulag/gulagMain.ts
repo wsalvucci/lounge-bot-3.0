@@ -8,6 +8,7 @@ import removeBribe from './removeBribe'
 import checkBribe from './checkBribe'
 import mine from './mine'
 import checkGulag from './checkGulag'
+import slap from './slap'
 
 const command = new SlashCommand(
     new SlashCommandBuilder()
@@ -102,6 +103,15 @@ const command = new SlashCommand(
                         .addChoice('Nea', 'nea')
                         .addChoice('Abstain', 'abstain')
                 )
+        )
+        .addSubcommand(subcommand =>
+            subcommand.setName('slap')
+                .setDescription('The infamous slap command. Hit a user for a 1% chance of gulaging them.')
+                .addUserOption(option =>
+                    option.setName('target')
+                        .setDescription('The user you want to slap')
+                        .setRequired(true)
+                )
         ),
     async (interaction: CommandInteraction) => {
         switch(interaction.options.getSubcommand(true)) {
@@ -112,6 +122,9 @@ const command = new SlashCommand(
             case 'mine': mine.method(interaction); break
             case 'removebribe': removeBribe.method(interaction); break
             case 'vote': vote.method(interaction); break
+            case 'slap': slap.method(interaction); break
         }
     }
 )
+
+export default command
