@@ -17,12 +17,21 @@ class UserTitle {
     }
 
     static toDomainModel(data: any) : UserTitle {
-        return new UserTitle(
-            data.titleId,
-            data.titleName,
-            data.titleColor,
-            data.titleCondition
-        )
+        if (data === undefined) {
+            return new UserTitle(
+                -1,
+                "",
+                "",
+                ""
+            )
+        } else {
+            return new UserTitle(
+                data.titleId,
+                data.titleName,
+                data.titleColor,
+                data.titleCondition
+            )
+        }
     }
 }
 

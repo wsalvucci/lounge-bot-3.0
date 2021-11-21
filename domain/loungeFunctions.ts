@@ -1,3 +1,10 @@
+import { GuildMember } from "discord.js"
+import gulagApi from "../api/gulag/gulagApi"
+import GuildConfig from "../models/bot/Guild"
+import SqlResponse from "../responseModels/SqlResponse"
+import gulagUserUseCase from "../useCases/gulag/gulagUserUseCase"
+import unGulagUserUseCase from "../useCases/gulag/unGulagUserUseCase"
+
 export class LevelStats {
     discordId: string
     messagesSent: number
@@ -538,4 +545,24 @@ export function secondsToTimeString(seconds: number) : string {
     returnString = returnString + `${remainingSeconds}s`
 
     return returnString
+}
+
+export function gulagUser(guildConfig: GuildConfig, user: GuildMember, attacker: GuildMember, timestamp: number, points: number, repository: typeof gulagApi) : Promise<SqlResponse> {
+    if (guildConfig.gulagRole !== null) {
+        user.roles.add(guildConfig.gulagRole)
+    }
+    if (guildConfig.normalRole !== null) {
+        user.roles.remove(guildConfig.normalRole)
+    }
+    return gulagUserUseCase(user.id, attacker.id, timestamp, points, repository)
+}
+
+export function unGulagUser(guildConfig: GuildConfig, user: GuildMember, repository: typeof gulagApi) : Promise<SqlResponse> {
+    if (guildConfig.normalRole !== null) {
+        user.roles.add(guildConfig.normalRole)
+    }
+    if (guildConfig.gulagRole !== null) {
+        user.roles.remove(guildConfig.gulagRole)
+    }
+    return unGulagUserUseCase(user.id, repository)
 }

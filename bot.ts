@@ -19,7 +19,7 @@ import userCommands from './commands/user'
 import weatherCommands from './commands/weather'
 import gulagCommands from './commands/gulag'
 import { Routes } from 'discord-api-types/v9'
-import { startPersonalityController } from './chron'
+import { startPersonalityController, startTrialController } from './chron'
 
 var commandModules = [
     userCommands,
@@ -77,6 +77,7 @@ client.login(process.env.BOT_TOKEN).then((value: string) => {
     client.guilds.cache.forEach((guild: Guild) => {
         startPersonalityController(guild.id)
     })
+    startTrialController()
 })
 
 export default client

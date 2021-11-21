@@ -1,11 +1,15 @@
 import query from "../../domain/database"
 
-export function addTrial(accuserId: string, targetId: string, accusation: string, timestamp: number, judgeType: number) {
-    return query(`INSERT INTO trials (accuserId, targetId, accusation, timestamp, judgeType) VALUES ('${accuserId}', '${targetId}', '${accusation}', ${timestamp}, ${judgeType})`)
+export function addTrial(accuserId: string, guildId: string, targetId: string, accusation: string, timestamp: number, judgeType: number) {
+    return query(`INSERT INTO trials (guildId, accuserId,  targetId, accusation, timestamp, judgeType) VALUES ('${guildId}', '${accuserId}', '${targetId}', '${accusation}', ${timestamp}, ${judgeType})`)
 }
 
 export function addTrialVote(trialId: number, voterId: string, vote: number) {
     return query(`INSERT INTO trial_votes (trialId, voterId, vote) VALUES (${trialId}, '${voterId}', ${vote}) ON DUPLICATE KEY UPDATE vote = ${vote}`)
+}
+
+export function getTrialVotes(trialId: number) {
+    return query(`SELECT * FROM trial_votes WHERE trialId = ${trialId}`)
 }
 
 export function getTrial(trialId: number) {
@@ -26,4 +30,12 @@ export function addTrialBribe(trialId: number, discordId: string, amount: number
 
 export function removeTrialBribe(trialId: number, discordId: string) {
     return query(`DELETE FROM trial_bribes WHERE trialId = ${trialId} and discordId = ${discordId}`)
+}
+
+export function gulagUser(userId: string, attackerId: string, timestamp: number, points: number) {
+    return query(`INSERT INTO gulag (victimId, attackerId, timestamp, points) VALUES (${userId}, ${attackerId}, ${timestamp}, ${points}) ON DUPLICATE KEY UPDATE points = ${points}`)
+}
+
+export function unGulagUser(userId: string) {
+    return query(`DELETE FROM gulag WHERE victimId = ${userId}`)
 }

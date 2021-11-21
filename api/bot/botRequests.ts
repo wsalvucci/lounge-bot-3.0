@@ -23,3 +23,7 @@ export function getGuild(id: string) {
 export function getIntroLines(id: number) {
     return query(`SELECT * FROM personality_intro_lines WHERE botId = ${id}`)
 }
+
+export function getTrialResultLines(personalityId: number) {
+    return query(`SELECT * FROM bot_trial_lines WHERE personalityId = ${personalityId}`)
+}

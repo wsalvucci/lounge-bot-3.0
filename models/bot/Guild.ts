@@ -1,4 +1,4 @@
-class Guild {
+class GuildConfig {
     id: string
     announcementsChannel: string
     competitionChannel: string
@@ -22,8 +22,8 @@ class Guild {
         this.normalRole = normalRole
     }
 
-    static toDomainModel(data: any) : Guild {
-        return new Guild(
+    static toDomainModel(data: any) : GuildConfig {
+        return new GuildConfig(
             data.guildId,
             data.announcementsChannelId,
             data.competitionChannelId,
@@ -34,4 +34,4 @@ class Guild {
     }
 }
 
-export default Guild
+export default GuildConfig

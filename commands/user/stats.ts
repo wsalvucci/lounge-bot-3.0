@@ -13,6 +13,7 @@ import '../../domain/numberExtensions' //Can this be imported once from a centra
 import { LeaderboardResponse, LeaderboardUserResponse } from "../../models/response/LeaderboardResponse"
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { createText } from "../../domain/loungeCanvas"
+import { stat } from "fs"
 
 // function createText(
 //     ctx: NodeCanvasRenderingContext2D,

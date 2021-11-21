@@ -1,5 +1,6 @@
 class Trial {
     id: number
+    guildId: string
     accuserId: string
     targetId: string
     accusation: string
@@ -9,6 +10,7 @@ class Trial {
 
     constructor(
         id: number,
+        guildId: string,
         accuserId: string,
         targetId: string,
         accusation: string,
@@ -17,6 +19,7 @@ class Trial {
         judgeType: number
     ) {
         this.id = id
+        this.guildId = guildId
         this.accuserId = accuserId
         this.targetId = targetId
         this.accusation = accusation
@@ -28,6 +31,7 @@ class Trial {
     static toDomainModel(data: any) : Trial {
         return new Trial(
             data.trialId,
+            data.guildId,
             data.accuserId,
             data.targetId,
             data.accusation,

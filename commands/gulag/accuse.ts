@@ -32,7 +32,7 @@ const command = new SlashCommand(
         var member = interaction.member
         var accused = interaction.options.getUser('target')
         var accusation = interaction.options.getString('accusation')
-        if (member == null || accused == null || accusation == null) return
+        if (member == null || accused == null || accusation == null || interaction.guildId == null) return
 
         if (member.user.id == accused.id) {
             interaction.reply({content: 'You can\'t accuse yourself!', ephemeral: true})
@@ -71,7 +71,7 @@ const command = new SlashCommand(
 
         interaction.reply(`${member.user} has accused ${accused} of ${accusation}!!!`)
 
-        await addTrialUseCase(member.user.id, accused.id, accusation, DateTime.now().toSeconds(), 0, gulagApi)
+        await addTrialUseCase(interaction.guildId, member.user.id, accused.id, accusation, DateTime.now().toSeconds(), 0, gulagApi)
 
         interaction.channel?.send(
             `The trial is underway! Use \`/vote ${member.user} yea/nea\` to participate!\nUse \`/bribe ${member.user} amount\` to bribe the judge!\nThe judge for this trial is -personality-`
