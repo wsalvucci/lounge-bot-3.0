@@ -20,13 +20,23 @@ class BetOption {
     }
 
     static toDomainModel(data: any) : BetOption {
-        return new BetOption(
-            data.betOptionId,
-            data.betId,
-            data.optionName,
-            data.optionDescription,
-            data.optionLine
-        )
+        if (data !== undefined) {
+            return new BetOption(
+                data.betOptionId,
+                data.betId,
+                data.optionName,
+                data.optionDescription,
+                data.optionLine
+            )
+        } else {
+            return new BetOption(
+                -1,
+                -1,
+                "",
+                "",
+                0
+            )
+        }
     }
 }
 

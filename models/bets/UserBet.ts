@@ -17,12 +17,21 @@ class UserBet {
     }
 
     static toDomainModel(data: any) : UserBet {
-        return new UserBet(
-            data.userId,
-            data.betId,
-            data.betSelection,
-            data.betAmount
-        )
+        if (data !== undefined) {
+            return new UserBet(
+                data.userId,
+                data.betId,
+                data.betSelection,
+                data.betAmount
+            )
+        } else {
+            return new UserBet(
+                "",
+                -1,
+                -1,
+                -1
+            )
+        }
     }
 }
 

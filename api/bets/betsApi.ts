@@ -22,12 +22,12 @@ class BetApi {
     }
 
     async addBet(betName: string, betDescription: string, openingTimestamp: number, closingTimestamp: number) : Promise<SqlResponse> {
-        return apiCall(`/bets/addBet`)
+        return apiCall(`/bets/addBet?betName=${betName}&betDescription=${betDescription}&openingTimestamp=${openingTimestamp}&closingTimestamp=${closingTimestamp}`)
             .then((data: any) => SqlResponse.dataToModel(data))
     }
 
     async updateBet(betId: number, betName: string, betDescription: string, openingTimestamp: number, closingTimestamp: number) : Promise<SqlResponse> {
-        return apiCall(`/bets/updateBet`)
+        return apiCall(`/bets/updateBet?betId=${betId}&betName=${betName}&betDescription=${betDescription}&openingTimestamp=${openingTimestamp}&closingTimestamp=${closingTimestamp}`)
             .then((data: any) => SqlResponse.dataToModel(data))
         
     }
@@ -44,24 +44,24 @@ class BetApi {
     }
 
     async getBetOption(betOptionId: number) : Promise<BetOption> {
-        return apiCall(`/bets/getBetOption`)
+        return apiCall(`/bets/getBetOption?betOptionId=${betOptionId}`)
             .then((data: any) => BetOption.toDomainModel(data[0]))
     }
 
     async addBetOption(betId: number, optionName: string, optionDescription: string, optionLine: number) : Promise<SqlResponse> {
-        return apiCall(`/bets/addBetOption`)
+        return apiCall(`/bets/addBetOption?betId=${betId}&optionName=${optionName}&optionDescription=${optionDescription}&optionLine=${optionLine}`)
             .then((data: any) => SqlResponse.dataToModel(data))
         
     }
 
     async updateBetOption(betId: number, optionName: string, optionDescription: string, optionLine: number) : Promise<SqlResponse> {
-        return apiCall(`/bets/updateBetOption`)
+        return apiCall(`/bets/updateBetOptionbetId=${betId}&optionName=${optionName}&optionDescription=${optionDescription}&optionLine=${optionLine}`)
             .then((data: any) => SqlResponse.dataToModel(data))
         
     }
 
     async getUserBets(userId: string) : Promise<UserBet[]> {
-        return apiCall(`/bets/getUserBets`)
+        return apiCall(`/bets/getUserBets?userId=${userId}`)
             .then((data: any) => {
                 var userBets : UserBet[] = []
                 data.forEach((userBet: UserBet) => {
@@ -72,12 +72,12 @@ class BetApi {
     }
 
     async getUserBet(userId: string, betId: number) : Promise<UserBet> {
-        return apiCall(`/bets/getUserBet`)
+        return apiCall(`/bets/getUserBet?userId=${userId}&betId=${betId}`)
             .then((data: any) => UserBet.toDomainModel(data[0]))
     }
 
     async placeBet(userId: string, betId: number, betSelection: number, betAmount: number) : Promise<SqlResponse> {
-        return apiCall(`/bets/placeBet`)
+        return apiCall(`/bets/placeBet?userId=${userId}&betId=${betId}&betSelection=${betSelection}&betAmount=${betAmount}`)
             .then((data: any) => SqlResponse.dataToModel(data))
         
     }
