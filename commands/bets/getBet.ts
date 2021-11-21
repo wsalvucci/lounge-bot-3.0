@@ -1,5 +1,6 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbed } from "discord.js";
+import { DateTime } from "luxon";
 import betsApi from "../../api/bets/betsApi";
 import BetOption from "../../models/bets/BetOption";
 import SlashCommand from "../../models/SlashCommand";
@@ -21,6 +22,32 @@ const command = new SlashCommand(
 
         var betDetailEmbed = new MessageEmbed()
             .setTitle(betDetails.betName)
+            
+        var status = "Open"
+        var now = DateTime.now().toSeconds()
+        if (now > betDetails.closingTimestamp) {
+            status = "Running"
+        }
+        if (now > betDetails.hiddenTimestamp) {
+            status = "Finished"
+        }
+        if (betDetails.concluded == 1) {
+            status = "Concluded"
+        }
+
+        betDetailEmbed.addField(
+            'Open',
+            `<t:${betDetails.openingTimestamp}>`
+        )
+        betDetailEmbed.addField(
+            'Close',
+            `<t:${betDetails.closingTimestamp}>`
+        )
+
+        betDetailEmbed.addField(
+            `Status`,
+            status
+        )
         
         betOptions.forEach((option: BetOption) => {
             betDetailEmbed.addField(

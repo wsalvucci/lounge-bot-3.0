@@ -1,7 +1,7 @@
 import query from '../../domain/database'
 
 export function getBets(timestamp: number) {
-    return query(`SELECT * FROM bets WHERE openingTimestamp <= ${timestamp} and closingTimestamp >= ${timestamp}`)
+    return query(`SELECT * FROM bets WHERE openingTimestamp <= ${timestamp} and hiddenTimestamp >= ${timestamp}`)
 }
 
 export function getBet(betId: number) {
