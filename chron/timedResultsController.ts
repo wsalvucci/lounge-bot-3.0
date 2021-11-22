@@ -8,6 +8,9 @@ import getGuildConfigUseCase from '../useCases/bot/getGuildConfigUseCase'
 import botApi from '../api/bot/botApi'
 import GuildConfig from '../models/bot/Guild'
 import checkIfUserExistsUseCase from '../useCases/user/checkIfUserExistsUseCase'
+import incrementUserStatUseCase from '../useCases/user/incrementUserStatUseCase'
+import { StatType } from '../domain/loungeFunctions'
+import setUserPropertyUseCase from '../useCases/user/setUserPropertyUseCase'
 
 const DAILY_COIN_AWARD = 1000
 const WEEKLY_COIN_AWARD = 10000
@@ -50,29 +53,29 @@ async function resultCanvas(rankings: Result[], title: string, maxValue: number,
         createText(ctx, textColor, '36px Boldsand', `${result.name}`, 50, USER_DATA_HEIGHT * (index + 2))
         if (rankingType == 'message') {
             if (intervalType == 'daily') {
-                createText(ctx, textColor, '36px Boldsand', `${Math.round(result.messagesSent / maxValue * DAILY_COIN_AWARD)}`, 600, USER_DATA_HEIGHT * (index + 2))
+                createText(ctx, textColor, '36px Boldsand', `${Math.round(result.messagesSent / maxValue * DAILY_COIN_AWARD).withCommas()}`, 600, USER_DATA_HEIGHT * (index + 2))
             } else if (intervalType == 'weekly') {
-                createText(ctx, textColor, '36px Boldsand', `${Math.round(result.messagesSent / maxValue * WEEKLY_COIN_AWARD)}`, 600, USER_DATA_HEIGHT * (index + 2))
+                createText(ctx, textColor, '36px Boldsand', `${Math.round(result.messagesSent / maxValue * WEEKLY_COIN_AWARD).withCommas()}`, 600, USER_DATA_HEIGHT * (index + 2))
             } else {
-                createText(ctx, textColor, '36px Boldsand', `${Math.round(result.messagesSent / maxValue * MONTHLY_COIN_AWARD)}`, 600, USER_DATA_HEIGHT * (index + 2))
+                createText(ctx, textColor, '36px Boldsand', `${Math.round(result.messagesSent / maxValue * MONTHLY_COIN_AWARD).withCommas()}`, 600, USER_DATA_HEIGHT * (index + 2))
             }
-            createText(ctx, textColor, '36px Boldsand', `${result.messagesSent}`, 400, USER_DATA_HEIGHT * (index + 2))
+            createText(ctx, textColor, '36px Boldsand', `${result.messagesSent.withCommas()}`, 400, USER_DATA_HEIGHT * (index + 2))
         } else {
             if (intervalType == 'daily') {
-                createText(ctx, textColor, '36px Boldsand', `${Math.round(result.voiceScore / maxValue * DAILY_COIN_AWARD)}`, 600, USER_DATA_HEIGHT * (index + 2))
+                createText(ctx, textColor, '36px Boldsand', `${Math.round(result.voiceScore / maxValue * DAILY_COIN_AWARD).withCommas()}`, 600, USER_DATA_HEIGHT * (index + 2))
             } else if (intervalType == 'weekly') {
-                createText(ctx, textColor, '36px Boldsand', `${Math.round(result.voiceScore / maxValue * WEEKLY_COIN_AWARD)}`, 600, USER_DATA_HEIGHT * (index + 2))
+                createText(ctx, textColor, '36px Boldsand', `${Math.round(result.voiceScore / maxValue * WEEKLY_COIN_AWARD).withCommas()}`, 600, USER_DATA_HEIGHT * (index + 2))
             } else {
-                createText(ctx, textColor, '36px Boldsand', `${Math.round(result.voiceScore / maxValue * MONTHLY_COIN_AWARD)}`, 600, USER_DATA_HEIGHT * (index + 2))
+                createText(ctx, textColor, '36px Boldsand', `${Math.round(result.voiceScore / maxValue * MONTHLY_COIN_AWARD).withCommas()}`, 600, USER_DATA_HEIGHT * (index + 2))
             }
-            createText(ctx, textColor, '36px Boldsand', `${result.voiceScore}`, 400, USER_DATA_HEIGHT * (index + 2))
+            createText(ctx, textColor, '36px Boldsand', `${result.voiceScore.withCommas()}`, 400, USER_DATA_HEIGHT * (index + 2))
         }
     });
 
     return canvas.toBuffer()
 }
 
-async function runDailies(guildId: string) {
+async function runDailies(guildId: string, intervalType: string) {
     var guildData = client.guilds.cache.get(guildId)
     if (guildData === undefined) return
     var guildConfig = await getGuildConfigUseCase(guildId, botApi)
@@ -83,7 +86,13 @@ async function runDailies(guildId: string) {
         if(user == undefined) continue
         if(!(await checkIfUserExistsUseCase(user.id, loungeApi))) continue
         var userData = await getUserFullDataUseCase(user.id, loungeApi)
-        awards.push(new Result(user.id, user.nickname !== null ? user.nickname : user.displayName, userData.stats.dailyStats.messagesSent, userData.stats.dailyStats.secondsVoice))
+        if (intervalType == 'daily') {
+            awards.push(new Result(user.id, user.nickname !== null ? user.nickname : user.displayName, userData.stats.dailyStats.messagesSent, userData.stats.dailyStats.secondsVoice))
+        } else if (intervalType == 'weekly') {
+            awards.push(new Result(user.id, user.nickname !== null ? user.nickname : user.displayName, userData.stats.weeklyStats.messagesSent, userData.stats.weeklyStats.secondsVoice))
+        } else {
+            awards.push(new Result(user.id, user.nickname !== null ? user.nickname : user.displayName, userData.stats.monthlyStats.messagesSent, userData.stats.monthlyStats.secondsVoice))
+        }
     }
 
     var messageMax = 0
@@ -93,6 +102,20 @@ async function runDailies(guildId: string) {
         voiceMax = Math.max(voiceMax, result.voiceScore)
     })
 
+    var messageTitle = ""
+    var voiceTitle = ""
+
+    if (intervalType == 'daily') {
+        messageTitle = 'Daily Message Results'
+        voiceTitle = 'Daily Voice Results'
+    } else if (intervalType == 'weekly') {
+        messageTitle = 'Weekly Message Results'
+        voiceTitle = 'Weekly Voice Results'
+    } else {
+        messageTitle = 'Monthly Message Results'
+        voiceTitle = 'Monthly Voice Results'
+    }
+
     resultCanvas(
         awards
         .filter((result: Result) => {
@@ -101,10 +124,10 @@ async function runDailies(guildId: string) {
         .sort((a: Result, b: Result) => {
             return b.messagesSent - a.messagesSent
         }),
-        'Daily Message Results',
+        messageTitle,
         messageMax,
         'message',
-        'daily'
+        intervalType
         )
         .then((attachment: Buffer) => {
             (client.channels.cache.get(guildConfig.competitionChannel) as TextChannel).send({files: [{attachment: attachment}]})
@@ -118,40 +141,48 @@ async function runDailies(guildId: string) {
         .sort((a: Result, b: Result) => {
             return b.voiceScore - a.voiceScore
         }),
-        'Daily Voice Results',
+        voiceTitle,
         voiceMax,
         'voice',
-        'daily'
+        intervalType
         )
         .then((attachment: Buffer) => {
             (client.channels.cache.get(guildConfig.competitionChannel) as TextChannel).send({files: [{attachment: attachment}]})
         })
-}
-
-async function runWeeklies(guildId: string) {
-    var guildData = client.guilds.cache.get(guildId)
-    if (guildData === undefined) return
-    var guildConfig = await getGuildConfigUseCase(guildId, botApi)
-    var memberList = await guildData.members.fetch()
-}
-
-async function runMonthlies(guildId: string) {
-    var guildData = client.guilds.cache.get(guildId)
-    if (guildData === undefined) return
-    var guildConfig = await getGuildConfigUseCase(guildId, botApi)
-    var memberList = await guildData.members.fetch()
+    
+    if (intervalType == 'daily') {
+        awards.forEach((result: Result) => {
+            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * DAILY_COIN_AWARD), loungeApi)
+            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * DAILY_COIN_AWARD), loungeApi)
+            setUserPropertyUseCase(result.userId, StatType.DailyMessages, 0, loungeApi)
+            setUserPropertyUseCase(result.userId, StatType.DailyVoice, 0, loungeApi)
+        });
+    } else if (intervalType == 'weekly') {
+        awards.forEach((result: Result) => {
+            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * WEEKLY_COIN_AWARD), loungeApi)
+            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * WEEKLY_COIN_AWARD), loungeApi)
+            setUserPropertyUseCase(result.userId, StatType.WeeklyMessages, 0, loungeApi)
+            setUserPropertyUseCase(result.userId, StatType.WeeklyVoice, 0, loungeApi)
+        });
+    } else {
+        awards.forEach((result: Result) => {
+            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * MONTHLY_COIN_AWARD), loungeApi)
+            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * MONTHLY_COIN_AWARD), loungeApi)
+            setUserPropertyUseCase(result.userId, StatType.MonthlyMessages, 0, loungeApi)
+            setUserPropertyUseCase(result.userId, StatType.MonthlyVoice, 0, loungeApi)
+        });
+    }
 }
 
 function checkTimedResults(guildId: string) {
-    //schedule.scheduleJob(`* 0 * * *`, async function() {
-    schedule.scheduleJob(`0 * * * * *`, async function() {
-        runDailies(guildId)
+    schedule.scheduleJob(`* 0 * * *`, async function() {
+        runDailies(guildId, 'daily')
     })
     schedule.scheduleJob(`* 0 * * 0`, async function() {
-        runWeeklies(guildId)
+        runDailies(guildId, 'weekly')
     })
     schedule.scheduleJob(`* 0 1 * *`, async function() {
-        runMonthlies(guildId)
+        runDailies(guildId, 'monthly')
     })
 }
 
