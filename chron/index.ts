@@ -1,4 +1,5 @@
 import personalityController from './botPersonalityController'
+import timedResultsController from './timedResultsController'
 import trialController from './trialController'
 
 export function startPersonalityController(guildId: string) {
@@ -7,4 +8,8 @@ export function startPersonalityController(guildId: string) {
 
 export function startTrialController() {
     trialController()
+}
+
+export function startTimedResultsController(guildId: string) {
+    timedResultsController(guildId)
 }

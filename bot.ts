@@ -4,7 +4,7 @@ import { Client, Guild, Intents, Interaction, Message } from 'discord.js'
 import CommandModule from './models/CommandModule'
 import SlashCommand from './models/SlashCommand'
 import { REST } from '@discordjs/rest'
-const client = new Client({intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS]})
+const client = new Client({intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_MEMBERS]})
 
 // Load APIs
 require('./api/userRoutes')
@@ -21,7 +21,7 @@ import weatherCommands from './commands/weather'
 import gulagCommands from './commands/gulag'
 import betsCommands from './commands/bets'
 import { Routes } from 'discord-api-types/v9'
-import { startPersonalityController, startTrialController } from './chron'
+import { startPersonalityController, startTimedResultsController, startTrialController } from './chron'
 
 var commandModules = [
     userCommands,
@@ -79,6 +79,7 @@ client.login(process.env.BOT_TOKEN).then((value: string) => {
     // Load Chron Tasks
     client.guilds.cache.forEach((guild: Guild) => {
         startPersonalityController(guild.id)
+        startTimedResultsController(guild.id)
     })
     startTrialController()
 })
