@@ -20,6 +20,7 @@ import userCommands from './commands/user'
 import weatherCommands from './commands/weather'
 import gulagCommands from './commands/gulag'
 import betsCommands from './commands/bets'
+import stocksCommands from './commands/stocks'
 import { Routes } from 'discord-api-types/v9'
 import { startPersonalityController, startTimedResultsController, startTrialController } from './chron'
 
