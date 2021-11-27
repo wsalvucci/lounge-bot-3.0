@@ -1,6 +1,6 @@
 import app from "../../domain/expressModule";
 import processDatabaseRequest from "../processDatabaseRequest";
-import { getBotPersonalities, getCurrentPersonality, getGuild, getIntroLines, getSlapResponseLines, getTrialResultLines, updateBotPersonality } from "./botRequests";
+import { getBotPersonalities, getCurrentPersonality, getGuild, getIntroLines, getSlapResponseLines, getTrialResultLines, setBirthdayActive, updateBotPersonality } from "./botRequests";
 
 app.get(`/bot/personalities`, (req: any, res: any) => {
     processDatabaseRequest(getBotPersonalities(), res)
@@ -28,4 +28,8 @@ app.get(`/bot/trialResultLines`, (req: any, res: any) => {
 
 app.get(`/bot/slapResponseLines`, (req: any, res: any) => {
     processDatabaseRequest(getSlapResponseLines(req.query.personalityId, req.query.responseType), res)
+})
+
+app.get(`/guild/setBirthdayActive`, (req: any, res: any) => {
+    processDatabaseRequest(setBirthdayActive(req.query.guildId, req.query.active), res)
 })

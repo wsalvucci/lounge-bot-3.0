@@ -16,7 +16,6 @@ export function getCurrentPersonality() {
 }
 
 export function getGuild(id: string) {
-    console.log(`SELECT * FROM guildconfig WHERE guildId = ${id}`)
     return query(`SELECT * FROM guildconfig WHERE guildId = ${id}`)
 }
 
@@ -30,4 +29,8 @@ export function getTrialResultLines(personalityId: number) {
 
 export function getSlapResponseLines(personalityId: number, responseType: number) {
     return query(`SELECT * FROM bot_slap_responses WHERE personalityId = ${personalityId} and responseType = ${responseType}`)
+}
+
+export function setBirthdayActive(guildId: number, active: number) {
+    return query(`UPDATE guildconfig SET birthdayActive = ${active} WHERE guildId = ${guildId}`)
 }

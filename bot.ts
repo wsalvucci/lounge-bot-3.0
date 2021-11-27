@@ -22,7 +22,7 @@ import gulagCommands from './commands/gulag'
 import betsCommands from './commands/bets'
 import stocksCommands from './commands/stocks'
 import { Routes } from 'discord-api-types/v9'
-import { startPersonalityController, startTimedResultsController, startTrialController } from './chron'
+import { startPersonalityController, startTimedResultsController, startTrialController, startVoiceScoreController, startMessageScoreController } from './chron'
 
 var commandModules = [
     userCommands,
@@ -81,6 +81,8 @@ client.login(process.env.BOT_TOKEN).then((value: string) => {
     client.guilds.cache.forEach((guild: Guild) => {
         startPersonalityController(guild.id)
         startTimedResultsController(guild.id)
+        startVoiceScoreController(guild.id)
+        startMessageScoreController(guild.id)
     })
     startTrialController()
 })

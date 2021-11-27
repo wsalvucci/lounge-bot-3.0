@@ -19,7 +19,7 @@ function apiCall(path: string) {
 
 class TheLoungeApi {
     async getUser(discordId: string): Promise<LoungeUser> {
-        return apiCall(`/user/${discordId}`)
+        return apiCall(`/user/getUser?discordId=${discordId}`)
             .then((data: any) => LoungeUser.toDomainModel(data[0]))
     }
 
@@ -59,10 +59,41 @@ class TheLoungeApi {
     }
 
     async checkIfUserExists(discordId: string) : Promise<Boolean> {
-        return apiCall(`/user/${discordId}`)
+        return apiCall(`/user/getUser?discordId=${discordId}`)
             .then((data: any) => {
                 if (data.length == 0) {return false} else {return true}
             })
+    }
+
+    async getAllUsers() : Promise<LoungeUser[]> {
+        return apiCall(`/user/getAllUsers`)
+            .then((data: any) => {
+                var userList : LoungeUser[] = []
+                data.forEach((user: any) => {
+                    userList.push(LoungeUser.toDomainModel(data))
+                });
+                return userList
+            })
+    }
+
+    async addVoice(discordId: string, amount: number, xp: number) : Promise<SqlResponse> {
+        return apiCall(`/user/addVoice?discordId=${discordId}&amount=${amount}&xp=${xp}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
+    }
+
+    async addMessage(discordId: string, xp: number) : Promise<SqlResponse> {
+        return apiCall(`/user/addMessage?discordId=${discordId}&xp=${xp}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
+    }
+
+    async addPersonalRecord(discordId: string, timestamp: number, messages: number, voice: number) : Promise<SqlResponse> {
+        return apiCall(`/user/addPersonalRecord?discordId=${discordId}&timestamp=${timestamp}&messages=${messages}&voice=${voice}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
+    }
+
+    async addServerRecord(timestamp: number, messages: number, voice: number) : Promise<SqlResponse> {
+        return apiCall(`/user/addServerRecord?timestamp=${timestamp}&messages=${messages}&voice=${voice}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
     }
 }
 

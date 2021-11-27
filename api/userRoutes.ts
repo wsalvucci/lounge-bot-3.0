@@ -1,4 +1,4 @@
-import { createUser, getLeaderboard, getPersonalRecord, getTitle, getUser, incrementUserValue, updateUserValue } from "../domain/databaseRequests";
+import { addMessage, addPersonalRecord, addServerRecord, addVoice, createUser, getAllUsers, getLeaderboard, getPersonalRecord, getTitle, getUser, incrementUserValue, updateUserValue } from "../domain/databaseRequests";
 import app from "../domain/expressModule";
 
 function processDatabaseRequest(request: Promise<any>, res: any) {
@@ -17,7 +17,7 @@ function processDatabaseRequest(request: Promise<any>, res: any) {
     })
 }
 
-app.get(`/user/:discordId`, (req: any, res: any) => {
+app.get(`/user/getUser`, (req: any, res: any) => {
     getUser(req.params.discordId).then((data: any) => {
         if (data.err) {
             console.error(data.err)
@@ -95,4 +95,24 @@ app.get(`/createUser`, (req: any, res: any) => {
 
 app.get(`/personalRecords`, (req: any, res: any) => {
     processDatabaseRequest(getPersonalRecord(req.query.discordId), res)
+})
+
+app.get(`/user/getAllUsers`, (req: any, res: any) => {
+    processDatabaseRequest(getAllUsers(), res)
+})
+
+app.get(`/user/addVoice`, (req: any, res: any) => {
+    processDatabaseRequest(addVoice(req.query.discordId, req.query.amount, req.query.xp), res)
+})
+
+app.get(`/user/addMessage`, (req: any, res: any) => {
+    processDatabaseRequest(addMessage(req.query.discordId, req.query.xp), res)
+})
+
+app.get(`/user/addPersonalRecord`, (req: any, res: any) => {
+    processDatabaseRequest(addPersonalRecord(req.query.discordId, req.query.timestamp, req.query.messages, req.query.voice), res)
+})
+
+app.get(`/user/addServerRecord`, (req: any, res: any) => {
+    processDatabaseRequest(addServerRecord(req.query.timestamp, req.query.messages, req.query.voice), res)
 })

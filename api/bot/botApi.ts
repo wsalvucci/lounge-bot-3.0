@@ -64,6 +64,11 @@ class BotApi {
                 return lines
             })
     }
+
+    async setActiveBirthday(guildId: string, active: number) : Promise<SqlResponse> {
+        return apiCall(`/guild/setBirthdayActive?guildId=${guildId}&active=${active}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
+    }
 }
 
 export default new BotApi

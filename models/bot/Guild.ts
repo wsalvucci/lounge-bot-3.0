@@ -5,6 +5,8 @@ class GuildConfig {
     afkChannel: string
     gulagRole: string
     normalRole: string
+    xpModifier: number
+    birthdayActive: number
 
     constructor(
         id: string,
@@ -12,7 +14,9 @@ class GuildConfig {
         competitionChannel: string,
         afkChannel: string,
         gulagRole: string,
-        normalRole: string
+        normalRole: string,
+        xpModifier: number,
+        birthdayActive: number
     ) {
         this.id = id
         this.announcementsChannel = announcementsChannel
@@ -20,6 +24,8 @@ class GuildConfig {
         this.afkChannel = afkChannel
         this.gulagRole = gulagRole
         this.normalRole = normalRole
+        this.xpModifier = xpModifier
+        this.birthdayActive = birthdayActive
     }
 
     static toDomainModel(data: any) : GuildConfig {
@@ -29,7 +35,9 @@ class GuildConfig {
             data.competitionChannelId,
             data.afkChannelId,
             data.gulagRoleId,
-            data.normalRoleId
+            data.normalRoleId,
+            data.xpModifier,
+            data.birthdayActive
         )
     }
 }

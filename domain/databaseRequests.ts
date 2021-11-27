@@ -31,3 +31,23 @@ export function createUser(discordId: string, name: string, timeAdded: number) {
 export function getPersonalRecord(discordId: string) {
     return query(`SELECT * FROM daily_personal_records WHERE discordId = ${discordId}`)
 }
+
+export function getAllUsers() {
+    return query(`SELECT * FROM users`)
+}
+
+export function addVoice(discordId: string, amount: number, xp: number) {
+    return query(`UPDATE users SET xp = xp + ${xp}, secondsVoice = secondsVoice + 1, dailySecondsVoice = dailySecondsVoice + ${amount}, weeklySecondsVoice = weeklySecondsVoice + ${amount}, monthlySecondsVoice = monthlySecondsVoice + ${amount} WHERE discordId = '${discordId}'`)
+}
+
+export function addMessage(discordId: string, xp: number) {
+    return query(`UPDATE users SET xp = xp + ${xp}, messagesSent = messagesSent + 1, dailyMessagesSent = dailyMessagesSent + 1, weeklyMessagesSent = weeklyMessagesSent + 1, monthlyMessagesSent = monthlyMessagesSent + 1 WHERE discordId = '${discordId}'`)
+}
+
+export function addPersonalRecord(discordId: string, timestamp: number, messages: number, voice: number) {
+    return query(`INSERT INTO daily_personal_records (timestamp, discordId, totalMessage, totalVoice) VALUES (${timestamp}, ${discordId}, ${messages}, ${voice})`)
+}
+
+export function addServerRecord(timestamp: number, messages: number, voice: number) {
+    return query(`INSERT INTO daily_server_records (timestamp, totalMessage, totalVoice) VALUES (${timestamp}, ${messages}, ${voice})`)
+}

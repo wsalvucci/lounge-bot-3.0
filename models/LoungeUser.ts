@@ -18,7 +18,8 @@ class LoungeUser {
                 data.nickname,
                 data.timeAdded,
                 data.color,
-                data.activeTitleId
+                data.activeTitleId,
+                data.birthday
             ),
             new LoungeUserStats(
                 data.messagesSent,
@@ -62,6 +63,7 @@ class LoungeUserAttributes {
     timeAdded: number
     color: string
     titleId: number
+    birthday: number
 
     constructor(
         discordId: string,
@@ -69,7 +71,8 @@ class LoungeUserAttributes {
         nickname: string,
         timeAdded: number,
         color: string,
-        titleId: number
+        titleId: number,
+        birthday: number
     ) {
         this.discordId = discordId
         this.name = name
@@ -77,6 +80,7 @@ class LoungeUserAttributes {
         this.timeAdded = timeAdded
         this.color = color
         this.titleId = titleId
+        this.birthday = birthday
     }
 }
 

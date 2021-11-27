@@ -8,6 +8,7 @@ import createAccount from './createAccount'
 import personalRecords from './personalRecords'
 import spec from './spec'
 import respec from './respec'
+import birthday from './birthday'
 
 const moduleList = new CommandModule(
     [
@@ -18,7 +19,8 @@ const moduleList = new CommandModule(
         createAccount,
         personalRecords,
         spec,
-        respec
+        respec,
+        birthday
     ]
 )
 

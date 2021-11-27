@@ -11,6 +11,9 @@ import checkIfUserExistsUseCase from '../useCases/user/checkIfUserExistsUseCase'
 import incrementUserStatUseCase from '../useCases/user/incrementUserStatUseCase'
 import { StatType } from '../domain/loungeFunctions'
 import setUserPropertyUseCase from '../useCases/user/setUserPropertyUseCase'
+import addUserRecordUseCase from '../useCases/user/addUserRecordUseCase'
+import { DateTime } from 'luxon'
+import addServerRecordUseCase from '../useCases/user/addServerRecordUseCase'
 
 const DAILY_COIN_AWARD = 1000
 const WEEKLY_COIN_AWARD = 10000
@@ -37,7 +40,7 @@ class Result {
 
 const USER_DATA_HEIGHT = 75
 
-async function resultCanvas(rankings: Result[], title: string, maxValue: number, rankingType: string, intervalType: string) : Promise<Buffer> {
+async function resultCanvas(rankings: Result[], title: string, maxValue: number, rankingType: string, maxReward: number) : Promise<Buffer> {
     const canvas = Canvas.createCanvas(1000, 75 + (USER_DATA_HEIGHT * (rankings.length + 1)))
     const ctx = canvas.getContext('2d')
 
@@ -52,22 +55,10 @@ async function resultCanvas(rankings: Result[], title: string, maxValue: number,
 
         createText(ctx, textColor, '36px Boldsand', `${result.name}`, 50, USER_DATA_HEIGHT * (index + 2))
         if (rankingType == 'message') {
-            if (intervalType == 'daily') {
-                createText(ctx, textColor, '36px Boldsand', `${Math.round(result.messagesSent / maxValue * DAILY_COIN_AWARD).withCommas()}`, 600, USER_DATA_HEIGHT * (index + 2))
-            } else if (intervalType == 'weekly') {
-                createText(ctx, textColor, '36px Boldsand', `${Math.round(result.messagesSent / maxValue * WEEKLY_COIN_AWARD).withCommas()}`, 600, USER_DATA_HEIGHT * (index + 2))
-            } else {
-                createText(ctx, textColor, '36px Boldsand', `${Math.round(result.messagesSent / maxValue * MONTHLY_COIN_AWARD).withCommas()}`, 600, USER_DATA_HEIGHT * (index + 2))
-            }
+            createText(ctx, textColor, '36px Boldsand', `${Math.round(result.messagesSent / maxValue * maxReward).withCommas()}`, 600, USER_DATA_HEIGHT * (index + 2))
             createText(ctx, textColor, '36px Boldsand', `${result.messagesSent.withCommas()}`, 400, USER_DATA_HEIGHT * (index + 2))
         } else {
-            if (intervalType == 'daily') {
-                createText(ctx, textColor, '36px Boldsand', `${Math.round(result.voiceScore / maxValue * DAILY_COIN_AWARD).withCommas()}`, 600, USER_DATA_HEIGHT * (index + 2))
-            } else if (intervalType == 'weekly') {
-                createText(ctx, textColor, '36px Boldsand', `${Math.round(result.voiceScore / maxValue * WEEKLY_COIN_AWARD).withCommas()}`, 600, USER_DATA_HEIGHT * (index + 2))
-            } else {
-                createText(ctx, textColor, '36px Boldsand', `${Math.round(result.voiceScore / maxValue * MONTHLY_COIN_AWARD).withCommas()}`, 600, USER_DATA_HEIGHT * (index + 2))
-            }
+            createText(ctx, textColor, '36px Boldsand', `${Math.round(result.voiceScore / maxValue * maxReward).withCommas()}`, 600, USER_DATA_HEIGHT * (index + 2))
             createText(ctx, textColor, '36px Boldsand', `${result.voiceScore.withCommas()}`, 400, USER_DATA_HEIGHT * (index + 2))
         }
     });
@@ -116,6 +107,22 @@ async function runDailies(guildId: string, intervalType: string) {
         voiceTitle = 'Monthly Voice Results'
     }
 
+    var maxReward = 0
+    
+    if (intervalType == 'daily') {
+        maxReward = DAILY_COIN_AWARD
+    } else if (intervalType == 'weekly') {
+        maxReward = WEEKLY_COIN_AWARD
+    } else {
+        maxReward = MONTHLY_COIN_AWARD
+    }
+
+    maxReward = maxReward + (maxReward * guildConfig.xpModifier)
+
+    if (guildConfig.birthdayActive == 1) {
+        maxReward = maxReward * 2
+    }
+
     resultCanvas(
         awards
         .filter((result: Result) => {
@@ -127,7 +134,7 @@ async function runDailies(guildId: string, intervalType: string) {
         messageTitle,
         messageMax,
         'message',
-        intervalType
+        maxReward
         )
         .then((attachment: Buffer) => {
             (client.channels.cache.get(guildConfig.competitionChannel) as TextChannel).send({files: [{attachment: attachment}]})
@@ -144,30 +151,38 @@ async function runDailies(guildId: string, intervalType: string) {
         voiceTitle,
         voiceMax,
         'voice',
-        intervalType
+        maxReward
         )
         .then((attachment: Buffer) => {
             (client.channels.cache.get(guildConfig.competitionChannel) as TextChannel).send({files: [{attachment: attachment}]})
         })
+
+    var timestamp = DateTime.now().toSeconds()
     
     if (intervalType == 'daily') {
+        var allServerMessages = 0
+        var allServerVoice = 0
         awards.forEach((result: Result) => {
-            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * DAILY_COIN_AWARD), loungeApi)
-            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * DAILY_COIN_AWARD), loungeApi)
+            allServerMessages = allServerMessages + result.messagesSent
+            allServerVoice = allServerVoice + result.voiceScore
+            addUserRecordUseCase(result.userId, timestamp, result.messagesSent, result.voiceScore, loungeApi)
+            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward), loungeApi)
+            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward), loungeApi)
             setUserPropertyUseCase(result.userId, StatType.DailyMessages, 0, loungeApi)
             setUserPropertyUseCase(result.userId, StatType.DailyVoice, 0, loungeApi)
         });
+        addServerRecordUseCase(timestamp, allServerMessages, allServerVoice, loungeApi)
     } else if (intervalType == 'weekly') {
         awards.forEach((result: Result) => {
-            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * WEEKLY_COIN_AWARD), loungeApi)
-            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * WEEKLY_COIN_AWARD), loungeApi)
+            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward), loungeApi)
+            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward), loungeApi)
             setUserPropertyUseCase(result.userId, StatType.WeeklyMessages, 0, loungeApi)
             setUserPropertyUseCase(result.userId, StatType.WeeklyVoice, 0, loungeApi)
         });
     } else {
         awards.forEach((result: Result) => {
-            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * MONTHLY_COIN_AWARD), loungeApi)
-            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * MONTHLY_COIN_AWARD), loungeApi)
+            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward), loungeApi)
+            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward), loungeApi)
             setUserPropertyUseCase(result.userId, StatType.MonthlyMessages, 0, loungeApi)
             setUserPropertyUseCase(result.userId, StatType.MonthlyVoice, 0, loungeApi)
         });
