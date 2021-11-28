@@ -16,6 +16,7 @@ class UserStats {
     cha: number
     respecTimestamp: number
     specPoints: number
+    accusationTimestamp: number
 
     constructor(
         username: string,
@@ -32,7 +33,8 @@ class UserStats {
         hp: number,
         cha: number,
         respecTimestamp: number,
-        specPoints: number
+        specPoints: number,
+        accusationTimestamp: number
     ) {
         this.username = username
         this.nickname = nickanme
@@ -49,6 +51,7 @@ class UserStats {
         this.cha = cha
         this.respecTimestamp = respecTimestamp
         this.specPoints = specPoints
+        this.accusationTimestamp = accusationTimestamp
     }
 }
 

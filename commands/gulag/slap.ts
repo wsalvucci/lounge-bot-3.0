@@ -96,6 +96,9 @@ const command = new SlashCommand(
 
         interaction.channel?.send(response)
 
+        incrementUserStatUseCase(member.id, 'xp', 20, loungeApi)
+        incrementUserStatUseCase(victim.id, 'xp', 20, loungeApi)
+
         var guildConfig = await getGuildConfigUseCase(interaction.guildId, botApi)
         var victimUser = client.guilds.cache.get((guildConfig).id)?.members.cache.get(victim.id)
         if (victimUser == undefined) {

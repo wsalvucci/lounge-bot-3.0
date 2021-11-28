@@ -170,14 +170,18 @@ async function getCanvas(user: User, stats: UserStats) : Promise<Buffer> {
 
     var messagePromise = getStatLeaderboardUseCase(StatType.TotalMessages, OrderType.DESC, Repository)
     var voicePromise = getStatLeaderboardUseCase(StatType.TotalVoice, OrderType.DESC, Repository)
-    await Promise.all([messagePromise, voicePromise]).then((value: [LeaderboardResponse, LeaderboardResponse]) => {
+    var xpPromise = getStatLeaderboardUseCase(StatType.XP, OrderType.DESC, Repository)
+    await Promise.all([messagePromise, voicePromise, xpPromise]).then((value: [LeaderboardResponse, LeaderboardResponse, LeaderboardResponse]) => {
         var messageRank = value[0].members.findIndex((leaderboardUser: LeaderboardUserResponse) => {
             return leaderboardUser.discordId == user.id.toString()
         }) + 1
         var voiceRank = value[1].members.findIndex((leaderboardUser: LeaderboardUserResponse) => {
             return leaderboardUser.discordId == user.id.toString()
         }) + 1
-        createText(ctx, `#ffffff`, statsTextStyle, `...`, 900, 380, 'right')
+        var xpRank = value[2].members.findIndex((leaderboardUser: LeaderboardUserResponse) => {
+            return leaderboardUser.discordId == user.id.toString()
+        }) + 1
+        createText(ctx, `#ffffff`, statsTextStyle, `${xpRank}`, 900, 380, 'right')
         createText(ctx, `#ffffff`, statsTextStyle, `${messageRank}`, 900, 410, 'right')
         createText(ctx, `#ffffff`, statsTextStyle, `${voiceRank}`, 900, 440, 'right') 
     })

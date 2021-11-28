@@ -175,23 +175,13 @@ export function levelToTitle(level: number): TierData {
             )
     } else if (level < 120) { //100-119
         return new TierData(
-            'B Class - Stage 1',
+            'A Class',
             100,
-            '#700000',
-            '#202020',
-            110,
-            'B Class - Stage 2',
-            "Stage 1",
-            "Stage 2"
-        )
-        // return new TierData(
-        //     'A Class',
-        //     100,
-        //     '#33303C',
-        //     '#282430',
-        //     120,
-        //     'S Class'
-        //     )
+            '#33303C',
+            '#282430',
+            120,
+            'S Class'
+            )
     } else if (level < 140) { //120-139
         return new TierData(
             'S Class',
@@ -485,7 +475,8 @@ export enum StatType {
     TimesGulaged = 'timesGulaged',
     UsersGulaged = 'usersGulaged',
     TimeInGulag = 'timeInGulag',
-    Coins = 'coins'
+    Coins = 'coins',
+    XP = 'xp'
 }
 
 export function StatTypeToString(statType: StatType | string) {

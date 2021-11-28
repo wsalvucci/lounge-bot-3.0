@@ -13,6 +13,7 @@ import { DateTime } from "luxon"
 import checkIfUserExistsUseCase from "../../useCases/user/checkIfUserExistsUseCase"
 
 const accusationCost : number = 10000
+const accusationCooldown : number = 604800
 
 const command = new SlashCommand(
     new SlashCommandBuilder()
@@ -67,14 +68,20 @@ const command = new SlashCommand(
             return
         }
 
+        if (userStats.accusationTimestamp + accusationCooldown > DateTime.now().toSeconds()) {
+            interaction.reply({content: `Your accusation is still on cooldown. You cannot accuse someone again until <t:${userStats.accusationTimestamp + accusationCooldown}>`, ephemeral: true})
+            return
+        }
+
         await setUserPropertyUseCase(member !== null ? member.user.id : "", StatType.Coins, userStats.coins - accusationCost, Repository)
+        await setUserPropertyUseCase(member !== null ? member.user.id : "", 'accusationTimestamp', DateTime.now().toSeconds(), Repository)
 
         interaction.reply(`${member.user} has accused ${accused} of ${accusation}!!!`)
 
         await addTrialUseCase(interaction.guildId, member.user.id, accused.id, accusation, DateTime.now().toSeconds(), 0, gulagApi)
 
         interaction.channel?.send(
-            `The trial is underway! Use \`/vote ${member.user} yea/nea\` to participate!\nUse \`/bribe ${member.user} amount\` to bribe the judge!\nThe judge for this trial is -personality-`
+            `The trial is underway! Use \`/vote\` ${member.user} \`yea/nea\` to participate!\nUse \`/bribe\` ${member.user} \`amount\` to bribe the judge!`
             )
     }
 )

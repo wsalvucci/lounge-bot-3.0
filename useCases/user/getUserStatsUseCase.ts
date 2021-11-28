@@ -30,7 +30,8 @@ export default function getUserStatsUseCase(discordId: string, repository: typeo
                 user.stats.hp,
                 user.stats.cha,
                 user.stats.respecTimestamp,
-                user.stats.specPoints
+                user.stats.specPoints,
+                user.stats.accusationTimestamp
             )
             if (user.attributes.titleId !== undefined) {
                 return getUserTitleUseCase(user.attributes.titleId, repository).then((userTitle: UserTitle) => {

@@ -70,7 +70,7 @@ class TheLoungeApi {
             .then((data: any) => {
                 var userList : LoungeUser[] = []
                 data.forEach((user: any) => {
-                    userList.push(LoungeUser.toDomainModel(data))
+                    userList.push(LoungeUser.toDomainModel(user))
                 });
                 return userList
             })

@@ -22,6 +22,8 @@ class LoungeUser {
                 data.birthday
             ),
             new LoungeUserStats(
+                data.xp,
+                data.currentLevel,
                 data.messagesSent,
                 data.secondsVoice,
                 data.usersSlapped,
@@ -50,7 +52,8 @@ class LoungeUser {
                 data.hp,
                 data.cha,
                 data.respecTimestamp,
-                data.specPoints
+                data.specPoints,
+                data.accusationTimestamp
             )
         )
     }
@@ -85,6 +88,8 @@ class LoungeUserAttributes {
 }
 
 class LoungeUserStats {
+    xp: number
+    level: number
     messagesSent: number
     secondsVoice: number
     usersSlapped: number
@@ -105,8 +110,11 @@ class LoungeUserStats {
     cha: number
     respecTimestamp: number
     specPoints: number
+    accusationTimestamp: number
 
     constructor(
+        xp: number,
+        level: number,
         messagesSent: number,
         secondsVoice: number,
         usersSlapped: number,
@@ -126,8 +134,11 @@ class LoungeUserStats {
         hp: number,
         cha: number,
         respecTimestamp: number,
-        specPoints: number
+        specPoints: number,
+        accusationTimestamp: number
     ) {
+        this.xp = xp
+        this.level = level
         this.messagesSent = messagesSent
         this.secondsVoice = secondsVoice
         this.usersSlapped = usersSlapped
@@ -148,6 +159,7 @@ class LoungeUserStats {
         this.cha = cha
         this.respecTimestamp = respecTimestamp
         this.specPoints = specPoints
+        this.accusationTimestamp = accusationTimestamp
     }
 }
 

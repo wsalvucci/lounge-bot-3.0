@@ -3,6 +3,7 @@ import timedResultsController from './timedResultsController'
 import trialController from './trialController'
 import voiceScoreController from './voiceScoreController'
 import messageScoreController from './messageScoreController'
+import levelUpController from './levelUpController'
 
 export function startPersonalityController(guildId: string) {
     personalityController(guildId)
@@ -22,4 +23,8 @@ export function startVoiceScoreController(guildId: string) {
 
 export function startMessageScoreController(guildId: string) {
     messageScoreController(guildId)
+}
+
+export function startLevelUpController(guildId: string) {
+    levelUpController(guildId)
 }

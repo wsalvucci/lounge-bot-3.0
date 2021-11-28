@@ -18,7 +18,7 @@ function processDatabaseRequest(request: Promise<any>, res: any) {
 }
 
 app.get(`/user/getUser`, (req: any, res: any) => {
-    getUser(req.params.discordId).then((data: any) => {
+    getUser(req.query.discordId).then((data: any) => {
         if (data.err) {
             console.error(data.err)
             res.end()

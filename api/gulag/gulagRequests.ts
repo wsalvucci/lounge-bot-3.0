@@ -1,6 +1,6 @@
 import query from "../../domain/database"
 
-export function addTrial(accuserId: string, guildId: string, targetId: string, accusation: string, timestamp: number, judgeType: number) {
+export function addTrial( guildId: string, accuserId: string, targetId: string, accusation: string, timestamp: number, judgeType: number) {
     return query(`INSERT INTO trials (guildId, accuserId,  targetId, accusation, timestamp, judgeType) VALUES ('${guildId}', '${accuserId}', '${targetId}', '${accusation}', ${timestamp}, ${judgeType})`)
 }
 

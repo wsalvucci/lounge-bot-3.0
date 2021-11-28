@@ -22,7 +22,7 @@ import gulagCommands from './commands/gulag'
 import betsCommands from './commands/bets'
 import stocksCommands from './commands/stocks'
 import { Routes } from 'discord-api-types/v9'
-import { startPersonalityController, startTimedResultsController, startTrialController, startVoiceScoreController, startMessageScoreController } from './chron'
+import { startPersonalityController, startTimedResultsController, startTrialController, startVoiceScoreController, startMessageScoreController, startLevelUpController } from './chron'
 
 var commandModules = [
     userCommands,
@@ -83,6 +83,7 @@ client.login(process.env.BOT_TOKEN).then((value: string) => {
         startTimedResultsController(guild.id)
         startVoiceScoreController(guild.id)
         startMessageScoreController(guild.id)
+        startLevelUpController(guild.id)
     })
     startTrialController()
 })
