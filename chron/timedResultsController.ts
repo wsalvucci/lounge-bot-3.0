@@ -123,6 +123,8 @@ async function runDailies(guildId: string, intervalType: string) {
         maxReward = maxReward * 2
     }
 
+    var competitionChannel = await client.channels.fetch(guildConfig.competitionChannel) as TextChannel
+
     resultCanvas(
         awards
         .filter((result: Result) => {
@@ -137,7 +139,7 @@ async function runDailies(guildId: string, intervalType: string) {
         maxReward
         )
         .then((attachment: Buffer) => {
-            (client.channels.cache.get(guildConfig.competitionChannel) as TextChannel).send({files: [{attachment: attachment}]})
+            competitionChannel.send({files: [{attachment: attachment}]})
         })
 
     resultCanvas(
@@ -154,7 +156,7 @@ async function runDailies(guildId: string, intervalType: string) {
         maxReward
         )
         .then((attachment: Buffer) => {
-            (client.channels.cache.get(guildConfig.competitionChannel) as TextChannel).send({files: [{attachment: attachment}]})
+            competitionChannel.send({files: [{attachment: attachment}]})
         })
 
     var timestamp = DateTime.now().toSeconds()
@@ -190,13 +192,13 @@ async function runDailies(guildId: string, intervalType: string) {
 }
 
 function checkTimedResults(guildId: string) {
-    schedule.scheduleJob(`* 0 * * *`, async function() {
+    schedule.scheduleJob(`0 3 * * *`, async function() {
         runDailies(guildId, 'daily')
     })
-    schedule.scheduleJob(`* 0 * * 0`, async function() {
+    schedule.scheduleJob(`0 3 * * 0`, async function() {
         runDailies(guildId, 'weekly')
     })
-    schedule.scheduleJob(`* 0 1 * *`, async function() {
+    schedule.scheduleJob(`0 3 1 * *`, async function() {
         runDailies(guildId, 'monthly')
     })
 }

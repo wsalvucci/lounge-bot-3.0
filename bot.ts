@@ -11,6 +11,7 @@ require('./api/userRoutes')
 require('./api/gulag/gulagRoutes')
 require('./api/bot/botRoutes')
 require('./api/bets/betsRoutes')
+require('./api/stocks/stockRoutes')
 
 client.once('ready', () => {
     console.log('Ready!')
@@ -28,7 +29,8 @@ var commandModules = [
     userCommands,
     weatherCommands,
     gulagCommands,
-    betsCommands
+    betsCommands,
+    stocksCommands
 ]
 
 const token: string = process.env.BOT_TOKEN || ""
@@ -52,7 +54,7 @@ client.on('messageCreate', async (message : Message) => {
                 console.log('Started refreshing application (/) commands.');
 
                 await rest.put(
-                    Routes.applicationGuildCommands('695402691622338601', '695403120758489181'),
+                    Routes.applicationGuildCommands(process.env.CLIENT_ID!, process.env.GUILD_ID!),
                     {body: data}
                 )
 

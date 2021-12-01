@@ -1,22 +1,19 @@
 import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
-//import stocksApi from "../../api/stocks/stocksApi";
+import stocksApi from "../../api/stocks/stocksApi";
 import Canvas, { createDefaultBackground, createText } from "../../domain/loungeCanvas";
 import SlashCommand from "../../models/SlashCommand";
 import Quote from "../../models/stocks/Quote";
-//import getQuoteUseCase from "../../useCases/stocks/getQuoteUseCase";
+import getQuoteUseCase from "../../useCases/stocks/getQuoteUseCase";
 
-async function quoteCanvas(ticker: string, quote: Quote) : Promise<Buffer> {
-    const canvas = Canvas.createCanvas(1000, 500)
+async function quoteCanvas(quote: Quote) : Promise<Buffer> {
+    const canvas = Canvas.createCanvas(300, 150)
     const ctx = canvas.getContext('2d')
+    createDefaultBackground(canvas, ctx)
 
-    if (quote.current < quote.open) {
-        createDefaultBackground(canvas, ctx, "#AA0000", "#101010", 10)
-    } else {
-        createDefaultBackground(canvas, ctx, "#00AA00", "#101010", 10)
-    }
-
-    createText(ctx, "#ffffff", "36px Boldsand", ticker.toUpperCase(), 50, 50)
+    createText(ctx, "#ffffff", "36px Boldsand", quote.symbol.toUpperCase(), 25, 45)
+    createText(ctx, '#ffffff', '48px Boldsand', `$${quote.lastSalePrice.toString()}`, 25, 100)
+    createText(ctx, '#ffffff', '24px Quicksand', `Volume: ${quote.volume.withCommas()}`, 25, 135)
 
     return canvas.toBuffer()
 }
@@ -33,9 +30,12 @@ const command = new SlashCommand(
     async (interaction: CommandInteraction) => {
         var ticker = interaction.options.getString('ticker', true)
 
-        //var quoteData = await getQuoteUseCase(ticker, stocksApi)
+        var quoteData = await getQuoteUseCase([ticker], stocksApi)
 
-        //console.log(quoteData)
+        quoteCanvas(quoteData[0])
+            .then((attachment: Buffer) => {
+                interaction.reply({files: [{attachment: attachment}]})
+            })
     }
 )
 

@@ -1,30 +1,54 @@
-// const fetch = require("node-fetch")
-// import client from "../../bot"
-// import Quote from "../../models/stocks/Quote"
+const fetch = require("node-fetch")
+import Quote from "../../models/stocks/Quote"
+import UserStock from "../../models/stocks/UserStock"
+import SqlResponse from "../../responseModels/SqlResponse"
+import apiCall from "../apiCall"
 
-// const key = process.env.STOCKS_API_KEY
-// const endpoint = ''
+const key = process.env.STOCKS_API_KEY
+const iexEndpoint = 'https://cloud.iexapis.com/stable/'
 
-// const {Client} = require('iexjs')
-// const iexClient = new Client({api_token: "pk_e9136c1903924aed8ce0a2d0f091fce1", version: "v1"})
-// iexClient.chart({symbol: "AAPL", range: "1m"}).then((res: any) => {
-//     console.log(res);
-// });
+function iexApiCall(path: string) {
+    return new Promise(function(resolve, reject) {
+        fetch(`${iexEndpoint}${path}&token=${key}`)
+            .then((res: { json : () => any}) => res.json())
+            .then((json: string) => {resolve(json)})
+            .catch((err: any) => reject(err))
+    })
+}
 
-// function apiCall(path: string) {
-//     return new Promise(function(resolve, reject) {
-//         fetch(`${endpoint}${path}&token=${key}`)
-//             .then((res: { json : () => any}) => res.json())
-//             .then((json: string) => {resolve(json)})
-//             .catch((err: any) => reject(err))
-//     })
-// }
+class StocksApi {
+    async getQuote(tickers: string[]) : Promise<Quote[]> {
+        var tickerCombo = tickers.join(',')
+        return iexApiCall(`tops?symbols=${tickerCombo}`)
+            .then((data: any) => {
+                var stockList : Quote[] = []
+                data.forEach((stock: any) => {
+                    stockList.push(Quote.toDomainModel(stock))
+                });
+                return stockList
+            })
+    }
 
-// class StocksApi {
-//     async getQuote(ticker: string) : Promise<Quote> {
-//         return apiCall(`quote?symbol=${ticker}`)
-//             .then((data: any) => Quote.toDomainModel(data))
-//     }
-// }
+    async buyStock(discordId: string, stockSymbol: string, quantity: number, costPerShare: number, timestamp: number) : Promise<SqlResponse> {
+        return apiCall(`/stocks/buyStock?discordId=${discordId}&stockSymbol=${stockSymbol}&quantity=${quantity}&costPerShare=${costPerShare}&timestamp=${timestamp}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
+    }
 
-// export default new StocksApi
+    async sellStock(discordId: string, stockSymbol: string, quantity: number) : Promise<SqlResponse> {
+        return apiCall(`/stocks/sellStock?discordId=${discordId}&stockSymbol=${stockSymbol}&quantity=${quantity}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
+    }
+
+    async getStocks(discordId: string) : Promise<UserStock[]> {
+        return apiCall(`/stocks/getStocks?discordId=${discordId}`)
+            .then((data: any) => {
+                var stocklist : UserStock[] = []
+                data.forEach((stock: any) => {
+                    stocklist.push(UserStock.toDomainModel(stock))
+                });
+                return stocklist
+            })
+    }
+}
+
+export default new StocksApi

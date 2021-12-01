@@ -1,39 +1,59 @@
 class Quote {
-    current: number
-    change: number
-    percentChange: number
-    high: number
-    low: number
-    open: number
-    previousClose: number
+    symbol: string
+    sector: string
+    securityType: string
+    bidPrice: number
+    bidSize: number
+    askPrice: number
+    askSize: number
+    lastUpdated: number
+    lastSalePrice: number
+    lastSaleSize: number
+    lastSaleTime: number
+    volume: number
 
     constructor(
-        current: number,
-        change: number,
-        percentChange: number,
-        high: number,
-        low: number,
-        open: number,
-        previousClose: number
+        symbol: string,
+        sector: string,
+        securityType: string,
+        bidPrice: number,
+        bidSize: number,
+        askPrice: number,
+        askSize: number,
+        lastUpdated: number,
+        lastSalePrice: number,
+        lastSaleSize: number,
+        lastSaleTime: number,
+        volume: number
     ) {
-        this.current = current
-        this.change = change
-        this.percentChange = percentChange
-        this.high = high
-        this.low = low
-        this.open = open
-        this.previousClose = previousClose
+        this.symbol = symbol
+        this.sector = sector
+        this.securityType = securityType
+        this.bidPrice = bidPrice
+        this.bidSize = bidSize
+        this.askPrice = askPrice
+        this.askSize = askSize
+        this.lastUpdated = lastUpdated
+        this.lastSalePrice = lastSalePrice
+        this.lastSaleSize = lastSaleSize
+        this.lastSaleTime = lastSaleTime
+        this.volume = volume
     }
 
     static toDomainModel(data: any) : Quote {
         return new Quote(
-            data.c,
-            data.d,
-            data.dp,
-            data.h,
-            data.l,
-            data.o,
-            data.pc
+            data.symbol,
+            data.sector,
+            data.securityType,
+            data.bidPrice,
+            data.bidSize,
+            data.askPrice,
+            data.askSize,
+            data.lastUpdated,
+            data.lastSalePrice,
+            data.lastSaleSize,
+            data.lastSaleTime,
+            data.volume
         )
     }
 }

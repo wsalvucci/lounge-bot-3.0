@@ -24,7 +24,6 @@ export default function(guildId: string) {
                 })
 
                 members.map((member: GuildMember) => {
-                    console.log(score)
                     addVoiceUseCase(member.id, score, Math.round(score + (score * guildConfig.xpModifier)), loungeApi)
                 })
             }

@@ -1,0 +1,61 @@
+Error: Connection lost: The server closed the connection.
+    at Socket.<anonymous> (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:101:31)
+    at Socket.emit (node:events:394:28)
+    at TCP.<anonymous> (node:net:672:12) {
+  fatal: true,
+  code: 'PROTOCOL_CONNECTION_LOST'
+}
+Error: Connection lost: The server closed the connection.
+    at Socket.<anonymous> (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:101:31)
+    at Socket.emit (node:events:394:28)
+    at TCP.<anonymous> (node:net:672:12) {
+  fatal: true,
+  code: 'PROTOCOL_CONNECTION_LOST'
+}
+Error: Connection lost: The server closed the connection.
+    at Socket.<anonymous> (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:101:31)
+    at Socket.emit (node:events:394:28)
+    at TCP.<anonymous> (node:net:672:12) {
+  fatal: true,
+  code: 'PROTOCOL_CONNECTION_LOST'
+}
+Error: Connection lost: The server closed the connection.
+    at Socket.<anonymous> (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:101:31)
+    at Socket.emit (node:events:394:28)
+    at TCP.<anonymous> (node:net:672:12) {
+  fatal: true,
+  code: 'PROTOCOL_CONNECTION_LOST'
+}
+Error: Connection lost: The server closed the connection.
+    at Socket.<anonymous> (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:101:31)
+    at Socket.emit (node:events:394:28)
+    at TCP.<anonymous> (node:net:672:12) {
+  fatal: true,
+  code: 'PROTOCOL_CONNECTION_LOST'
+}
+C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\models\bot\Guild.js:23
+        return new GuildConfig(data.guildId, data.announcementsChannelId, data.competitionChannelId, data.afkChannelId, data.gulagRoleId, data.normalRoleId, data.xpModifier, data.birthdayActive);
+                                    ^
+
+TypeError: Cannot read property 'guildId' of undefined
+    at Function.toDomainModel (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\models\bot\Guild.js:23:37)
+    at C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\api\bot\botApi.js:33:45
+    at runMicrotasks (<anonymous>)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at async C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\chron\voiceScoreController.js:18:35
+node:events:371
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: Connection lost: The server closed the connection.
+    at Socket.<anonymous> (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:101:31)
+    at Socket.emit (node:events:394:28)
+    at TCP.<anonymous> (node:net:672:12)
+Emitted 'error' event on Connection instance at:
+    at Connection._notifyError (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:236:12)
+    at Socket.<anonymous> (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:107:12)
+    at Socket.emit (node:events:394:28)
+    at TCP.<anonymous> (node:net:672:12) {
+  fatal: true,
+  code: 'PROTOCOL_CONNECTION_LOST'
+}
