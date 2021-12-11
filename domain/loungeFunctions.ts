@@ -476,7 +476,8 @@ export enum StatType {
     UsersGulaged = 'usersGulaged',
     TimeInGulag = 'timeInGulag',
     Coins = 'coins',
-    XP = 'xp'
+    XP = 'xp',
+    CurrentLevel = 'currentLevel'
 }
 
 export function StatTypeToString(statType: StatType | string) {

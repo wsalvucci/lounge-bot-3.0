@@ -13,22 +13,6 @@ import '../../domain/numberExtensions' //Can this be imported once from a centra
 import { LeaderboardResponse, LeaderboardUserResponse } from "../../models/response/LeaderboardResponse"
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { createText } from "../../domain/loungeCanvas"
-import { stat } from "fs"
-
-// function createText(
-//     ctx: NodeCanvasRenderingContext2D,
-//     fillStyle: string,
-//     font: string,
-//     text: string,
-//     x: number,
-//     y: number,
-//     alignment: CanvasTextAlign = 'left')
-//     {
-//         ctx.fillStyle = fillStyle
-//         ctx.font = font
-//         ctx.textAlign = alignment
-//         ctx.fillText(text, x, y)
-//     }
 
 function createDivider(
     ctx: NodeCanvasRenderingContext2D,
@@ -166,11 +150,11 @@ async function getCanvas(user: User, stats: UserStats) : Promise<Buffer> {
     //Rankings
     createText(ctx, `#ffffff`, statsTextStyle, `Level`, 550, 380)
     createText(ctx, `#ffffff`, statsTextStyle, `Messages`, 550, 410)
-    createText(ctx, `#ffffff`, statsTextStyle, `Voice`, 550, 440) 
+    createText(ctx, `#ffffff`, statsTextStyle, `Voice`, 550, 440)
 
     var messagePromise = getStatLeaderboardUseCase(StatType.TotalMessages, OrderType.DESC, Repository)
     var voicePromise = getStatLeaderboardUseCase(StatType.TotalVoice, OrderType.DESC, Repository)
-    var xpPromise = getStatLeaderboardUseCase(StatType.XP, OrderType.DESC, Repository)
+    var xpPromise = getStatLeaderboardUseCase(StatType.CurrentLevel, OrderType.DESC, Repository)
     await Promise.all([messagePromise, voicePromise, xpPromise]).then((value: [LeaderboardResponse, LeaderboardResponse, LeaderboardResponse]) => {
         var messageRank = value[0].members.findIndex((leaderboardUser: LeaderboardUserResponse) => {
             return leaderboardUser.discordId == user.id.toString()
