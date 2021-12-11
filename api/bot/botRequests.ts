@@ -34,3 +34,11 @@ export function getSlapResponseLines(personalityId: number, responseType: number
 export function setBirthdayActive(guildId: number, active: number) {
     return query(`UPDATE guildconfig SET birthdayActive = ${active} WHERE guildId = ${guildId}`)
 }
+
+export function adjustPersonalityFavor(personalityId: number, userId: string, amount: number) {
+    return query(`INSERT INTO personality_favor (personalityId, userId, favor) VALUES (${personalityId}, ${userId}, ${amount}) ON DUPLICATE KEY UPDATE amount = amount + ${amount}`)
+}
+
+export function getPersonalityFavor(personalityId: number, userId: string) {
+    return query(`SELECT * FROM personality_favor WHERE personalityId = ${personalityId} and userId = ${userId}`)
+}

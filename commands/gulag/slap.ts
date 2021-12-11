@@ -7,6 +7,7 @@ import loungeApi from "../../api/loungeApi";
 import client from "../../bot";
 import { gulagUser, SlapResponseType, StatType } from "../../domain/loungeFunctions";
 import SlashCommand from "../../models/SlashCommand";
+import adjustPersonalityFavorUseCase from "../../useCases/bot/adjustPersonalityFavorUseCase";
 import getBotSlapResponseLinesUseCase from "../../useCases/bot/getBotSlapResponseLinesUseCase";
 import getCurrentBotPersonalityUseCase from "../../useCases/bot/getCurrentBotPersonalityUseCase";
 import getGuildConfigUseCase from "../../useCases/bot/getGuildConfigUseCase";
@@ -96,6 +97,8 @@ const command = new SlashCommand(
 
         interaction.channel?.send(response)
 
+        adjustPersonalityFavorUseCase(botConfig.id, member.id, botConfig.aggression * 0.1, botApi)
+
         incrementUserStatUseCase(member.id, 'xp', 20, loungeApi)
         incrementUserStatUseCase(victim.id, 'xp', 20, loungeApi)
 
@@ -115,10 +118,14 @@ const command = new SlashCommand(
         if (responseType == 1) {
             incrementUserStatUseCase(member.id, StatType.TimesGulaged, 1, loungeApi)
             incrementUserStatUseCase(victim.id, StatType.UsersGulaged, 1, loungeApi)
+            adjustPersonalityFavorUseCase(botConfig.id, victim.id, botConfig.aggression, botApi)
+            adjustPersonalityFavorUseCase(botConfig.id, member.id, -botConfig.aggression, botApi)
             gulagUser(guildConfig, member, victimUser, DateTime.now().toSeconds(), 50, gulagApi)
         } else if (responseType == 9) {
             incrementUserStatUseCase(victim.id, StatType.TimesGulaged, 1, loungeApi)
             incrementUserStatUseCase(member.id, StatType.UsersGulaged, 1, loungeApi)
+            adjustPersonalityFavorUseCase(botConfig.id, member.id, botConfig.aggression, botApi)
+            adjustPersonalityFavorUseCase(botConfig.id, victim.id, -botConfig.aggression, botApi)
             gulagUser(guildConfig, victimUser, member, DateTime.now().toSeconds(), 50, gulagApi)
         }
     }

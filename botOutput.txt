@@ -1,24 +1,2 @@
 API is listening on port 3000
 Ready!
-User Reward: 40000
-User Reward: 75000
-API is listening on port 3000
-Ready!
-API is listening on port 3000
-Ready!
-BotPersonality {
-  id: 1,
-  name: 'Viktor',
-  description: 'Loves aggressive people, especially when someone is gulaged. ',
-  aggression: 5,
-  corruption: 2,
-  chaos: -2
-}
-BotPersonality {
-  id: 1,
-  name: 'Viktor',
-  description: 'Loves aggressive people, especially when someone is gulaged. ',
-  aggression: 5,
-  corruption: 2,
-  chaos: -2
-}

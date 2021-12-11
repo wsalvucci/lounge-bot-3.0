@@ -44,7 +44,9 @@ class StocksApi {
             .then((data: any) => {
                 var stocklist : UserStock[] = []
                 data.forEach((stock: any) => {
-                    stocklist.push(UserStock.toDomainModel(stock))
+                    if (stock.quantity > 0) {
+                        stocklist.push(UserStock.toDomainModel(stock))
+                    }
                 });
                 return stocklist
             })

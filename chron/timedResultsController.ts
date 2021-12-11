@@ -14,6 +14,10 @@ import setUserPropertyUseCase from '../useCases/user/setUserPropertyUseCase'
 import addUserRecordUseCase from '../useCases/user/addUserRecordUseCase'
 import { DateTime } from 'luxon'
 import addServerRecordUseCase from '../useCases/user/addServerRecordUseCase'
+import getCurrentBotPersonalityUseCase from '../useCases/bot/getCurrentBotPersonalityUseCase'
+import getPersonalityFavorUseCase from '../useCases/bot/getPersonalityFavorUseCase'
+import BotPersonality from '../models/bot/BotPersonality'
+import getUserStatsUseCase from '../useCases/user/getUserStatsUseCase'
 
 const DAILY_COIN_AWARD = 1000
 const WEEKLY_COIN_AWARD = 10000
@@ -40,28 +44,34 @@ class Result {
 
 const USER_DATA_HEIGHT = 75
 
-async function resultCanvas(rankings: Result[], title: string, maxValue: number, rankingType: string, maxReward: number) : Promise<Buffer> {
+async function resultCanvas(rankings: Result[], title: string, maxValue: number, rankingType: string, maxReward: number, botConfig: BotPersonality) : Promise<Buffer> {
     const canvas = Canvas.createCanvas(1000, 75 + (USER_DATA_HEIGHT * (rankings.length + 1)))
     const ctx = canvas.getContext('2d')
 
     createDefaultBackground(canvas, ctx)
     createText(ctx, '#ffffff', '48px Boldsand', title, 500, 75, 'center')
 
-    rankings.forEach((result: Result, index: number) => {
+    for (var i = 0; i < rankings.length; i++) {
+        var result = rankings[i]
+        var index = i
+
         var textColor = '#ffffff'
         if (index == 0) {textColor = '#FFA700'}
         if (index == 1) {textColor = '#D0D0D0'}
         if (index == 2) {textColor = '#DA771A'}
 
+        var botFavor = await getPersonalityFavorUseCase(botConfig.id, result.userId, botApi)
+        var userStats = await getUserStatsUseCase(result.userId, loungeApi)
+        var favorPercentage = (botFavor.favor <= 0 ? "" : "+") + (botFavor.favor + (userStats.cha * 0.25)) + "%"
         createText(ctx, textColor, '36px Boldsand', `${result.name}`, 50, USER_DATA_HEIGHT * (index + 2))
         if (rankingType == 'message') {
-            createText(ctx, textColor, '36px Boldsand', `${Math.round(result.messagesSent / maxValue * maxReward).withCommas()}`, 600, USER_DATA_HEIGHT * (index + 2))
+            createText(ctx, textColor, '36px Boldsand', `${Math.round(result.messagesSent / maxValue * maxReward).withCommas()} (${favorPercentage})`, 600, USER_DATA_HEIGHT * (index + 2))
             createText(ctx, textColor, '36px Boldsand', `${result.messagesSent.withCommas()}`, 400, USER_DATA_HEIGHT * (index + 2))
         } else {
-            createText(ctx, textColor, '36px Boldsand', `${Math.round(result.voiceScore / maxValue * maxReward).withCommas()}`, 600, USER_DATA_HEIGHT * (index + 2))
+            createText(ctx, textColor, '36px Boldsand', `${Math.round(result.voiceScore / maxValue * maxReward).withCommas()} (${favorPercentage})`, 600, USER_DATA_HEIGHT * (index + 2))
             createText(ctx, textColor, '36px Boldsand', `${result.voiceScore.withCommas()}`, 400, USER_DATA_HEIGHT * (index + 2))
         }
-    });
+    }
 
     return canvas.toBuffer()
 }
@@ -70,6 +80,9 @@ async function runDailies(guildId: string, intervalType: string) {
     var guildData = client.guilds.cache.get(guildId)
     if (guildData === undefined) return
     var guildConfig = await getGuildConfigUseCase(guildId, botApi)
+
+    var botConfig = await getCurrentBotPersonalityUseCase(botApi)
+
     var memberList : Collection<string, GuildMember> = await guildData.members.fetch()
     var awards : Result[] = []
     for(var i = 0; i < memberList.size; i++) {
@@ -136,7 +149,8 @@ async function runDailies(guildId: string, intervalType: string) {
         messageTitle,
         messageMax,
         'message',
-        maxReward
+        maxReward,
+        botConfig
         )
         .then((attachment: Buffer) => {
             competitionChannel.send({files: [{attachment: attachment}]})
@@ -153,7 +167,8 @@ async function runDailies(guildId: string, intervalType: string) {
         voiceTitle,
         voiceMax,
         'voice',
-        maxReward
+        maxReward,
+        botConfig
         )
         .then((attachment: Buffer) => {
             competitionChannel.send({files: [{attachment: attachment}]})
@@ -164,27 +179,36 @@ async function runDailies(guildId: string, intervalType: string) {
     if (intervalType == 'daily') {
         var allServerMessages = 0
         var allServerVoice = 0
-        awards.forEach((result: Result) => {
+        awards.forEach(async (result: Result) => {
+            var botFavor = await getPersonalityFavorUseCase(botConfig.id, result.userId, botApi)
+            var userStats = await getUserStatsUseCase(result.userId, loungeApi)
+            var favorMultiplier = (botFavor.favor / 100) + 1 + (userStats.cha * 0.25)
             allServerMessages = allServerMessages + result.messagesSent
             allServerVoice = allServerVoice + result.voiceScore
             addUserRecordUseCase(result.userId, timestamp, result.messagesSent, result.voiceScore, loungeApi)
-            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward), loungeApi)
-            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward), loungeApi)
+            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward) * favorMultiplier, loungeApi)
+            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward) * favorMultiplier, loungeApi)
             setUserPropertyUseCase(result.userId, StatType.DailyMessages, 0, loungeApi)
             setUserPropertyUseCase(result.userId, StatType.DailyVoice, 0, loungeApi)
         });
         addServerRecordUseCase(timestamp, allServerMessages, allServerVoice, loungeApi)
     } else if (intervalType == 'weekly') {
-        awards.forEach((result: Result) => {
-            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward), loungeApi)
-            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward), loungeApi)
+        awards.forEach(async (result: Result) => {
+            var botFavor = await getPersonalityFavorUseCase(botConfig.id, result.userId, botApi)
+            var userStats = await getUserStatsUseCase(result.userId, loungeApi)
+            var favorMultiplier = (botFavor.favor / 100) + 1 + (userStats.cha * 0.25)
+            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward) * favorMultiplier, loungeApi)
+            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward) * favorMultiplier, loungeApi)
             setUserPropertyUseCase(result.userId, StatType.WeeklyMessages, 0, loungeApi)
             setUserPropertyUseCase(result.userId, StatType.WeeklyVoice, 0, loungeApi)
         });
     } else {
-        awards.forEach((result: Result) => {
-            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward), loungeApi)
-            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward), loungeApi)
+        awards.forEach(async (result: Result) => {
+            var botFavor = await getPersonalityFavorUseCase(botConfig.id, result.userId, botApi)
+            var userStats = await getUserStatsUseCase(result.userId, loungeApi)
+            var favorMultiplier = (botFavor.favor / 100) + 1 + (userStats.cha * 0.25)
+            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward) * favorMultiplier, loungeApi)
+            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward) * favorMultiplier, loungeApi)
             setUserPropertyUseCase(result.userId, StatType.MonthlyMessages, 0, loungeApi)
             setUserPropertyUseCase(result.userId, StatType.MonthlyVoice, 0, loungeApi)
         });
@@ -192,13 +216,13 @@ async function runDailies(guildId: string, intervalType: string) {
 }
 
 function checkTimedResults(guildId: string) {
-    schedule.scheduleJob(`0 3 * * *`, async function() {
+    schedule.scheduleJob(`0 11 * * *`, async function() {
         runDailies(guildId, 'daily')
     })
-    schedule.scheduleJob(`0 3 * * 0`, async function() {
+    schedule.scheduleJob(`0 11 * * 0`, async function() {
         runDailies(guildId, 'weekly')
     })
-    schedule.scheduleJob(`0 3 1 * *`, async function() {
+    schedule.scheduleJob(`0 11 1 * *`, async function() {
         runDailies(guildId, 'monthly')
     })
 }

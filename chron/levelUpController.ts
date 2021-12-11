@@ -6,6 +6,7 @@ import client from '../bot'
 import LoungeUser from '../models/LoungeUser'
 import getGuildConfigUseCase from '../useCases/bot/getGuildConfigUseCase'
 import getAllUsersUseCase from '../useCases/user/getAllUsersUseCase'
+import incrementUserStatUseCase from '../useCases/user/incrementUserStatUseCase'
 import setUserPropertyUseCase from '../useCases/user/setUserPropertyUseCase'
 
 function levelUpUsers(guildId: string) {
@@ -24,6 +25,7 @@ function levelUpUsers(guildId: string) {
                 if (channel !== null) {
                     channel.send(`<@${user.attributes.discordId}> is now Level ${actualLevel}!!`)
                     setUserPropertyUseCase(user.attributes.discordId, 'currentLevel', actualLevel, loungeApi)
+                    incrementUserStatUseCase(user.attributes.discordId, 'specPoints', 5, loungeApi)
                 }
             }
         });

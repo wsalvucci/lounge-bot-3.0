@@ -1,5 +1,6 @@
 import BotPersonality from "../../models/bot/BotPersonality";
 import GuildConfig from "../../models/bot/Guild";
+import PersonalityFavor from "../../models/bot/PersonalityFavor";
 import SlapResponseLine from "../../models/bot/SlapResponseLine";
 import { TrialResultLine } from "../../models/bot/TrialResultLine";
 import SqlResponse from "../../responseModels/SqlResponse";
@@ -68,6 +69,16 @@ class BotApi {
     async setActiveBirthday(guildId: string, active: number) : Promise<SqlResponse> {
         return apiCall(`/guild/setBirthdayActive?guildId=${guildId}&active=${active}`)
             .then((data: any) => SqlResponse.dataToModel(data))
+    }
+
+    async adjustPersonalityFavor(personalityId: number, userId: string, amount: number) : Promise<SqlResponse> {
+        return apiCall(`/bot/adjustPersonalityFavor?personalityId=${personalityId}&userId=${userId}&amount=${amount}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
+    }
+
+    async getPersonalityFavor(personalityId: number, userId: string) : Promise<PersonalityFavor> {
+        return apiCall(`/bot/getPersonalityFavor?personalityId=${personalityId}&userId=${userId}`)
+            .then((data: any) => PersonalityFavor.toDomainModel(data[0]))
     }
 }
 

@@ -8,7 +8,7 @@ import getBotPersonalityIntroLinesUseCase from '../useCases/bot/getBotPersonalit
 import getGuildConfigUseCase from '../useCases/bot/getGuildConfigUseCase'
 
 function updatePersonality(guildId: string) {
-    schedule.scheduleJob('0 2 * * *', async function() {
+    schedule.scheduleJob('0 0 * * *', async function() {
         var personalities = await getBotPersonalitiesUseCase(botApi)
         var newPersonality = personalities[Math.floor(Math.random() * personalities.length)]
         updateBotPersonality(newPersonality.id)

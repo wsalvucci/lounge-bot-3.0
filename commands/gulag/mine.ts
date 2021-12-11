@@ -13,7 +13,6 @@ import mineGulagUseCase from "../../useCases/gulag/mineGulagUseCase";
 import getUserStatsUseCase from "../../useCases/user/getUserStatsUseCase";
 
 const ATK_MULTIPLIER = 0.01
-const LUC_MULTIPLIER = 0.01
 
 class Cooldown {
     userId: string

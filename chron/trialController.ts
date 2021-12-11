@@ -53,6 +53,7 @@ async function executeTrial(trial: Trial) {
     var trialGuild = client.guilds.cache.find((guild: Guild) => {return guild.id == trial.guildId})
     if (trialGuild === undefined) {
         console.error(`No guild found for trial id: ${trial.id}`)
+        concludeTrialUseCase(trial.id, gulagApi)
         return
     }
 
@@ -63,6 +64,7 @@ async function executeTrial(trial: Trial) {
         return vote.vote == 1
     }).length < MINIMUM_REQUIRED_YEA_VOTES) {
         resultChannel.send(`There were not enough yea votes for the trial of ${trialGuild.members.cache.get(trial.targetId)}, so it has been tossed out. (3 yea votes are required)`)
+        concludeTrialUseCase(trial.id, gulagApi)
         return
     }
 
@@ -92,10 +94,12 @@ async function executeTrial(trial: Trial) {
 
     if (targetMember == undefined) {
         console.error('Target member not in guild?!')
+        concludeTrialUseCase(trial.id, gulagApi)
         return
     }
     if (accuserMember == undefined) {
         console.error('Accuser member not in guild?!')
+        concludeTrialUseCase(trial.id, gulagApi)
         return
     }
 
