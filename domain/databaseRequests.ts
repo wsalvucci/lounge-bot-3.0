@@ -9,7 +9,7 @@ export function getTitle(titleId: number) {
 }
 
 export function updateUserValue(discordId: string, statName: string, statValue: any) {
-    if (statValue instanceof String) {
+    if (isNaN(statValue)) {
         return query(`UPDATE users SET ${statName} = '${statValue}' WHERE discordId = ${discordId}`)
     } else {
         return query(`UPDATE users SET ${statName} = ${statValue} WHERE discordId = ${discordId}`)

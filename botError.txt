@@ -1,0 +1,291 @@
+Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:211:20) {
+  errno: -4077,
+  code: 'ECONNRESET',
+  syscall: 'read',
+  fatal: true
+}
+Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:211:20) {
+  errno: -4077,
+  code: 'ECONNRESET',
+  syscall: 'read',
+  fatal: true
+}
+Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:211:20) {
+  errno: -4077,
+  code: 'ECONNRESET',
+  syscall: 'read',
+  fatal: true
+}
+Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:211:20) {
+  errno: -4077,
+  code: 'ECONNRESET',
+  syscall: 'read',
+  fatal: true
+}
+Error: read ECONNRESET
+    at TCP.onStreamRead (node:internal/stream_base_commons:211:20) {
+  errno: -4077,
+  code: 'ECONNRESET',
+  syscall: 'read',
+  fatal: true
+}
+C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\models\bot\Guild.js:23
+        return new GuildConfig(data.guildId, data.announcementsChannelId, data.competitionChannelId, data.afkChannelId, data.gulagRoleId, data.normalRoleId, data.xpModifier, data.birthdayActive);
+                                    ^
+
+TypeError: Cannot read property 'guildId' of undefined
+    at Function.toDomainModel (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\models\bot\Guild.js:23:37)
+    at C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\api\bot\botApi.js:34:45
+    at runMicrotasks (<anonymous>)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at async C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\chron\voiceScoreController.js:18:35
+Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 's chat', 1640325773.336, 0)' at line 1
+    at Packet.asError (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\packets\packet.js:722:17)
+    at Query.execute (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\commands\command.js:28:26)
+    at Connection.handlePacket (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:456:32)
+    at PacketParser.onPacket (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:85:12)
+    at PacketParser.executeStart (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\packet_parser.js:75:16)
+    at Socket.<anonymous> (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:92:25)
+    at Socket.emit (node:events:394:28)
+    at addChunk (node:internal/streams/readable:312:12)
+    at readableAddChunk (node:internal/streams/readable:287:9)
+    at Socket.Readable.push (node:internal/streams/readable:226:10) {
+  code: 'ER_PARSE_ERROR',
+  errno: 1064,
+  sqlState: '42000',
+  sqlMessage: "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 's chat', 1640325773.336, 0)' at line 1",
+  sql: "INSERT INTO trials (guildId, accuserId,  targetId, accusation, timestamp, judgeType) VALUES ('517862823292960785', '150328729342574593', '280483495539900417', 'Failure to gulag Kaity, and crimes against humanity in last night's chat', 1640325773.336, 0)"
+}
+C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\models\bot\PersonalityFavor.js:13
+        return new PersonalityFavor(data.personalityId, data.userId, data.favor);
+                                         ^
+
+TypeError: Cannot read property 'personalityId' of undefined
+    at Function.toDomainModel (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\models\bot\PersonalityFavor.js:13:42)
+    at C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\api\bot\botApi.js:76:56
+    at runMicrotasks (<anonymous>)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at async resultCanvas (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\chron\timedResultsController.js:76:24)
+Error: Unknown column 'amount' in 'field list'
+    at Packet.asError (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\packets\packet.js:722:17)
+    at Query.execute (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\commands\command.js:28:26)
+    at Connection.handlePacket (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:456:32)
+    at PacketParser.onPacket (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:85:12)
+    at PacketParser.executeStart (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\packet_parser.js:75:16)
+    at Socket.<anonymous> (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:92:25)
+    at Socket.emit (node:events:394:28)
+    at addChunk (node:internal/streams/readable:312:12)
+    at readableAddChunk (node:internal/streams/readable:287:9)
+    at Socket.Readable.push (node:internal/streams/readable:226:10) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'amount' in 'field list'",
+  sql: 'INSERT INTO personality_favor (personalityId, userId, favor) VALUES (2, 150328729342574593, -0.30000000000000004) ON DUPLICATE KEY UPDATE amount = amount + -0.30000000000000004'
+}
+Error: Unknown column 'amount' in 'field list'
+    at Packet.asError (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\packets\packet.js:722:17)
+    at Query.execute (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\commands\command.js:28:26)
+    at Connection.handlePacket (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:456:32)
+    at PacketParser.onPacket (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:85:12)
+    at PacketParser.executeStart (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\packet_parser.js:75:16)
+    at Socket.<anonymous> (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:92:25)
+    at Socket.emit (node:events:394:28)
+    at addChunk (node:internal/streams/readable:312:12)
+    at readableAddChunk (node:internal/streams/readable:287:9)
+    at Socket.Readable.push (node:internal/streams/readable:226:10) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'amount' in 'field list'",
+  sql: 'INSERT INTO personality_favor (personalityId, userId, favor) VALUES (2, 150328729342574593, -0.30000000000000004) ON DUPLICATE KEY UPDATE amount = amount + -0.30000000000000004'
+}
+Error: Unknown column 'amount' in 'field list'
+    at Packet.asError (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\packets\packet.js:722:17)
+    at Query.execute (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\commands\command.js:28:26)
+    at Connection.handlePacket (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:456:32)
+    at PacketParser.onPacket (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:85:12)
+    at PacketParser.executeStart (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\packet_parser.js:75:16)
+    at Socket.<anonymous> (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:92:25)
+    at Socket.emit (node:events:394:28)
+    at addChunk (node:internal/streams/readable:312:12)
+    at readableAddChunk (node:internal/streams/readable:287:9)
+    at Socket.Readable.push (node:internal/streams/readable:226:10) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'amount' in 'field list'",
+  sql: 'INSERT INTO personality_favor (personalityId, userId, favor) VALUES (3, 150328729342574593, 0.30000000000000004) ON DUPLICATE KEY UPDATE amount = amount + 0.30000000000000004'
+}
+Error: Unknown column 'amount' in 'field list'
+    at Packet.asError (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\packets\packet.js:722:17)
+    at Query.execute (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\commands\command.js:28:26)
+    at Connection.handlePacket (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:456:32)
+    at PacketParser.onPacket (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:85:12)
+    at PacketParser.executeStart (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\packet_parser.js:75:16)
+    at Socket.<anonymous> (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:92:25)
+    at Socket.emit (node:events:394:28)
+    at addChunk (node:internal/streams/readable:312:12)
+    at readableAddChunk (node:internal/streams/readable:287:9)
+    at Socket.Readable.push (node:internal/streams/readable:226:10) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'amount' in 'field list'",
+  sql: 'INSERT INTO personality_favor (personalityId, userId, favor) VALUES (3, 150328729342574593, 0.30000000000000004) ON DUPLICATE KEY UPDATE amount = amount + 0.30000000000000004'
+}
+C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\models\bot\PersonalityFavor.js:13
+        return new PersonalityFavor(data.personalityId, data.userId, data.favor);
+                                         ^
+
+TypeError: Cannot read property 'personalityId' of undefined
+    at Function.toDomainModel (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\models\bot\PersonalityFavor.js:13:42)
+    at C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\api\bot\botApi.js:76:56
+    at runMicrotasks (<anonymous>)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at async resultCanvas (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\chron\timedResultsController.js:76:24)
+C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\models\bot\PersonalityFavor.js:13
+        return new PersonalityFavor(data.personalityId, data.userId, data.favor);
+                                         ^
+
+TypeError: Cannot read property 'personalityId' of undefined
+    at Function.toDomainModel (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\models\bot\PersonalityFavor.js:13:42)
+    at C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\api\bot\botApi.js:76:56
+    at runMicrotasks (<anonymous>)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at async resultCanvas (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\chron\timedResultsController.js:76:24)
+Error: Unknown column 'amount' in 'field list'
+    at Packet.asError (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\packets\packet.js:722:17)
+    at Query.execute (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\commands\command.js:28:26)
+    at Connection.handlePacket (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:456:32)
+    at PacketParser.onPacket (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:85:12)
+    at PacketParser.executeStart (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\packet_parser.js:75:16)
+    at Socket.<anonymous> (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:92:25)
+    at Socket.emit (node:events:394:28)
+    at addChunk (node:internal/streams/readable:312:12)
+    at readableAddChunk (node:internal/streams/readable:287:9)
+    at Socket.Readable.push (node:internal/streams/readable:226:10) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'amount' in 'field list'",
+  sql: 'INSERT INTO personality_favor (personalityId, userId, favor) VALUES (1, 692903288198266920, 0.5) ON DUPLICATE KEY UPDATE amount = amount + 0.5'
+}
+Error: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 's lazy.', 1640584584.108, 0)' at line 1
+    at Packet.asError (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\packets\packet.js:722:17)
+    at Query.execute (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\commands\command.js:28:26)
+    at Connection.handlePacket (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:456:32)
+    at PacketParser.onPacket (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:85:12)
+    at PacketParser.executeStart (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\packet_parser.js:75:16)
+    at Socket.<anonymous> (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:92:25)
+    at Socket.emit (node:events:394:28)
+    at addChunk (node:internal/streams/readable:312:12)
+    at readableAddChunk (node:internal/streams/readable:287:9)
+    at Socket.Readable.push (node:internal/streams/readable:226:10) {
+  code: 'ER_PARSE_ERROR',
+  errno: 1064,
+  sqlState: '42000',
+  sqlMessage: "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 's lazy.', 1640584584.108, 0)' at line 1",
+  sql: "INSERT INTO trials (guildId, accuserId,  targetId, accusation, timestamp, judgeType) VALUES ('517862823292960785', '692903288198266920', '194232193025966080', 'Coding a shitty bot that could be great but piles up bugs like trash because he's lazy.', 1640584584.108, 0)"
+}
+Error: Unknown column 'amount' in 'field list'
+    at Packet.asError (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\packets\packet.js:722:17)
+    at Query.execute (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\commands\command.js:28:26)
+    at Connection.handlePacket (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:456:32)
+    at PacketParser.onPacket (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:85:12)
+    at PacketParser.executeStart (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\packet_parser.js:75:16)
+    at Socket.<anonymous> (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:92:25)
+    at Socket.emit (node:events:394:28)
+    at addChunk (node:internal/streams/readable:312:12)
+    at readableAddChunk (node:internal/streams/readable:287:9)
+    at Socket.Readable.push (node:internal/streams/readable:226:10) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'amount' in 'field list'",
+  sql: 'INSERT INTO personality_favor (personalityId, userId, favor) VALUES (1, 150328729342574593, 0.5) ON DUPLICATE KEY UPDATE amount = amount + 0.5'
+}
+Error: Unknown column 'amount' in 'field list'
+    at Packet.asError (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\packets\packet.js:722:17)
+    at Query.execute (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\commands\command.js:28:26)
+    at Connection.handlePacket (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:456:32)
+    at PacketParser.onPacket (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:85:12)
+    at PacketParser.executeStart (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\packet_parser.js:75:16)
+    at Socket.<anonymous> (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:92:25)
+    at Socket.emit (node:events:394:28)
+    at addChunk (node:internal/streams/readable:312:12)
+    at readableAddChunk (node:internal/streams/readable:287:9)
+    at Socket.Readable.push (node:internal/streams/readable:226:10) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'amount' in 'field list'",
+  sql: 'INSERT INTO personality_favor (personalityId, userId, favor) VALUES (1, 150328729342574593, 0.5) ON DUPLICATE KEY UPDATE amount = amount + 0.5'
+}
+C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\models\bot\PersonalityFavor.js:13
+        return new PersonalityFavor(data.personalityId, data.userId, data.favor);
+                                         ^
+
+TypeError: Cannot read property 'personalityId' of undefined
+    at Function.toDomainModel (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\models\bot\PersonalityFavor.js:13:42)
+    at C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\api\bot\botApi.js:76:56
+    at runMicrotasks (<anonymous>)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at async resultCanvas (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\chron\timedResultsController.js:76:24)
+node:events:371
+      throw er; // Unhandled 'error' event
+      ^
+
+Error: Connection lost: The server closed the connection.
+    at Socket.<anonymous> (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:101:31)
+    at Socket.emit (node:events:394:28)
+    at TCP.<anonymous> (node:net:672:12)
+Emitted 'error' event on Connection instance at:
+    at Connection._notifyError (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:236:12)
+    at Socket.<anonymous> (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:107:12)
+    at Socket.emit (node:events:394:28)
+    at TCP.<anonymous> (node:net:672:12) {
+  fatal: true,
+  code: 'PROTOCOL_CONNECTION_LOST'
+}
+C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\models\bot\PersonalityFavor.js:13
+        return new PersonalityFavor(data.personalityId, data.userId, data.favor);
+                                         ^
+
+TypeError: Cannot read property 'personalityId' of undefined
+    at Function.toDomainModel (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\models\bot\PersonalityFavor.js:13:42)
+    at C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\api\bot\botApi.js:76:56
+    at runMicrotasks (<anonymous>)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at async resultCanvas (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\chron\timedResultsController.js:76:24)
+Error: Unknown column 'amount' in 'field list'
+    at Packet.asError (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\packets\packet.js:722:17)
+    at Query.execute (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\commands\command.js:28:26)
+    at Connection.handlePacket (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:456:32)
+    at PacketParser.onPacket (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:85:12)
+    at PacketParser.executeStart (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\packet_parser.js:75:16)
+    at Socket.<anonymous> (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\node_modules\mysql2\lib\connection.js:92:25)
+    at Socket.emit (node:events:394:28)
+    at addChunk (node:internal/streams/readable:312:12)
+    at readableAddChunk (node:internal/streams/readable:287:9)
+    at Socket.Readable.push (node:internal/streams/readable:226:10) {
+  code: 'ER_BAD_FIELD_ERROR',
+  errno: 1054,
+  sqlState: '42S22',
+  sqlMessage: "Unknown column 'amount' in 'field list'",
+  sql: 'INSERT INTO personality_favor (personalityId, userId, favor) VALUES (3, 150328729342574593, 0.30000000000000004) ON DUPLICATE KEY UPDATE amount = amount + 0.30000000000000004'
+}
+C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\models\bot\PersonalityFavor.js:13
+        return new PersonalityFavor(data.personalityId, data.userId, data.favor);
+                                         ^
+
+TypeError: Cannot read property 'personalityId' of undefined
+    at Function.toDomainModel (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\models\bot\PersonalityFavor.js:13:42)
+    at C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\api\bot\botApi.js:76:56
+    at runMicrotasks (<anonymous>)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+    at async resultCanvas (C:\Users\wsalv\OneDrive\Documents\lounge-bot-3.0\build\chron\timedResultsController.js:76:24)

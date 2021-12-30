@@ -40,10 +40,16 @@ const command = new SlashCommand(
             option.setName('target')
                 .setDescription('The user you want to slap')
                 .setRequired(true)
+        )
+        .addBooleanOption(option =>
+            option.setName('public')
+                .setDescription('Displays the % of your slap publically')
+                .setRequired(true)
         ),
     async (interaction: CommandInteraction) => {
         var member = interaction.member as GuildMember
         var victim = interaction.options.getUser('target', true)
+        var publicPercent = interaction.options.getBoolean('public', true)
 
         var memberExists = await checkIfUserExistsUseCase(member.id, loungeApi)
         if (!memberExists) {
@@ -88,7 +94,7 @@ const command = new SlashCommand(
         var memberData = await getUserStatsUseCase(member.id, loungeApi)
         var victimData = await getUserStatsUseCase(victim.id, loungeApi)
 
-        interaction.reply({content: `You rolled a ${Math.round(roll * 10000) / 100}%`, ephemeral: true})
+        interaction.reply({content: `You rolled a ${Math.round(roll * 10000) / 100}%`, ephemeral: !publicPercent})
         var response = responseLines[Math.floor(Math.random() * responseLines.length)].responseText
             .replace("[a]", memberData.nickname !== null ? memberData.nickname : memberData.username)
             .replace("[au]", memberData.nickname !== null ? memberData.nickname.toUpperCase() : memberData.username.toUpperCase())

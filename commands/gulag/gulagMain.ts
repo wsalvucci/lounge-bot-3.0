@@ -112,6 +112,11 @@ const command = new SlashCommand(
                         .setDescription('The user you want to slap')
                         .setRequired(true)
                 )
+                .addBooleanOption(option =>
+                    option.setName('public')
+                        .setDescription('Displays the % of your slap publically')
+                        .setRequired(true)
+                )
         ),
     async (interaction: CommandInteraction) => {
         switch(interaction.options.getSubcommand(true)) {

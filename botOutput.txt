@@ -1,2 +1,68 @@
 API is listening on port 3000
 Ready!
+API is listening on port 3000
+Ready!
+BotPersonality {
+  id: 2,
+  name: 'Edna',
+  description: "Soft and nice. Doesn't like aggression at all.",
+  aggression: -3,
+  corruption: -4,
+  chaos: -1
+}
+API is listening on port 3000
+Ready!
+Started refreshing application (/) commands.
+Successfully reloaded application (/) commands.
+BotPersonality {
+  id: 3,
+  name: 'Velocibot',
+  description: 'Desires only chaos.',
+  aggression: 3,
+  corruption: -5,
+  chaos: 5
+}
+API is listening on port 3000
+Ready!
+BotPersonality {
+  id: 2,
+  name: 'Edna',
+  description: "Soft and nice. Doesn't like aggression at all.",
+  aggression: -3,
+  corruption: -4,
+  chaos: -1
+}
+API is listening on port 3000
+Ready!
+BotPersonality {
+  id: 1,
+  name: 'Viktor',
+  description: 'Loves aggressive people, especially when someone is gulaged. ',
+  aggression: 5,
+  corruption: 2,
+  chaos: -2
+}
+API is listening on port 3000
+Ready!
+BotPersonality {
+  id: 3,
+  name: 'Velocibot',
+  description: 'Desires only chaos.',
+  aggression: 3,
+  corruption: -5,
+  chaos: 5
+}
+API is listening on port 3000
+Ready!
+API is listening on port 3000
+Ready!
+BotPersonality {
+  id: 3,
+  name: 'Velocibot',
+  description: 'Desires only chaos.',
+  aggression: 3,
+  corruption: -5,
+  chaos: 5
+}
+API is listening on port 3000
+Ready!

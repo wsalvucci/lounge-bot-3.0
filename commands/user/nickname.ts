@@ -17,11 +17,12 @@ const command = new SlashCommand(
     (interaction: CommandInteraction) => {
         if (interaction.member !== null) {
             var nickname = interaction.options.get('newname', true)
-            if (nickname === undefined) return
-            setUserNicknameUseCase(interaction.member.user.id, nickname.toString(), Repository).then((response: SqlResponse) => {
+            if (nickname.value === undefined) return
+            setUserNicknameUseCase(interaction.member.user.id, nickname.value.toString(), Repository).then((response: SqlResponse) => {
                 var guildMember = interaction.member as GuildMember
-                guildMember.setNickname(nickname?.toString()).then((guildMember: GuildMember) => {
-                    interaction.reply({content: `Your nickname has been changed to ${nickname}!`, ephemeral: true})
+                if (nickname.value == undefined) return
+                guildMember.setNickname(nickname.value.toString()).then((guildMember: GuildMember) => {
+                    interaction.reply({content: `Your nickname has been changed to ${nickname.value}!`, ephemeral: true})
                 }).catch((error: any) => {
                     interaction.reply({content: `There was an error changing your nickname:\n\n ${error}`, ephemeral: true})
                 })
