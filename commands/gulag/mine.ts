@@ -84,6 +84,10 @@ const command = new SlashCommand(
             mineGulagUseCase(member.id, mineResult, gulagApi)
             if (gulagStatus.points - mineResult <= 0) {
                 interaction.reply({content: `YOU HAVE FREED YOURSELF FROM THE GULAG!`})
+                if (interaction.guildId == null) {
+                    console.error('Tried ungulag user in server bot does not have access to')
+                    return
+                }
                 unGulagUser(await getGuildConfigUseCase(interaction.guildId, botApi), member, gulagApi)
             } else {
                 interaction.reply({content: `Your hard work has reduced your sentence by ${mineResult} points. It is now ${gulagStatus.points - mineResult}.`})

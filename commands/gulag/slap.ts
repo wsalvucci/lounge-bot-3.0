@@ -108,6 +108,10 @@ const command = new SlashCommand(
         incrementUserStatUseCase(member.id, 'xp', 20, loungeApi)
         incrementUserStatUseCase(victim.id, 'xp', 20, loungeApi)
 
+        if (interaction.guildId == null) {
+            console.error('Slap from the nether????')
+            return
+        }
         var guildConfig = await getGuildConfigUseCase(interaction.guildId, botApi)
         var victimUser = client.guilds.cache.get((guildConfig).id)?.members.cache.get(victim.id)
         if (victimUser == undefined) {

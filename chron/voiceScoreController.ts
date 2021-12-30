@@ -1,4 +1,4 @@
-import { Channel, GuildMember, VoiceChannel } from "discord.js"
+import { AnyChannel, Channel, GuildMember, VoiceChannel } from "discord.js"
 import botApi from "../api/bot/botApi"
 import loungeApi from "../api/loungeApi"
 import client from "../bot"
@@ -7,7 +7,7 @@ import addVoiceUseCase from "../useCases/user/addVoiceUseCase"
 
 export default function(guildId: string) {
     setInterval(() => {
-        client.channels.cache.forEach(async (channel: Channel) => {
+        client.channels.cache.forEach(async (channel: AnyChannel) => {
             if (channel instanceof VoiceChannel) {
                 var members = channel.members
                 var score = channel.members.size - 1

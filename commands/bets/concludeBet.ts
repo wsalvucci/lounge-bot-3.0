@@ -78,6 +78,10 @@ const command = new SlashCommand(
         await concludeBetUseCase(betId, betsApi)
         interaction.reply({content: `Bet ID ${betId} concluded`, ephemeral: true})
         
+        if (interaction.guildId == null) {
+            console.error('Tried to conlcude bet of server bot does not have access to')
+            return
+        }
         var guildConfig = await getGuildConfigUseCase(interaction.guildId, botApi)
         var resultChannel = client.channels.cache.get(guildConfig.announcementsChannel) as TextChannel
         if (resultChannel == undefined) return
