@@ -40,5 +40,7 @@ export function adjustPersonalityFavor(personalityId: number, userId: string, am
 }
 
 export function getPersonalityFavor(personalityId: number, userId: string) {
+    //Add the personality data if it doesn't already exist
+    query(`INSERT IGNORE personality_favor SET personalityId = ${personalityId}, userId = ${userId}`)
     return query(`SELECT * FROM personality_favor WHERE personalityId = ${personalityId} and userId = ${userId}`)
 }

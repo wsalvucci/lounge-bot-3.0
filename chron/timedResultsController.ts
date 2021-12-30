@@ -44,12 +44,15 @@ class Result {
 
 const USER_DATA_HEIGHT = 75
 
-async function resultCanvas(rankings: Result[], title: string, maxValue: number, rankingType: string, maxReward: number, botConfig: BotPersonality) : Promise<Buffer> {
+async function resultCanvas(rankings: Result[], title: string, maxValue: number, rankingType: string, maxReward: number, botConfig: BotPersonality, xpModifier: number) : Promise<Buffer> {
     const canvas = Canvas.createCanvas(1000, 75 + (USER_DATA_HEIGHT * (rankings.length + 1)))
     const ctx = canvas.getContext('2d')
 
     createDefaultBackground(canvas, ctx)
     createText(ctx, '#ffffff', '48px Boldsand', title, 500, 75, 'center')
+    if (xpModifier > 0) {
+        createText(ctx, '#FFD700', '24px Boldsand', `${Math.round(xpModifier * 100)}% Bonus!`, 500, 100, 'center')
+    }
 
     for (var i = 0; i < rankings.length; i++) {
         var result = rankings[i]
@@ -62,13 +65,20 @@ async function resultCanvas(rankings: Result[], title: string, maxValue: number,
 
         var botFavor = await getPersonalityFavorUseCase(botConfig.id, result.userId, botApi)
         var userStats = await getUserStatsUseCase(result.userId, loungeApi)
-        var favorPercentage = (botFavor.favor <= 0 ? "" : "+") + (botFavor.favor + (userStats.cha * 0.25)) + "%"
+        var bonusPercentage = (botFavor.favor / 100) + (userStats.cha * 0.25) + +xpModifier
+        bonusPercentage = Math.round(bonusPercentage * 10000) / 10000
+        var bonusPercentageString = ""
+        if (bonusPercentage !== 0) {
+            bonusPercentageString = "(" + (bonusPercentage <= 0 ? "" : "+") + (Math.round(bonusPercentage * 10000) / 100) + "%)"
+        }
         createText(ctx, textColor, '36px Boldsand', `${result.name}`, 50, USER_DATA_HEIGHT * (index + 2))
         if (rankingType == 'message') {
-            createText(ctx, textColor, '36px Boldsand', `${Math.round(result.messagesSent / maxValue * maxReward).withCommas()} (${favorPercentage})`, 600, USER_DATA_HEIGHT * (index + 2))
+            var reward = Math.round(result.messagesSent / maxValue * maxReward)
+            createText(ctx, textColor, '36px Boldsand', `${Math.round(reward + (reward * bonusPercentage)).withCommas()} ${bonusPercentageString}`, 600, USER_DATA_HEIGHT * (index + 2))
             createText(ctx, textColor, '36px Boldsand', `${result.messagesSent.withCommas()}`, 400, USER_DATA_HEIGHT * (index + 2))
         } else {
-            createText(ctx, textColor, '36px Boldsand', `${Math.round(result.voiceScore / maxValue * maxReward).withCommas()} (${favorPercentage})`, 600, USER_DATA_HEIGHT * (index + 2))
+            var reward = Math.round(result.voiceScore / maxValue * maxReward)
+            createText(ctx, textColor, '36px Boldsand', `${Math.round(reward + (reward * bonusPercentage)).withCommas()} ${bonusPercentageString}`, 600, USER_DATA_HEIGHT * (index + 2))
             createText(ctx, textColor, '36px Boldsand', `${result.voiceScore.withCommas()}`, 400, USER_DATA_HEIGHT * (index + 2))
         }
     }
@@ -130,11 +140,13 @@ async function runDailies(guildId: string, intervalType: string) {
         maxReward = MONTHLY_COIN_AWARD
     }
 
-    maxReward = maxReward + (maxReward * guildConfig.xpModifier)
+    var xpBonus = guildConfig.xpModifier
 
     if (guildConfig.birthdayActive == 1) {
-        maxReward = maxReward * 2
+        xpBonus = xpBonus + 1
     }
+
+    maxReward = maxReward + (maxReward * guildConfig.xpModifier)
 
     var competitionChannel = await client.channels.fetch(guildConfig.competitionChannel) as TextChannel
 
@@ -150,7 +162,8 @@ async function runDailies(guildId: string, intervalType: string) {
         messageMax,
         'message',
         maxReward,
-        botConfig
+        botConfig,
+        xpBonus
         )
         .then((attachment: Buffer) => {
             competitionChannel.send({files: [{attachment: attachment}]})
@@ -168,7 +181,8 @@ async function runDailies(guildId: string, intervalType: string) {
         voiceMax,
         'voice',
         maxReward,
-        botConfig
+        botConfig,
+        xpBonus
         )
         .then((attachment: Buffer) => {
             competitionChannel.send({files: [{attachment: attachment}]})
@@ -182,7 +196,7 @@ async function runDailies(guildId: string, intervalType: string) {
         awards.forEach(async (result: Result) => {
             var botFavor = await getPersonalityFavorUseCase(botConfig.id, result.userId, botApi)
             var userStats = await getUserStatsUseCase(result.userId, loungeApi)
-            var favorMultiplier = (botFavor.favor / 100) + 1 + (userStats.cha * 0.25)
+            var favorMultiplier = (botFavor.favor / 100) + 1 + (userStats.cha * 0.25) + xpBonus
             allServerMessages = allServerMessages + result.messagesSent
             allServerVoice = allServerVoice + result.voiceScore
             addUserRecordUseCase(result.userId, timestamp, result.messagesSent, result.voiceScore, loungeApi)
@@ -196,7 +210,7 @@ async function runDailies(guildId: string, intervalType: string) {
         awards.forEach(async (result: Result) => {
             var botFavor = await getPersonalityFavorUseCase(botConfig.id, result.userId, botApi)
             var userStats = await getUserStatsUseCase(result.userId, loungeApi)
-            var favorMultiplier = (botFavor.favor / 100) + 1 + (userStats.cha * 0.25)
+            var favorMultiplier = (botFavor.favor / 100) + 1 + (userStats.cha * 0.25) + xpBonus
             incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward) * favorMultiplier, loungeApi)
             incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward) * favorMultiplier, loungeApi)
             setUserPropertyUseCase(result.userId, StatType.WeeklyMessages, 0, loungeApi)
@@ -206,7 +220,7 @@ async function runDailies(guildId: string, intervalType: string) {
         awards.forEach(async (result: Result) => {
             var botFavor = await getPersonalityFavorUseCase(botConfig.id, result.userId, botApi)
             var userStats = await getUserStatsUseCase(result.userId, loungeApi)
-            var favorMultiplier = (botFavor.favor / 100) + 1 + (userStats.cha * 0.25)
+            var favorMultiplier = (botFavor.favor / 100) + 1 + (userStats.cha * 0.25) + xpBonus
             incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward) * favorMultiplier, loungeApi)
             incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward) * favorMultiplier, loungeApi)
             setUserPropertyUseCase(result.userId, StatType.MonthlyMessages, 0, loungeApi)
@@ -216,13 +230,13 @@ async function runDailies(guildId: string, intervalType: string) {
 }
 
 function checkTimedResults(guildId: string) {
-    schedule.scheduleJob(`0 11 * * *`, async function() {
+    schedule.scheduleJob(`0 3 * * *`, async function() {
         runDailies(guildId, 'daily')
     })
-    schedule.scheduleJob(`0 11 * * 0`, async function() {
+    schedule.scheduleJob(`0 3 * * 0`, async function() {
         runDailies(guildId, 'weekly')
     })
-    schedule.scheduleJob(`0 11 1 * *`, async function() {
+    schedule.scheduleJob(`0 3 1 * *`, async function() {
         runDailies(guildId, 'monthly')
     })
 }
