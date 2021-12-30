@@ -36,7 +36,7 @@ export function setBirthdayActive(guildId: number, active: number) {
 }
 
 export function adjustPersonalityFavor(personalityId: number, userId: string, amount: number) {
-    return query(`INSERT INTO personality_favor (personalityId, userId, favor) VALUES (${personalityId}, ${userId}, ${amount}) ON DUPLICATE KEY UPDATE amount = amount + ${amount}`)
+    return query(`INSERT INTO personality_favor (personalityId, userId, favor) VALUES (${personalityId}, ${userId}, ${amount}) ON DUPLICATE KEY UPDATE favor = favor + ${amount}`)
 }
 
 export function getPersonalityFavor(personalityId: number, userId: string) {

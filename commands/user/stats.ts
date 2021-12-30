@@ -99,8 +99,8 @@ async function getCanvas(user: User, stats: UserStats) : Promise<Buffer> {
 
     //XP Bars
     ctx.fillStyle = `${Color(stats.tier.primaryColor).lighten(0.2)}`
-    var levelXpPercent = stats.levelStats.currentLevelProgress / stats.levelStats.nextLevelExp
-    var tierXpPercent = stats.levelStats.currentTitleProgress / stats.levelStats.nextTitleExp
+    var levelXpPercent = stats.levelStats.currentLevelProgress / (stats.levelStats.nextLevelExp - stats.levelStats.currentLevelExp)
+    var tierXpPercent = stats.levelStats.currentTitleProgress / (stats.levelStats.nextTitleExp - stats.levelStats.currentTitleExp)
     ctx.fillRect(550, 175, 350 * levelXpPercent, 15)
     ctx.fillRect(550, 225, 350 * tierXpPercent, 15)
 
@@ -108,11 +108,11 @@ async function getCanvas(user: User, stats: UserStats) : Promise<Buffer> {
     ctx.fillStyle = '#ffffff'
     ctx.font = '24px Quicksand'
     ctx.fillText(`${stats.levelStats.level}`, 550, 170)
-    ctx.fillText(`${stats.tier.titleLeftText}`, 550, 220)
+    ctx.fillText(`${stats.tier.title}`, 550, 220)
 
     ctx.textAlign = 'right'
     ctx.fillText(`${stats.levelStats.nextLevel}`, 900, 170)
-    ctx.fillText(`${stats.tier.titleRightText}`, 900, 220)
+    ctx.fillText(`${stats.tier.nextTitleName}`, 900, 220)
 
     createDivider(ctx, '#C0C0C0', 525, 275, 425, 1, 'All Time')
 

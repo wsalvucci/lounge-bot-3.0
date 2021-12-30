@@ -14,6 +14,7 @@ export default function getUserStatsUseCase(discordId: string, repository: typeo
                 "",
                 getLevelStats(
                     discordId,
+                    user.stats.xp,
                     user.stats.secondsVoice,
                     user.stats.messagesSent,
                     user.stats.usersSlapped,

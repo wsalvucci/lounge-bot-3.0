@@ -22,6 +22,7 @@ export class LevelStats {
     totalLevelProgress: number
     title: TierData
     currentTitleExp: number
+    nextTitle: TierData
     nextTitleExp: number
     currentTitleProgress: number
     totalTitleProgress: number
@@ -43,6 +44,7 @@ export class LevelStats {
         totalLevelProgress: number,
         title: TierData,
         currentTitleExp: number,
+        nextTitle: TierData,
         nextTitleExp: number,
         currentTitleProgress: number,
         totalTitleProgress: number
@@ -63,6 +65,7 @@ export class LevelStats {
         this.totalLevelProgress = totalLevelProgress
         this.title = title
         this.currentTitleExp = currentTitleExp
+        this.nextTitle = nextTitle
         this.nextTitleExp = nextTitleExp
         this.currentTitleProgress = currentTitleProgress
         this.totalTitleProgress = totalTitleProgress
@@ -283,15 +286,13 @@ export function levelExpRequirement(level: number) : number {return Math.pow(lev
 export function expProgress(exp: number, target: number) : number {return Math.floor(exp - target)}
 export function getLevelStats(
     discordId: string,
+    exp: number,
     secondsVoice: number,
     messagesSent: number,
     usersSlapped: number,
     beenSlapped: number,
     usersGulaged: number,
     beenGulaged: number): LevelStats {
-    // Total amount of exp the user has earned based on these stats
-    var exp = statsToExp(secondsVoice, messagesSent, usersSlapped, beenSlapped)
-
     // The level of the user
     var level = expToLevel(exp)
 
@@ -312,6 +313,9 @@ export function getLevelStats(
 
     // The user's title data derived from their current level
     var title = levelToTitle(level)
+
+    // The user's next title derived from their current level
+    var nextTitle = levelToTitle(nextLevel)
 
     // The amount of experience required to reach the user's title
     var currentTitleExpReq = levelExpRequirement(title.titleLevel)
@@ -342,6 +346,7 @@ export function getLevelStats(
         totalLevelProgress,
         title,
         currentTitleExpReq,
+        nextTitle,
         nextTitleExpReq,
         currentTitleProgress,
         totalTitleProgress
