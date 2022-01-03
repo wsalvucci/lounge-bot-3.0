@@ -14,16 +14,16 @@ export default function(guildId: string) {
 
                 var guildConfig = await getGuildConfigUseCase(guildId, botApi)
 
-                members.map((member: GuildMember) => {
-                    if (member.user.bot) {score = score - 1}
-                    if (member.voice.selfVideo) {score = score + 1}
-                    if (member.voice.streaming) {score = score + 1}
-                    if (member.voice.selfMute) {score = score - 1}
-                    if (member.voice.selfDeaf) {score = score - 1}
+                members.forEach((member: GuildMember) => {
+                    if (member.user.bot) { score = score - 1} 
+                    if (member.voice.selfVideo) { score = score + 1} 
+                    if (member.voice.streaming) { score = score + 1} 
+                    if (member.voice.selfMute) { score = score - 1} 
+                    if (member.voice.selfDeaf) { score = score - 1} 
                     score = Math.max(0, score)
                 })
 
-                members.map((member: GuildMember) => {
+                members.forEach((member: GuildMember) => {
                     addVoiceUseCase(member.id, score, Math.round(score + (score * guildConfig.xpModifier)), loungeApi)
                 })
             }

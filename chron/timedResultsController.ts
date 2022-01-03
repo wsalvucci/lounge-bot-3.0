@@ -71,7 +71,7 @@ async function resultCanvas(rankings: Result[], title: string, maxValue: number,
         if (bonusPercentage !== 0) {
             bonusPercentageString = "(" + (bonusPercentage <= 0 ? "" : "+") + (Math.round(bonusPercentage * 10000) / 100) + "%)"
         }
-        createText(ctx, textColor, '36px Boldsand', `${result.name}`, 50, USER_DATA_HEIGHT * (index + 2))
+        createText(ctx, textColor, '36px Boldsand', `${result.name}`, 50, USER_DATA_HEIGHT * (index + 2), 'left', 500)
         if (rankingType == 'message') {
             var reward = Math.round(result.messagesSent / maxValue * maxReward)
             createText(ctx, textColor, '36px Boldsand', `${Math.round(reward + (reward * bonusPercentage)).withCommas()} ${bonusPercentageString}`, 600, USER_DATA_HEIGHT * (index + 2))
