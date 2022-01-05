@@ -9,6 +9,7 @@ import checkBribe from './checkBribe'
 import mine from './mine'
 import checkGulag from './checkGulag'
 import slap from './slap'
+import addslapresponse from './addSlapResponse'
 
 const command = new SlashCommand(
     new SlashCommandBuilder()
@@ -117,6 +118,40 @@ const command = new SlashCommand(
                         .setDescription('Displays the % of your slap publically')
                         .setRequired(true)
                 )
+        )
+        .addSubcommand(subcommand =>
+            subcommand.setName('addslapresponse')
+                .setDescription('Add a custom response for the bot and rarity of your chosing.')
+                .addIntegerOption(option => 
+                    option.setName('personality')
+                        .setDescription('The bot personality you want to add a slap line to')
+                        .setRequired(true)
+                        .addChoices([
+                            ["Viktor", 1],
+                            ["Edna", 2],
+                        ])
+                )
+                .addIntegerOption(option => 
+                    option.setName('rarity')
+                        .setDescription('What type of response')
+                        .setRequired(true)
+                        .addChoices([
+                            ["Legendary Bad, 1%, Attacker is Gulaged", 1],
+                            ["Epic Bad, 4%", 2],
+                            ["Rare Bad, 10%", 3],
+                            ["Uncommon Bad, 10%", 4],
+                            ["Common, 50%", 5],
+                            ["Uncommon Good, 10%", 6],
+                            ["Rare Good, 10%", 7],
+                            ["Epic Good, 4%", 8],
+                            ["Legendary Good, 1%, Victim is Gulaged", 9]
+                        ])
+                )
+                .addStringOption(option =>
+                    option.setName('response')
+                        .setDescription('The response. {a} - attacker name. {v} - victim name. {au} or {vu} - name all caps.')
+                        .setRequired(true)
+                )
         ),
     async (interaction: CommandInteraction) => {
         switch(interaction.options.getSubcommand(true)) {
@@ -128,6 +163,7 @@ const command = new SlashCommand(
             case 'removebribe': removeBribe.method(interaction); break
             case 'vote': vote.method(interaction); break
             case 'slap': slap.method(interaction); break
+            case 'addslapresponse': addslapresponse.method(interaction); break
         }
     }
 )

@@ -94,6 +94,11 @@ class GulagApi {
                 return gulagList
             })
     }
+
+    async addSlapResponse(userId: string, personalityId: number, responseType: number, responseText: string): Promise<SqlResponse> {
+        return apiCall(`/gulag/addSlapResponse?userId=${userId}&personalityId=${personalityId}&responseType=${responseType}&responseText=${responseText}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
+    }
 }
 
 export default new GulagApi

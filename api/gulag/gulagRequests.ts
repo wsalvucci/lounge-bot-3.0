@@ -1,4 +1,5 @@
 import query from "../../domain/database"
+import mysql2 from 'mysql2'
 
 export function addTrial( guildId: string, accuserId: string, targetId: string, accusation: string, timestamp: number, judgeType: number) {
     return query(`INSERT INTO trials (guildId, accuserId,  targetId, accusation, timestamp, judgeType) VALUES ('${guildId}', '${accuserId}', '${targetId}', '${accusation}', ${timestamp}, ${judgeType})`)
@@ -51,4 +52,8 @@ export function mineGulag(userId: string, points: number) {
 
 export function getActiveGulags() {
     return query(`SELECT * FROM gulag`)
+}
+
+export function addSlapResponse(userId: string, personalityId: number, responseType: number, responseText: string) {
+    return query(`INSERT INTO bot_slap_responses (personalityId, responseType, responseText, submittedBy) VALUES (${personalityId}, ${responseType}, ${mysql2.escape(responseText)}, ${userId})`)
 }
