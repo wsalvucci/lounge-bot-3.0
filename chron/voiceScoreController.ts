@@ -8,9 +8,11 @@ import addVoiceUseCase from "../useCases/user/addVoiceUseCase"
 export default function(guildId: string) {
     setInterval(() => {
         client.channels.cache.forEach(async (channel: AnyChannel) => {
-            if (channel instanceof VoiceChannel) {
-                var members = channel.members
-                var score = channel.members.size - 1
+            // Without fetching, client will have an outdated list of members and never refresh
+            var fetchedChannel = await client.channels.fetch(channel.id)
+            if (fetchedChannel instanceof VoiceChannel) {
+                var members = fetchedChannel.members
+                var score = fetchedChannel.members.size - 1
 
                 var guildConfig = await getGuildConfigUseCase(guildId, botApi)
 

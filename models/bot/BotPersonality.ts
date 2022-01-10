@@ -5,6 +5,8 @@ class BotPersonality {
     aggression: number
     corruption: number
     chaos: number
+    slapFavor: number
+    gulagFavor: number
 
     constructor(
         id: number,
@@ -12,7 +14,9 @@ class BotPersonality {
         description: string,
         aggression: number,
         corruption: number,
-        chaos: number
+        chaos: number,
+        slapFavor: number,
+        gulagFavor: number
     ) {
         this.id = id
         this.name = name
@@ -20,6 +24,8 @@ class BotPersonality {
         this.aggression = aggression
         this.corruption = corruption
         this.chaos = chaos
+        this.slapFavor = slapFavor
+        this.gulagFavor = gulagFavor
     }
 
     static toDomainModel(data: any) : BotPersonality {
@@ -29,7 +35,9 @@ class BotPersonality {
             data.personalityDescription,
             data.aggression,
             data.corruption,
-            data.chaos
+            data.chaos,
+            data.slapFavor,
+            data.gulagFavor
         )
     }
 }

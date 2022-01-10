@@ -65,7 +65,7 @@ async function resultCanvas(rankings: Result[], title: string, maxValue: number,
 
         var botFavor = await getPersonalityFavorUseCase(botConfig.id, result.userId, botApi)
         var userStats = await getUserStatsUseCase(result.userId, loungeApi)
-        var bonusPercentage = (botFavor.favor / 100) + (userStats.cha * 0.25) + +xpModifier
+        var bonusPercentage = (botFavor.favor / 100) + (userStats.cha * 0.0025) + +xpModifier
         bonusPercentage = Math.round(bonusPercentage * 10000) / 10000
         var bonusPercentageString = ""
         if (bonusPercentage !== 0) {
@@ -196,12 +196,16 @@ async function runDailies(guildId: string, intervalType: string) {
         awards.forEach(async (result: Result) => {
             var botFavor = await getPersonalityFavorUseCase(botConfig.id, result.userId, botApi)
             var userStats = await getUserStatsUseCase(result.userId, loungeApi)
-            var favorMultiplier = (botFavor.favor / 100) + 1 + (userStats.cha * 0.25) + xpBonus
+            var favorMultiplier = +(botFavor.favor / 100) + +1 + +(userStats.cha * 0.0025) + +xpBonus
             allServerMessages = allServerMessages + result.messagesSent
             allServerVoice = allServerVoice + result.voiceScore
             addUserRecordUseCase(result.userId, timestamp, result.messagesSent, result.voiceScore, loungeApi)
-            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward) * favorMultiplier, loungeApi)
-            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward) * favorMultiplier, loungeApi)
+            if (messageMax !== 0) {
+                incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward) * favorMultiplier, loungeApi)
+            }
+            if (voiceMax !== 0) {
+                incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward) * favorMultiplier, loungeApi)
+            }
             setUserPropertyUseCase(result.userId, StatType.DailyMessages, 0, loungeApi)
             setUserPropertyUseCase(result.userId, StatType.DailyVoice, 0, loungeApi)
         });
@@ -210,9 +214,13 @@ async function runDailies(guildId: string, intervalType: string) {
         awards.forEach(async (result: Result) => {
             var botFavor = await getPersonalityFavorUseCase(botConfig.id, result.userId, botApi)
             var userStats = await getUserStatsUseCase(result.userId, loungeApi)
-            var favorMultiplier = (botFavor.favor / 100) + 1 + (userStats.cha * 0.25) + xpBonus
-            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward) * favorMultiplier, loungeApi)
-            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward) * favorMultiplier, loungeApi)
+            var favorMultiplier = +(botFavor.favor / 100) + +1 + +(userStats.cha * 0.0025) + +xpBonus
+            if (messageMax !== 0) {
+                incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward) * favorMultiplier, loungeApi)
+            }
+            if (voiceMax !== 0) {
+                incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward) * favorMultiplier, loungeApi)
+            }
             setUserPropertyUseCase(result.userId, StatType.WeeklyMessages, 0, loungeApi)
             setUserPropertyUseCase(result.userId, StatType.WeeklyVoice, 0, loungeApi)
         });
@@ -220,9 +228,13 @@ async function runDailies(guildId: string, intervalType: string) {
         awards.forEach(async (result: Result) => {
             var botFavor = await getPersonalityFavorUseCase(botConfig.id, result.userId, botApi)
             var userStats = await getUserStatsUseCase(result.userId, loungeApi)
-            var favorMultiplier = (botFavor.favor / 100) + 1 + (userStats.cha * 0.25) + xpBonus
-            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward) * favorMultiplier, loungeApi)
-            incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward) * favorMultiplier, loungeApi)
+            var favorMultiplier = +(botFavor.favor / 100) + +1 + +(userStats.cha * 0.0025) + +xpBonus
+            if (messageMax !== 0) {
+                incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward) * favorMultiplier, loungeApi)
+            }
+            if (voiceMax !== 0) {
+                incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward) * favorMultiplier, loungeApi)
+            }
             setUserPropertyUseCase(result.userId, StatType.MonthlyMessages, 0, loungeApi)
             setUserPropertyUseCase(result.userId, StatType.MonthlyVoice, 0, loungeApi)
         });
@@ -230,7 +242,8 @@ async function runDailies(guildId: string, intervalType: string) {
 }
 
 function checkTimedResults(guildId: string) {
-    schedule.scheduleJob(`0 3 * * *`, async function() {
+    //schedule.scheduleJob(`0 3 * * *`, async function() {
+    schedule.scheduleJob(`0 * * * * *`, async function() {
         runDailies(guildId, 'daily')
     })
     schedule.scheduleJob(`0 3 * * 0`, async function() {

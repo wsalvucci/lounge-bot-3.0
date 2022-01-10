@@ -38,7 +38,7 @@ const command = new SlashCommand(
         )
         .addStringOption(option =>
             option.setName('response')
-                .setDescription('The response. {a} - attacker name. {v} - victim name. {au} or {vu} - name all caps.')
+                .setDescription('The response. [a] - attacker name. [v] - victim name. [au] or [vu] - name all caps.')
                 .setRequired(true)
         ),
     async (interaction: CommandInteraction) => {
