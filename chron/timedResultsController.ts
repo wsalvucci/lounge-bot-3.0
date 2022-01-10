@@ -242,8 +242,7 @@ async function runDailies(guildId: string, intervalType: string) {
 }
 
 function checkTimedResults(guildId: string) {
-    //schedule.scheduleJob(`0 3 * * *`, async function() {
-    schedule.scheduleJob(`0 * * * * *`, async function() {
+    schedule.scheduleJob(`0 3 * * *`, async function() {
         runDailies(guildId, 'daily')
     })
     schedule.scheduleJob(`0 3 * * 0`, async function() {
