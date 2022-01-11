@@ -4,7 +4,7 @@ import { Client, Guild, Intents, Interaction, Message } from 'discord.js'
 import CommandModule from './models/CommandModule'
 import SlashCommand from './models/SlashCommand'
 import { REST } from '@discordjs/rest'
-const client = new Client({intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_MEMBERS]})
+const client = new Client({intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.DIRECT_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS, Intents.FLAGS.GUILD_MEMBERS, Intents.FLAGS.GUILD_VOICE_STATES]})
 
 // Load APIs
 require('./api/userRoutes')
