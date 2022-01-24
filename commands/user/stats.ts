@@ -59,6 +59,7 @@ async function getCanvas(user: User, stats: UserStats) : Promise<Buffer> {
     ctx.restore()
 
     createText(ctx, '#ffffff', `24px Quicksand`, stats.titleString, 300, (canvas.height / 2) + 150, 'center')
+    createText(ctx, '#ffffff', `18px Quicksand`, `${stats.coins.withCommas()} Lounge Coins`, 300, (canvas.height / 2) + 170, 'center')
 
     createText(ctx, '#ffffff', '72px Quicksand', stats.levelStats.level.toString(), 25, 100)
 

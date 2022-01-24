@@ -32,6 +32,10 @@ const command = new SlashCommand(
 
         var userData = await getUserStatsUseCase(member.id, loungeApi)
 
+        if (amount <= 0) {
+            interaction.reply({content: `No.`, ephemeral: true})
+            return
+        }
         if (amount > userData.coins) {
             interaction.reply({content: `You don't have ${amount} coins. You only have ${userData.coins}`, ephemeral: true})
             return
