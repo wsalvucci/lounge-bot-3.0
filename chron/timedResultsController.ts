@@ -147,6 +147,11 @@ async function runDailies(guildId: string, intervalType: string) {
         xpBonus = xpBonus + 1
     }
 
+    if (intervalType !== 'daily') {
+        //Don't apply buffs to non dailies
+        xpBonus = 0
+    }
+
     maxReward = maxReward + (maxReward * guildConfig.xpModifier)
 
     var competitionChannel = await client.channels.fetch(guildConfig.competitionChannel) as TextChannel
