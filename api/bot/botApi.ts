@@ -1,3 +1,4 @@
+import ActiveRole from "../../models/shop/ActiveRole";
 import BotPersonality from "../../models/bot/BotPersonality";
 import GuildConfig from "../../models/bot/Guild";
 import PersonalityFavor from "../../models/bot/PersonalityFavor";
@@ -5,6 +6,7 @@ import SlapResponseLine from "../../models/bot/SlapResponseLine";
 import { TrialResultLine } from "../../models/bot/TrialResultLine";
 import SqlResponse from "../../responseModels/SqlResponse";
 import apiCall from "../apiCall"
+import ShopRole from "../../models/shop/ShopRole";
 
 class BotApi {
     async getPersonalities() : Promise<BotPersonality[]> {
@@ -79,6 +81,64 @@ class BotApi {
     async getPersonalityFavor(personalityId: number, userId: string) : Promise<PersonalityFavor> {
         return apiCall(`/bot/getPersonalityFavor?personalityId=${personalityId}&userId=${userId}`)
             .then((data: any) => PersonalityFavor.toDomainModel(data[0]))
+    }
+
+    async adjustGuildXp(guildId: string, amount: number) : Promise<SqlResponse> {
+        return apiCall(`/bot/adjustGuildXp?guildId=${guildId}&amount=${amount}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
+    }
+
+    async resetGuildXp(guildId: string) : Promise<SqlResponse> {
+        return apiCall(`/bot/resetGuildXp?guildId=${guildId}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
+    }
+
+    async getAllActiveRoles() : Promise<ActiveRole[]> {
+        return apiCall(`/bot/getAllActiveRoles`)
+            .then((data: any) => {
+                var roles : ActiveRole[] = []
+                data.forEach((roleData: any) => {
+                    roles.push(new ActiveRole(roleData.discordId, roleData.roleId, roleData.expirationTime))
+                });
+                return roles
+            })
+    }
+
+    async getActiveRoles(discordId: string) : Promise<ActiveRole[]> {
+        return apiCall(`/bot/getActiveRoles?discordId=${discordId}`)
+            .then((data: any) => {
+                var roles : ActiveRole[] = []
+                data.forEach((roleData: any) => {
+                    roles.push(new ActiveRole(roleData.discordId, roleData.roleId, roleData.expirationTime))
+                });
+                return roles
+            })
+    }
+
+    async addActiveUserRole(discordId: string, roleId: string, expirationTime: number) : Promise<SqlResponse> {
+        return apiCall(`/bot/addActiveUserRole?discordId=${discordId}&roleId=${roleId}&expirationTime=${expirationTime}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
+    }
+
+    async removeActiveUserRole(discordId: string, roleId: string) : Promise<SqlResponse> {
+        return apiCall(`/bot/removeActiveUserRole?discordId=${discordId}&roleId=${roleId}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
+    }
+
+    async getRoleShop() : Promise<ShopRole[]> {
+        return apiCall(`/bot/getRoleShop`)
+            .then((data: any) => {
+                var shop : ShopRole[] = []
+                data.forEach((roleData: any) => {
+                    shop.push(new ShopRole(roleData.roleId, roleData.name, roleData.costPerDay))
+                });
+                return shop
+            })
+    }
+
+    async getShopRoleInfo(roleId: string) : Promise<ShopRole> {
+        return apiCall(`/bot/getShopRoleInfo?roleId=${roleId}`)
+            .then((data: any) => ShopRole.toDomainModel(data[0]))
     }
 }
 

@@ -4,6 +4,7 @@ import trialController from './trialController'
 import voiceScoreController from './voiceScoreController'
 import messageScoreController from './messageScoreController'
 import levelUpController from './levelUpController'
+import activeRoleController from './activeRoleController'
 
 export function startPersonalityController(guildId: string) {
     personalityController(guildId)
@@ -27,4 +28,8 @@ export function startMessageScoreController(guildId: string) {
 
 export function startLevelUpController(guildId: string) {
     levelUpController(guildId)
+}
+
+export function startActiveRoleController(guildId: string) {
+    activeRoleController(guildId)
 }

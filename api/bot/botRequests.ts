@@ -44,3 +44,35 @@ export function getPersonalityFavor(personalityId: number, userId: string) {
     query(`INSERT IGNORE personality_favor SET personalityId = ${personalityId}, userId = ${userId}`)
     return query(`SELECT * FROM personality_favor WHERE personalityId = ${personalityId} and userId = ${userId}`)
 }
+
+export function adjustGuildXp(guildId: string, amount: number) {
+    return query(`UPDATE guildconfig SET xpModifier = xpModifier + ${amount} WHERE guildId = ${guildId}`)
+}
+
+export function resetGuildXp(guildId: string) {
+    return query(`UPDATE guildconfig SET xpModifier = 0 WHERE guildId = ${guildId}`)
+}
+
+export function getAllActiveRoles() {
+    return query(`SELECT * FROM active_roles`)
+}
+
+export function getActiveUserRoles(discordId: string) {
+    return query(`SELECT * FROM active_roles WHERE discordId = ${discordId}`)
+}
+
+export function addActiveUserRole(discordId: string, roleId: string, expirationTime: number) {
+    return query(`INSERT INTO active_roles (roleId, discordId, expirationTime) VALUES (${roleId}, ${discordId}, ${expirationTime}) ON DUPLICATE KEY UPDATE expirationTime = expirationTime + 86400`)
+}
+
+export function removeActiveUserRole(discordId: string, roleId: string) {
+    return query(`DELETE FROM active_roles WHERE discordId=${discordId} and roleId=${roleId}`)
+}
+
+export function getRoleShop() {
+    return query(`SELECT * FROM role_shop`)
+}
+
+export function getShopRoleInfo(roleId: string) {
+    return query(`SELECT * FROM role_shop WHERE roleId = ${roleId}`)
+}

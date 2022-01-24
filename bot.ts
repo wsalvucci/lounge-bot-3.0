@@ -22,15 +22,17 @@ import weatherCommands from './commands/weather'
 import gulagCommands from './commands/gulag'
 import betsCommands from './commands/bets'
 import stocksCommands from './commands/stocks'
+import shopCommands from './commands/shop'
 import { Routes } from 'discord-api-types/v9'
-import { startPersonalityController, startTimedResultsController, startTrialController, startVoiceScoreController, startMessageScoreController, startLevelUpController } from './chron'
+import { startPersonalityController, startTimedResultsController, startTrialController, startVoiceScoreController, startMessageScoreController, startLevelUpController, startActiveRoleController } from './chron'
 
 var commandModules = [
     userCommands,
     weatherCommands,
     gulagCommands,
     betsCommands,
-    stocksCommands
+    stocksCommands,
+    shopCommands
 ]
 
 const token: string = process.env.BOT_TOKEN || ""
@@ -86,6 +88,7 @@ client.login(process.env.BOT_TOKEN).then((value: string) => {
         startVoiceScoreController(guild.id)
         startMessageScoreController(guild.id)
         startLevelUpController(guild.id)
+        startActiveRoleController(guild.id)
     })
     startTrialController()
 })

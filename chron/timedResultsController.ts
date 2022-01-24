@@ -18,6 +18,7 @@ import getCurrentBotPersonalityUseCase from '../useCases/bot/getCurrentBotPerson
 import getPersonalityFavorUseCase from '../useCases/bot/getPersonalityFavorUseCase'
 import BotPersonality from '../models/bot/BotPersonality'
 import getUserStatsUseCase from '../useCases/user/getUserStatsUseCase'
+import resetGuildXpUseCase from '../useCases/bot/resetGuildXpUseCase'
 
 const DAILY_COIN_AWARD = 1000
 const WEEKLY_COIN_AWARD = 10000
@@ -209,7 +210,7 @@ async function runDailies(guildId: string, intervalType: string) {
             setUserPropertyUseCase(result.userId, StatType.DailyMessages, 0, loungeApi)
             setUserPropertyUseCase(result.userId, StatType.DailyVoice, 0, loungeApi)
         });
-        addServerRecordUseCase(timestamp, allServerMessages, allServerVoice, loungeApi)
+        await addServerRecordUseCase(timestamp, allServerMessages, allServerVoice, loungeApi)
     } else if (intervalType == 'weekly') {
         awards.forEach(async (result: Result) => {
             var botFavor = await getPersonalityFavorUseCase(botConfig.id, result.userId, botApi)
@@ -239,6 +240,8 @@ async function runDailies(guildId: string, intervalType: string) {
             setUserPropertyUseCase(result.userId, StatType.MonthlyVoice, 0, loungeApi)
         });
     }
+
+    resetGuildXpUseCase(guildId, botApi)
 }
 
 function checkTimedResults(guildId: string) {
