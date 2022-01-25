@@ -3,7 +3,7 @@ import LoungeUser from "../../models/LoungeUser";
 import UserStats from "../../models/UserStats";
 import UserTitle from "../../models/UserTitle";
 import getUserTitleUseCase from "./getUserTitleUseCase";
-import { getLevelStats, statsToTitle } from '../../domain/loungeFunctions'
+import { getLevelStats, levelToTitle, statsToTitle } from '../../domain/loungeFunctions'
 
 export default function getUserStatsUseCase(discordId: string, repository: typeof TheLoungeApi) : Promise<UserStats> {
     return repository.getUser(discordId)
@@ -21,7 +21,7 @@ export default function getUserStatsUseCase(discordId: string, repository: typeo
                     user.stats.beenSlapped,
                     user.stats.usersGulaged,
                     user.stats.timesGulaged),
-                statsToTitle(user.stats.secondsVoice, user.stats.messagesSent, user.stats.usersSlapped, user.stats.beenSlapped),
+                levelToTitle(user.stats.level),
                 user.stats.coins,
                 user.stats.atk,
                 user.stats.def,

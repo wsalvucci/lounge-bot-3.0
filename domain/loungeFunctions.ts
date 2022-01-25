@@ -180,8 +180,8 @@ export function levelToTitle(level: number): TierData {
         return new TierData(
             'A Class',
             100,
-            '#33303C',
-            '#282430',
+            '#0070c0',
+            '#ffffff',
             120,
             'S Class'
             )

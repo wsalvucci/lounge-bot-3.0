@@ -20,6 +20,7 @@ function createDivider(
     x: number,
     y: number,
     w: number,
+    labelTextColor: string = '#000000',
     dividerHeight: number = 1,
     header: string = ""
 ) {
@@ -30,7 +31,7 @@ function createDivider(
     grd.addColorStop(1, `${Color(color).alpha(0)}`)
     ctx.fillStyle = grd
     ctx.fillRect(x, y, w, dividerHeight)
-    createText(ctx, '#ffffff', `18px Quicksand`, header, x, y-2)
+    createText(ctx, labelTextColor, `18px Quicksand`, header, x, y-2)
 }
 
 async function getCanvas(user: User, stats: UserStats) : Promise<Buffer> {
@@ -58,42 +59,53 @@ async function getCanvas(user: User, stats: UserStats) : Promise<Buffer> {
     ctx.drawImage(avatar, 200, (canvas.height / 2) - 100, 200, 200)
     ctx.restore()
 
-    createText(ctx, '#ffffff', `24px Quicksand`, stats.titleString, 300, (canvas.height / 2) + 150, 'center')
-    createText(ctx, '#ffffff', `18px Quicksand`, `${stats.coins.withCommas()} Lounge Coins`, 300, (canvas.height / 2) + 170, 'center')
+    var textColor : string
+    if (Color(stats.tier.secondaryColor).isLight()) {
+        textColor = '#000000'
+    } else {
+        textColor = '#ffffff'
+    }
 
-    createText(ctx, '#ffffff', '72px Quicksand', stats.levelStats.level.toString(), 25, 100)
+    createText(ctx, textColor, `24px Quicksand`, stats.titleString, 300, (canvas.height / 2) + 150, 'center')
+    createText(ctx, textColor, `18px Quicksand`, `${stats.coins.withCommas()} Lounge Coins`, 300, (canvas.height / 2) + 170, 'center')
 
-    createText(ctx, '#ffffff', '32px Quicksand', stats.tier.title, 550, 75)
-    createText(ctx, '#ffffff', '38px Quicksand', stats.nickname.toUpperCase(), 550, 120, 'left', 350)
+    createText(ctx, textColor, '72px Quicksand', stats.levelStats.level.toString(), 25, 100)
 
-    createDivider(ctx, "#C0C0C0", 150, (canvas.height / 2) + 175, 300)
+    createText(ctx, textColor, '32px Quicksand', stats.tier.title, 550, 75)
+    createText(ctx, textColor, '38px Quicksand', stats.nickname.toUpperCase(), 550, 120, 'left', 350)
+
+    createDivider(ctx, "#C0C0C0", 150, (canvas.height / 2) + 175, 300, textColor)
 
     const userStatsTextStyle = '18px Quicksand'
     const userStatsNameY = (canvas.height / 2) + 200
     const userStatsValueY = (canvas.height / 2) + 225
-    createText(ctx, '#ffffff', userStatsTextStyle, "ATK", 150, userStatsNameY, 'center')
-    createText(ctx, '#ffffff', userStatsTextStyle, stats.atk.toString(), 150, userStatsValueY, 'center')
-    createText(ctx, '#ffffff', userStatsTextStyle, "DEF", 200, userStatsNameY, 'center')
-    createText(ctx, '#ffffff', userStatsTextStyle, stats.def.toString(), 200, userStatsValueY, 'center')
-    createText(ctx, '#ffffff', userStatsTextStyle, "MAT", 250, userStatsNameY, 'center')
-    createText(ctx, '#ffffff', userStatsTextStyle, stats.matk.toString(), 250, userStatsValueY, 'center')
-    createText(ctx, '#ffffff', userStatsTextStyle, "MDE", 300, userStatsNameY, 'center')
-    createText(ctx, '#ffffff', userStatsTextStyle, stats.mdef.toString(), 300, userStatsValueY, 'center')
-    createText(ctx, '#ffffff', userStatsTextStyle, "AGI", 350, userStatsNameY, 'center')
-    createText(ctx, '#ffffff', userStatsTextStyle, stats.agi.toString(), 350, userStatsValueY, 'center')
-    createText(ctx, '#ffffff', userStatsTextStyle, "HP", 400, userStatsNameY, 'center')
-    createText(ctx, '#ffffff', userStatsTextStyle, stats.hp.toString(), 400, userStatsValueY, 'center')
-    createText(ctx, '#ffffff', userStatsTextStyle, "CHA", 450, userStatsNameY, 'center')
-    createText(ctx, '#ffffff', userStatsTextStyle, stats.cha.toString(), 450, userStatsValueY, 'center')
+    createText(ctx, textColor, userStatsTextStyle, "ATK", 150, userStatsNameY, 'center')
+    createText(ctx, textColor, userStatsTextStyle, stats.atk.toString(), 150, userStatsValueY, 'center')
+    createText(ctx, textColor, userStatsTextStyle, "DEF", 200, userStatsNameY, 'center')
+    createText(ctx, textColor, userStatsTextStyle, stats.def.toString(), 200, userStatsValueY, 'center')
+    createText(ctx, textColor, userStatsTextStyle, "MAT", 250, userStatsNameY, 'center')
+    createText(ctx, textColor, userStatsTextStyle, stats.matk.toString(), 250, userStatsValueY, 'center')
+    createText(ctx, textColor, userStatsTextStyle, "MDE", 300, userStatsNameY, 'center')
+    createText(ctx, textColor, userStatsTextStyle, stats.mdef.toString(), 300, userStatsValueY, 'center')
+    createText(ctx, textColor, userStatsTextStyle, "AGI", 350, userStatsNameY, 'center')
+    createText(ctx, textColor, userStatsTextStyle, stats.agi.toString(), 350, userStatsValueY, 'center')
+    createText(ctx, textColor, userStatsTextStyle, "HP", 400, userStatsNameY, 'center')
+    createText(ctx, textColor, userStatsTextStyle, stats.hp.toString(), 400, userStatsValueY, 'center')
+    createText(ctx, textColor, userStatsTextStyle, "CHA", 450, userStatsNameY, 'center')
+    createText(ctx, textColor, userStatsTextStyle, stats.cha.toString(), 450, userStatsValueY, 'center')
 
-    createText(ctx, '#ffffff', userStatsTextStyle, `Spec Points Available: ${stats.specPoints}`, 300, userStatsValueY + 25, 'center')
+    createText(ctx, textColor, userStatsTextStyle, `Spec Points Available: ${stats.specPoints}`, 300, userStatsValueY + 25, 'center')
 
 
-    createDivider(ctx, '#C0C0C0', 525, 145, 425, 1, 'Progression')
+    createDivider(ctx, '#C0C0C0', 525, 145, 425, textColor, 1, 'Progression')
 
 
     //XP Bar backgrounds
-    ctx.fillStyle = `${Color(stats.tier.primaryColor).darken(0.5)}`
+    if (Color(stats.tier.secondaryColor).isLight()) {
+        ctx.fillStyle = `${Color(stats.tier.primaryColor).whiten(0.75).hex()}`
+    } else {
+        ctx.fillStyle = `${Color(stats.tier.primaryColor).blacken(0.75).hex()}`
+    }
     ctx.fillRect(550, 175, 350, 15)
     ctx.fillRect(550, 225, 350, 15)
 
@@ -106,7 +118,7 @@ async function getCanvas(user: User, stats: UserStats) : Promise<Buffer> {
     ctx.fillRect(550, 225, 350 * tierXpPercent, 15)
 
     //Current and next levels and titles
-    ctx.fillStyle = '#ffffff'
+    ctx.fillStyle = textColor
     ctx.font = '24px Quicksand'
     ctx.fillText(`${stats.levelStats.level}`, 550, 170)
     ctx.fillText(`${stats.tier.title}`, 550, 220)
@@ -115,7 +127,7 @@ async function getCanvas(user: User, stats: UserStats) : Promise<Buffer> {
     ctx.fillText(`${stats.levelStats.nextLevel}`, 900, 170)
     ctx.fillText(`${stats.tier.nextTitleName}`, 900, 220)
 
-    createDivider(ctx, '#C0C0C0', 525, 275, 425, 1, 'All Time')
+    createDivider(ctx, '#C0C0C0', 525, 275, 425, textColor, 1, 'All Time')
 
 
     //XP Bar Labels
@@ -129,7 +141,7 @@ async function getCanvas(user: User, stats: UserStats) : Promise<Buffer> {
         ctx.textAlign = 'right'
         startPoint = 545
     }
-    ctx.fillStyle = '#ffffff'
+    ctx.fillStyle = textColor
     ctx.fillText(`${Math.floor(levelXpPercent * 100)}%`, startPoint + (350 * levelXpPercent), 187)
     ctx.fillText(`${Math.floor(tierXpPercent * 100)}%`, startPoint + (350 * tierXpPercent), 237)
 
@@ -139,19 +151,19 @@ async function getCanvas(user: User, stats: UserStats) : Promise<Buffer> {
 
     //Stats
     var statsTextStyle = `20px Quicksand`
-    createText(ctx, `#ffffff`, statsTextStyle, `Messages Sent`, 550, 300)
-    createText(ctx, `#ffffff`, statsTextStyle, `Voice Chat`, 550, 330)
+    createText(ctx, textColor, statsTextStyle, `Messages Sent`, 550, 300)
+    createText(ctx, textColor, statsTextStyle, `Voice Chat`, 550, 330)
 
-    createText(ctx, `#ffffff`, statsTextStyle, `${stats.levelStats.messagesSent.withCommas()}`, 900, 300, 'right')
-    createText(ctx, `#ffffff`, statsTextStyle, `${secondsToTimeString(stats.levelStats.secondsVoice)}`, 900, 330, 'right')  
+    createText(ctx, textColor, statsTextStyle, `${stats.levelStats.messagesSent.withCommas()}`, 900, 300, 'right')
+    createText(ctx, textColor, statsTextStyle, `${secondsToTimeString(stats.levelStats.secondsVoice)}`, 900, 330, 'right')  
     
-    createDivider(ctx, '#C0C0C0', 525, 355, 425, 1, 'Rankings')
+    createDivider(ctx, '#C0C0C0', 525, 355, 425, textColor, 1, 'Rankings')
 
 
     //Rankings
-    createText(ctx, `#ffffff`, statsTextStyle, `Level`, 550, 380)
-    createText(ctx, `#ffffff`, statsTextStyle, `Messages`, 550, 410)
-    createText(ctx, `#ffffff`, statsTextStyle, `Voice`, 550, 440)
+    createText(ctx, textColor, statsTextStyle, `Level`, 550, 380)
+    createText(ctx, textColor, statsTextStyle, `Messages`, 550, 410)
+    createText(ctx, textColor, statsTextStyle, `Voice`, 550, 440)
 
     var messagePromise = getStatLeaderboardUseCase(StatType.TotalMessages, OrderType.DESC, Repository)
     var voicePromise = getStatLeaderboardUseCase(StatType.TotalVoice, OrderType.DESC, Repository)
@@ -166,18 +178,18 @@ async function getCanvas(user: User, stats: UserStats) : Promise<Buffer> {
         var xpRank = value[2].members.findIndex((leaderboardUser: LeaderboardUserResponse) => {
             return leaderboardUser.discordId == user.id.toString()
         }) + 1
-        createText(ctx, `#ffffff`, statsTextStyle, `${xpRank}`, 900, 380, 'right')
-        createText(ctx, `#ffffff`, statsTextStyle, `${messageRank}`, 900, 410, 'right')
-        createText(ctx, `#ffffff`, statsTextStyle, `${voiceRank}`, 900, 440, 'right') 
+        createText(ctx, textColor, statsTextStyle, `${xpRank}`, 900, 380, 'right')
+        createText(ctx, textColor, statsTextStyle, `${messageRank}`, 900, 410, 'right')
+        createText(ctx, textColor, statsTextStyle, `${voiceRank}`, 900, 440, 'right') 
     })
 
-    createDivider(ctx, '#C0C0C0', 525, 475, 425, 1, 'Abuse')
+    createDivider(ctx, '#C0C0C0', 525, 475, 425, textColor, 1, 'Abuse')
 
     //Slaps and Gulags
-    createText(ctx, `#ffffff`, statsTextStyle, `People Slapped`, 550, 500)
-    createText(ctx, `#ffffff`, statsTextStyle, `People Gulaged`, 550, 530) 
-    createText(ctx, `#ffffff`, statsTextStyle, `${stats.levelStats.usersSlapped}`, 900, 500, 'right')
-    createText(ctx, `#ffffff`, statsTextStyle, `${stats.levelStats.usersGulaged}`, 900, 530, 'right')  
+    createText(ctx, textColor, statsTextStyle, `People Slapped`, 550, 500)
+    createText(ctx, textColor, statsTextStyle, `People Gulaged`, 550, 530) 
+    createText(ctx, textColor, statsTextStyle, `${stats.levelStats.usersSlapped}`, 900, 500, 'right')
+    createText(ctx, textColor, statsTextStyle, `${stats.levelStats.usersGulaged}`, 900, 530, 'right')  
 
 
     return canvas.toBuffer()
