@@ -12,6 +12,7 @@ require('./api/gulag/gulagRoutes')
 require('./api/bot/botRoutes')
 require('./api/bets/betsRoutes')
 require('./api/stocks/stockRoutes')
+require('./api/button/buttonRoutes')
 
 client.once('ready', () => {
     console.log('Ready!')
@@ -23,8 +24,9 @@ import gulagCommands from './commands/gulag'
 import betsCommands from './commands/bets'
 import stocksCommands from './commands/stocks'
 import shopCommands from './commands/shop'
+import buttonCommands from './commands/button'
 import { Routes } from 'discord-api-types/v9'
-import { startPersonalityController, startTimedResultsController, startTrialController, startVoiceScoreController, startMessageScoreController, startLevelUpController, startActiveRoleController } from './chron'
+import { startPersonalityController, startTimedResultsController, startTrialController, startVoiceScoreController, startMessageScoreController, startLevelUpController, startActiveRoleController, startButtonGameController } from './chron'
 
 var commandModules = [
     userCommands,
@@ -32,12 +34,22 @@ var commandModules = [
     gulagCommands,
     betsCommands,
     stocksCommands,
-    shopCommands
+    shopCommands,
+    buttonCommands
 ]
 
 const token: string = process.env.BOT_TOKEN || ""
 
 client.on('messageCreate', async (message : Message) => {
+
+    if (!message.author.bot) {
+        var removeChance = 0.05
+        var roll = Math.random()
+        if (roll < removeChance) {
+            message.delete().catch(error => console.log(error))
+        }
+    }
+
     if (!client.application?.owner) await client.application?.fetch()
 
     if (message.content.toLowerCase() === '!deploy' && message.author.id == client.application?.owner?.id) {
@@ -89,6 +101,7 @@ client.login(process.env.BOT_TOKEN).then((value: string) => {
         startMessageScoreController(guild.id)
         startLevelUpController(guild.id)
         startActiveRoleController(guild.id)
+        startButtonGameController(guild.id)
     })
     startTrialController()
 })
