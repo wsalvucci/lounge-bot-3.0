@@ -33,7 +33,7 @@ const command = new SlashCommand(
             interaction.reply({content: 'That button is broken', ephemeral: true})
             return
         }
-        if (targetButtonDetails.timePressed !== null) {
+        if (targetButtonDetails.timePressed !== null &&  userButtonDetails.userId !== "") {
             interaction.reply({content: 'That button has already been pushed this round', ephemeral: true})
             return
         }

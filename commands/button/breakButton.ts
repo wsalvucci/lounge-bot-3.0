@@ -29,7 +29,7 @@ const command = new SlashCommand(
 
         var userButtonDetails = await getButtonUseCase(user.id, buttonApi)
         var targetButtonDetails = await getButtonUseCase(target.id, buttonApi)
-        if (targetButtonDetails.timePressed !== null) {
+        if (targetButtonDetails.timePressed !== null && userButtonDetails.userId !== "") {
             interaction.reply({content: 'That button has already been pushed this round', ephemeral: true})
             return
         }

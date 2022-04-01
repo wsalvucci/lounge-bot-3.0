@@ -30,7 +30,7 @@ const command = new SlashCommand(
 
         var userButtonDetails = await getButtonUseCase(user.id, buttonApi)
         var targetButtonDetails = await getButtonUseCase(target.id, buttonApi)
-        if (targetButtonDetails.buttonBroken !== 1) {
+        if (targetButtonDetails.buttonBroken !== 1 &&  userButtonDetails.userId !== "") {
             interaction.reply({content: `That button is not broken`, ephemeral: true})
             return
         }
