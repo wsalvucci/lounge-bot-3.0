@@ -12,7 +12,7 @@ import breakButtonUseCase from '../useCases/button/breakButtonUseCase'
 import repairButtonUseCase from '../useCases/button/repairButtonUseCase'
 import pushButtonUseCase from '../useCases/button/pushButtonUseCase'
 
-const MAX_ROUND_LENGTH = 1800
+const MAX_ROUND_LENGTH = 3600
 const BOT_ACTION_CHANCES = 0.002
 
 function timeToScore(time: number) : number {

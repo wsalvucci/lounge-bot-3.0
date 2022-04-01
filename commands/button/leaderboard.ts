@@ -23,7 +23,7 @@ const command = new SlashCommand(
         })
         .forEach((button: UserButton) => {
             var username : string | undefined = client.users.cache.get(button.userId)?.username
-            if (username == undefined) username = ""
+            if (username == undefined) username = button.userId
             leaderboard.addField(username, button.score.toString())
         });
 
