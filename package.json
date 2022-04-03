@@ -4,7 +4,7 @@
   "description": "A bot for The Lounge discord server",
   "main": "index.js",
   "scripts": {
-    "start": "copyfiles assets/**/* build/ && node build/bot.js",
+    "start": "node build/bot.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "postinstall": "tsc"
   },
