@@ -20,23 +20,27 @@ function updatePersonality(guildId: string) {
             }
         })
 
-        var introLines = await getBotPersonalityIntroLinesUseCase(newPersonality.id, botApi)
-        var selectedLine = introLines[Math.floor(Math.random() * introLines.length)]
+        /**
+         * This was meant to announce the bot each time they updated, but it got a
+         * little spammy so it has been removed. The personality and name will still change
+         */
+        // var introLines = await getBotPersonalityIntroLinesUseCase(newPersonality.id, botApi)
+        // var selectedLine = introLines[Math.floor(Math.random() * introLines.length)]
 
-        var guildConfig = await getGuildConfigUseCase(guildId, botApi)
+        // var guildConfig = await getGuildConfigUseCase(guildId, botApi)
 
-        var channel = await client.channels.fetch(guildConfig.announcementsChannel)
+        // var channel = await client.channels.fetch(guildConfig.announcementsChannel)
 
-        if (channel == null) {
-            console.log('Invalid announcement channel given for intro lines')
-            return
-        } else {
-            if (channel instanceof TextChannel) {
-                channel.send(selectedLine)
-            } else {
-                console.log('Invalid channel type given for announcements channel. Not a TextChannel')
-            }
-        }
+        // if (channel == null) {
+        //     console.log('Invalid announcement channel given for intro lines')
+        //     return
+        // } else {
+        //     if (channel instanceof TextChannel) {
+        //         channel.send(selectedLine)
+        //     } else {
+        //         console.log('Invalid channel type given for announcements channel. Not a TextChannel')
+        //     }
+        // }
         
         
         console.log(newPersonality)

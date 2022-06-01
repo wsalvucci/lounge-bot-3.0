@@ -20,7 +20,7 @@ function levelUpUsers(guildId: string) {
             if (actualLevel > currentLevel) {
                 var guildConfig = await getGuildConfigUseCase(guildId, botApi)
 
-                var channel = await client.channels.fetch(guildConfig.announcementsChannel) as TextChannel
+                var channel = await client.channels.fetch(guildConfig.levelChannel) as TextChannel
 
                 if (channel !== null) {
                     channel.send(`<@${user.attributes.discordId}> is now Level ${actualLevel}!!`)

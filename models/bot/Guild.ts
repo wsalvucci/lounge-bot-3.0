@@ -2,6 +2,7 @@ class GuildConfig {
     id: string
     announcementsChannel: string
     competitionChannel: string
+    levelChannel: string
     afkChannel: string
     gulagRole: string
     normalRole: string
@@ -12,6 +13,7 @@ class GuildConfig {
         id: string,
         announcementsChannel: string,
         competitionChannel: string,
+        levelChannel: string,
         afkChannel: string,
         gulagRole: string,
         normalRole: string,
@@ -21,6 +23,7 @@ class GuildConfig {
         this.id = id
         this.announcementsChannel = announcementsChannel
         this.competitionChannel = competitionChannel
+        this.levelChannel = levelChannel
         this.afkChannel = afkChannel
         this.gulagRole = gulagRole
         this.normalRole = normalRole
@@ -33,6 +36,7 @@ class GuildConfig {
             data.guildId,
             data.announcementsChannelId,
             data.competitionChannelId,
+            data.levelChannelId,
             data.afkChannelId,
             data.gulagRoleId,
             data.normalRoleId,
