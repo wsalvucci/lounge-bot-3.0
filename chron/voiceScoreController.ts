@@ -1,4 +1,5 @@
 import { AnyChannel, Channel, GuildMember, VoiceChannel } from "discord.js"
+import getUserFullDataUseCase from "useCases/user/getUserFullDataUseCase"
 import botApi from "../api/bot/botApi"
 import loungeApi from "../api/loungeApi"
 import client from "../bot"
@@ -25,8 +26,13 @@ export default function(guildId: string) {
                     score = Math.max(0, score)
                 })
 
-                members.forEach((member: GuildMember) => {
-                    addVoiceUseCase(member.id, score, Math.round(score + (score * guildConfig.xpModifier)), loungeApi)
+                members.forEach(async (member: GuildMember) => {
+                    var voiceXp = Math.round(score + (score * guildConfig.xpModifier))
+                    var userData = await getUserFullDataUseCase(member.id, loungeApi)
+                    if (userData.attributes.stunned == 1) {
+                        voiceXp = 0
+                    }
+                    addVoiceUseCase(member.id, score, voiceXp, loungeApi)
                 })
             }
         })

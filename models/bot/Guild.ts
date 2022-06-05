@@ -8,6 +8,7 @@ class GuildConfig {
     normalRole: string
     xpModifier: number
     birthdayActive: number
+    stunnedRole: string
 
     constructor(
         id: string,
@@ -18,7 +19,8 @@ class GuildConfig {
         gulagRole: string,
         normalRole: string,
         xpModifier: number,
-        birthdayActive: number
+        birthdayActive: number,
+        stunnedRole: string
     ) {
         this.id = id
         this.announcementsChannel = announcementsChannel
@@ -29,6 +31,7 @@ class GuildConfig {
         this.normalRole = normalRole
         this.xpModifier = xpModifier
         this.birthdayActive = birthdayActive
+        this.stunnedRole = stunnedRole
     }
 
     static toDomainModel(data: any) : GuildConfig {
@@ -41,7 +44,8 @@ class GuildConfig {
             data.gulagRoleId,
             data.normalRoleId,
             data.xpModifier,
-            data.birthdayActive
+            data.birthdayActive,
+            data.stunnedRoleId
         )
     }
 }

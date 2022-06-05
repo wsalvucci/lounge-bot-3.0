@@ -39,10 +39,12 @@ export function removeTrialBribe(trialId: number, discordId: string) {
 
 export function gulagUser(userId: string, attackerId: string, timestamp: number, points: number) {
     query(`INSERT INTO gulag_archive (victimId, attackerId, timestamp) VALUES (${userId}, ${attackerId}, ${timestamp})`)
+    query(`UPDATE users SET stunned = 1 WHERE discordId = ${userId}`)
     return query(`INSERT INTO gulag (victimId, attackerId, timestamp, points) VALUES (${userId}, ${attackerId}, ${timestamp}, ${points}) ON DUPLICATE KEY UPDATE points = ${points}`)
 }
 
 export function unGulagUser(userId: string) {
+    query(`UPDATE users SET stunned = 0 WHERE discordId = ${userId}`)
     return query(`DELETE FROM gulag WHERE victimId = ${userId}`)
 }
 

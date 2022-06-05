@@ -1,4 +1,6 @@
 import { GuildMember, Message } from "discord.js";
+import getUserFullDataUseCase from "useCases/user/getUserFullDataUseCase";
+import getUserStatsUseCase from "useCases/user/getUserStatsUseCase";
 import botApi from "../api/bot/botApi";
 import loungeApi from "../api/loungeApi";
 import client from "../bot";
@@ -12,6 +14,13 @@ export default function(guildId: string) {
         var guildConfig = await getGuildConfigUseCase(guildId, botApi)
         if (message.member == null) return
         var member = message.member as GuildMember
-        addMessageUseCase(message.member.id, XP_PER_MESSAGE + (XP_PER_MESSAGE * guildConfig.xpModifier), loungeApi)
+        var messageXp = XP_PER_MESSAGE
+        var userData = await getUserFullDataUseCase(member.id, loungeApi)
+        if (userData.attributes.stunned == 1) {
+            messageXp = 0
+        } else {
+            messageXp = XP_PER_MESSAGE + (XP_PER_MESSAGE * guildConfig.xpModifier)
+        }
+        addMessageUseCase(message.member.id, messageXp, loungeApi)
     })
 }

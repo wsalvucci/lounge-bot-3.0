@@ -545,21 +545,15 @@ export function secondsToTimeString(seconds: number) : string {
 }
 
 export function gulagUser(guildConfig: GuildConfig, user: GuildMember, attacker: GuildMember, timestamp: number, points: number, repository: typeof gulagApi) : Promise<SqlResponse> {
-    if (guildConfig.gulagRole !== null) {
-        user.roles.add(guildConfig.gulagRole)
-    }
-    if (guildConfig.normalRole !== null) {
-        user.roles.remove(guildConfig.normalRole)
+    if (guildConfig.stunnedRole != null) {
+        user.roles.add(guildConfig.stunnedRole)
     }
     return gulagUserUseCase(user.id, attacker.id, timestamp, points, repository)
 }
 
 export function unGulagUser(guildConfig: GuildConfig, user: GuildMember, repository: typeof gulagApi) : Promise<SqlResponse> {
-    if (guildConfig.normalRole !== null) {
-        user.roles.add(guildConfig.normalRole)
-    }
-    if (guildConfig.gulagRole !== null) {
-        user.roles.remove(guildConfig.gulagRole)
+    if (guildConfig.stunnedRole !== null) {
+        user.roles.remove(guildConfig.stunnedRole)
     }
     return unGulagUserUseCase(user.id, repository)
 }
