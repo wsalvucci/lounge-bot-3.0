@@ -1,4 +1,4 @@
-import { addMessage, addPersonalRecord, addServerRecord, addVoice, createUser, getAllUsers, getLeaderboard, getPersonalRecord, getTitle, getUser, incrementUserValue, updateUserValue } from "../domain/databaseRequests";
+import { addMessage, addPersonalRecord, addServerRecord, addVoice, createUser, getAllUsers, getHouseDetails, getLeaderboard, getPersonalRecord, getTitle, getUser, incrementUserValue, updateUserValue } from "../domain/databaseRequests";
 import app from "../domain/expressModule";
 
 function processDatabaseRequest(request: Promise<any>, res: any) {
@@ -90,7 +90,7 @@ app.get(`/updateUserProperty`, (req: any, res: any) => {
 })
 
 app.get(`/createUser`, (req: any, res: any) => {
-    processDatabaseRequest(createUser(req.query.discordId, req.query.name, req.query.timeAdded), res)
+    processDatabaseRequest(createUser(req.query.discordId, req.query.name, req.query.timeAdded, req.query.house), res)
 })
 
 app.get(`/personalRecords`, (req: any, res: any) => {
@@ -115,4 +115,8 @@ app.get(`/user/addPersonalRecord`, (req: any, res: any) => {
 
 app.get(`/user/addServerRecord`, (req: any, res: any) => {
     processDatabaseRequest(addServerRecord(req.query.timestamp, req.query.messages, req.query.voice), res)
+})
+
+app.get(`/house`, (req: any, res: any) => {
+    processDatabaseRequest(getHouseDetails(req.query.id), res)
 })

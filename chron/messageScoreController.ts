@@ -12,7 +12,7 @@ const XP_PER_MESSAGE = 100
 export default function(guildId: string) {
     client.on('messageCreate', async (message: Message) => {
         var guildConfig = await getGuildConfigUseCase(guildId, botApi)
-        if (message.member == null) return
+        if (message.member == null || message.member.user.bot) return
         var member = message.member as GuildMember
         var messageXp = XP_PER_MESSAGE
         var userData = await getUserFullDataUseCase(member.id, loungeApi)

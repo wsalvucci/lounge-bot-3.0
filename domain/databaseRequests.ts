@@ -24,8 +24,8 @@ export function getLeaderboard(statName: string, order: string) {
     return query(`SELECT discordId, name, ${statName} FROM users ORDER BY ${statName} ${order}`)
 }
 
-export function createUser(discordId: string, name: string, timeAdded: number) {
-    return query(`INSERT INTO users (discordId, name, timeAdded) VALUES ('${discordId}', '${name}', ${timeAdded})`)
+export function createUser(discordId: string, name: string, timeAdded: number, house: number) {
+    return query(`INSERT INTO users (discordId, name, timeAdded, house) VALUES ('${discordId}', '${name}', ${timeAdded}, ${house})`)
 }
 
 export function getPersonalRecord(discordId: string) {
@@ -50,4 +50,8 @@ export function addPersonalRecord(discordId: string, timestamp: number, messages
 
 export function addServerRecord(timestamp: number, messages: number, voice: number) {
     return query(`INSERT INTO daily_server_records (timestamp, totalMessage, totalVoice) VALUES (${timestamp}, ${messages}, ${voice})`)
+}
+
+export function getHouseDetails(houseId: number) {
+    return query(`SELECT * FROM houses WHERE houseId = ${houseId}`)
 }

@@ -1,4 +1,5 @@
 import { OrderType } from "../domain/loungeFunctions";
+import House from "../models/house/House";
 import LoungeUser from "../models/LoungeUser";
 import { LeaderboardResponse } from "../models/response/LeaderboardResponse";
 import { PersonalRecordsResponse } from "../models/response/PersonalRecordsResponse";
@@ -48,8 +49,8 @@ class TheLoungeApi {
             .then((data: any) => SqlResponse.dataToModel(data))
     }
 
-    async createAccount(discordId: string, name: string, timeAdded: number) : Promise<SqlResponse> {
-        return apiCall(`/createUser?discordId=${discordId}&name=${name}&timeAdded=${timeAdded}`)
+    async createAccount(discordId: string, name: string, timeAdded: number, house: number) : Promise<SqlResponse> {
+        return apiCall(`/createUser?discordId=${discordId}&name=${name}&timeAdded=${timeAdded}&house=${house}`)
             .then((data: any) => SqlResponse.dataToModel(data))
     }
 
@@ -94,6 +95,11 @@ class TheLoungeApi {
     async addServerRecord(timestamp: number, messages: number, voice: number) : Promise<SqlResponse> {
         return apiCall(`/user/addServerRecord?timestamp=${timestamp}&messages=${messages}&voice=${voice}`)
             .then((data: any) => SqlResponse.dataToModel(data))
+    }
+
+    async getHouseDetails(houseId: number) : Promise<House> {
+        return apiCall(`/house?id=${houseId}`)
+            .then((data: any) => House.toDomainModel(data[0]))
     }
 }
 

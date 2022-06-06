@@ -11,6 +11,7 @@ import personalRecords from './personalRecords'
 import spec from './spec'
 import respec from './respec'
 import birthday from './birthday'
+import sethouse from './sethouse'
 import { StatType } from "../../domain/loungeFunctions";
 
 const command = new SlashCommand(
@@ -160,7 +161,20 @@ const command = new SlashCommand(
                     option.setName('user')
                         .setDescription('A specific user to get Lounge Stats for')
                 )
-        ),
+        )
+        .addSubcommand(subCommand => 
+            subCommand.setName('sethouse')
+                .setDescription('THIS IS IRREVERSABLE! CHOOSE WISELY!')
+                .addIntegerOption(option =>
+                    option.setName('house')
+                        .setDescription('The house you want to permanently join.')
+                        .setRequired(true)
+                        .addChoices([
+                            ['House 1 (Sealith)', 1],
+                            ['House 2 (OfficialChillAx)', 2],
+                            ['House 3 (GrumpyGungan)', 3],
+                            ['House 4 (Starkey)', 4]
+                        ]))),
     async (interaction: CommandInteraction) => {
         switch(interaction.options.getSubcommand(true)) {
             case 'birthday': birthday.method(interaction); break
@@ -172,6 +186,7 @@ const command = new SlashCommand(
             case 'respec': respec.method(interaction); break
             case 'spec': spec.method(interaction); break
             case 'stats': stats.method(interaction); break
+            case 'sethouse': sethouse.method(interaction); break
         }
     }
 )

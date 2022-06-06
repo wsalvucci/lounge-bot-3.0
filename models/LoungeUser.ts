@@ -20,7 +20,8 @@ class LoungeUser {
                 data.color,
                 data.activeTitleId,
                 data.birthday,
-                data.stunned
+                data.stunned,
+                data.house
             ),
             new LoungeUserStats(
                 data.xp,
@@ -69,6 +70,7 @@ class LoungeUserAttributes {
     titleId: number
     birthday: number
     stunned: number
+    house: number
 
     constructor(
         discordId: string,
@@ -78,7 +80,8 @@ class LoungeUserAttributes {
         color: string,
         titleId: number,
         birthday: number,
-        stunned: number
+        stunned: number,
+        house: number
     ) {
         this.discordId = discordId
         this.name = name
@@ -88,6 +91,7 @@ class LoungeUserAttributes {
         this.titleId = titleId
         this.birthday = birthday
         this.stunned = stunned
+        this.house = house
     }
 }
 
