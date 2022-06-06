@@ -1,6 +1,6 @@
 import { GuildMember, Message } from "discord.js";
-import getUserFullDataUseCase from "useCases/user/getUserFullDataUseCase";
-import getUserStatsUseCase from "useCases/user/getUserStatsUseCase";
+import getUserFullDataUseCase from "../useCases/user/getUserFullDataUseCase";
+import getUserStatsUseCase from "../useCases/user/getUserStatsUseCase";
 import botApi from "../api/bot/botApi";
 import loungeApi from "../api/loungeApi";
 import client from "../bot";

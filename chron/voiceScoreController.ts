@@ -1,5 +1,5 @@
 import { AnyChannel, Channel, GuildMember, VoiceChannel } from "discord.js"
-import getUserFullDataUseCase from "useCases/user/getUserFullDataUseCase"
+import getUserFullDataUseCase from "../useCases/user/getUserFullDataUseCase"
 import botApi from "../api/bot/botApi"
 import loungeApi from "../api/loungeApi"
 import client from "../bot"
