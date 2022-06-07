@@ -50,7 +50,7 @@ export function adjustGuildXp(guildId: string, amount: number) {
 }
 
 export function resetGuildXp(guildId: string) {
-    return query(`UPDATE guildconfig SET xpModifier = 0 WHERE guildId = ${guildId}`)
+    return query(`UPDATE guildconfig SET xpModifier = 0, birthdayActive = 0 WHERE guildId = ${guildId}`)
 }
 
 export function getAllActiveRoles() {

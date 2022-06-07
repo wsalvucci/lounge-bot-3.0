@@ -6,6 +6,10 @@ export default class House {
     primaryColor: string
     secondaryColor: string
     roleId: string
+    dailyPoints: number
+    weeklyPoints: number
+    monthlyPoints: number
+    annualPoints: number
 
     constructor (
         id: number,
@@ -14,7 +18,11 @@ export default class House {
         description: string,
         primaryColor: string,
         secondaryColor: string,
-        roleId: string
+        roleId: string,
+        dailyPoints: number,
+        weeklyPoints: number,
+        monthlyPoints: number,
+        annualPoints: number
     ) {
         this.id = id
         this.headmaster = headmaster
@@ -23,6 +31,10 @@ export default class House {
         this.primaryColor = primaryColor
         this.secondaryColor = secondaryColor
         this.roleId = roleId
+        this.dailyPoints = dailyPoints
+        this.weeklyPoints = weeklyPoints
+        this.monthlyPoints = monthlyPoints
+        this.annualPoints = annualPoints
     }
 
     static toDomainModel(data: any) : House {
@@ -33,7 +45,11 @@ export default class House {
             data.description,
             data.primaryColor,
             data.secondaryColor,
-            data.roleId
+            data.roleId,
+            data.dailyPoints,
+            data.weeklyPoints,
+            data.monthlyPoints,
+            data.annualPoints
         )
     }
 }

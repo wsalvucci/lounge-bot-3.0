@@ -6,7 +6,7 @@ class GuildConfig {
     afkChannel: string
     gulagRole: string
     normalRole: string
-    xpModifier: number
+    xpModifier: string
     birthdayActive: number
     stunnedRole: string
     initiateRole: string
@@ -19,7 +19,7 @@ class GuildConfig {
         afkChannel: string,
         gulagRole: string,
         normalRole: string,
-        xpModifier: number,
+        xpModifier: string,
         birthdayActive: number,
         stunnedRole: string,
         initiateRole: string

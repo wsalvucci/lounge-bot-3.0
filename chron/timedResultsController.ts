@@ -19,6 +19,8 @@ import getPersonalityFavorUseCase from '../useCases/bot/getPersonalityFavorUseCa
 import BotPersonality from '../models/bot/BotPersonality'
 import getUserStatsUseCase from '../useCases/user/getUserStatsUseCase'
 import resetGuildXpUseCase from '../useCases/bot/resetGuildXpUseCase'
+import getHouseDetailsUseCase from '../useCases/house/getHouseDetails'
+import House from '../models/house/House'
 
 const DAILY_COIN_AWARD = 1000
 const WEEKLY_COIN_AWARD = 10000
@@ -29,24 +31,44 @@ class Result {
     name: string
     messagesSent: number
     voiceScore: number
+    house: number
 
     constructor(
         userId: string,
         name: string,
         messagesSent: number,
-        voiceScore: number
+        voiceScore: number,
+        house: number
     ) {
         this.userId = userId
         this.name = name
         this.messagesSent = messagesSent
         this.voiceScore = voiceScore
+        this.house = house
     }
 }
 
-const USER_DATA_HEIGHT = 75
+class HouseResult {
+    house: House
+    messagesSentAvg: number
+    voiceScoreAvg: number
 
-async function resultCanvas(rankings: Result[], title: string, maxValue: number, rankingType: string, maxReward: number, botConfig: BotPersonality, xpModifier: number) : Promise<Buffer> {
-    const canvas = Canvas.createCanvas(1000, 75 + (USER_DATA_HEIGHT * (rankings.length + 1)))
+    constructor(
+        house: House,
+        messagesSentAvg: number,
+        voiceScoreAvg: number
+    ) {
+        this.house = house
+        this.messagesSentAvg = messagesSentAvg
+        this.voiceScoreAvg = voiceScoreAvg
+    }
+}
+
+const USER_DATA_START = 150
+const USER_DATA_HEIGHT = 50
+
+async function resultCanvas(rankings: Result[], houseRankings: HouseResult[], title: string, maxValue: number, rankingType: string, maxReward: number, botConfig: BotPersonality, xpModifier: number) : Promise<Buffer> {
+    const canvas = Canvas.createCanvas(1000, Math.max(75 + (USER_DATA_HEIGHT * (rankings.length + 1)), 350))
     const ctx = canvas.getContext('2d')
 
     createDefaultBackground(canvas, ctx)
@@ -55,32 +77,36 @@ async function resultCanvas(rankings: Result[], title: string, maxValue: number,
         createText(ctx, '#FFD700', '24px Boldsand', `${Math.round(xpModifier * 100)}% Bonus!`, 500, 100, 'center')
     }
 
+    houseRankings.sort((a, b) => {
+        if (rankingType == 'message') {
+            return b.messagesSentAvg - a.messagesSentAvg
+        } else {
+            return b.voiceScoreAvg - a.voiceScoreAvg
+        }
+    }).forEach((data, index) => {
+        if (rankingType == 'message') {
+            createText(ctx, `#${data.house.primaryColor}`, '36px Boldsand', `${data.house.name} - ${Math.floor(data.messagesSentAvg).withCommas()}`, 600, 150 + (USER_DATA_HEIGHT * index), 'left')
+        } else {
+            createText(ctx, `#${data.house.primaryColor}`, '36px Boldsand', `${data.house.name} - ${Math.floor(data.voiceScoreAvg).withCommas()}`, 600, 150 + (USER_DATA_HEIGHT * index), 'left')
+        }
+    })
+
     for (var i = 0; i < rankings.length; i++) {
         var result = rankings[i]
         var index = i
-
-        var textColor = '#ffffff'
-        if (index == 0) {textColor = '#FFA700'}
-        if (index == 1) {textColor = '#D0D0D0'}
-        if (index == 2) {textColor = '#DA771A'}
-
-        var botFavor = await getPersonalityFavorUseCase(botConfig.id, result.userId, botApi)
-        var userStats = await getUserStatsUseCase(result.userId, loungeApi)
-        var bonusPercentage = (botFavor.favor / 100) + (userStats.cha * 0.0025) + +xpModifier
-        bonusPercentage = Math.round(bonusPercentage * 10000) / 10000
-        var bonusPercentageString = ""
-        if (bonusPercentage !== 0) {
-            bonusPercentageString = "(" + (bonusPercentage <= 0 ? "" : "+") + (Math.round(bonusPercentage * 10000) / 100) + "%)"
+        var userStats = await getUserFullDataUseCase(result.userId, loungeApi)
+        var houseData : House | null = null
+        if (userStats.attributes.house != null) {
+            houseData = await getHouseDetailsUseCase(userStats.attributes.house, loungeApi)
         }
-        createText(ctx, textColor, '36px Boldsand', `${result.name}`, 50, USER_DATA_HEIGHT * (index + 2), 'left', 300)
+
+        var textColor = `#${houseData != null ? houseData.primaryColor : 'C0C0C0'}`
+        var yValue = USER_DATA_START + (USER_DATA_HEIGHT * (index))
+        createText(ctx, textColor, '36px Boldsand', `${result.name}`, 50, yValue, 'left', 300)
         if (rankingType == 'message') {
-            var reward = Math.round(result.messagesSent / maxValue * maxReward)
-            createText(ctx, textColor, '36px Boldsand', `${Math.round(reward + (reward * bonusPercentage)).withCommas()} ${bonusPercentageString}`, 600, USER_DATA_HEIGHT * (index + 2))
-            createText(ctx, textColor, '36px Boldsand', `${result.messagesSent.withCommas()}`, 400, USER_DATA_HEIGHT * (index + 2))
+            createText(ctx, textColor, '36px Boldsand', `${result.messagesSent.withCommas()}`, 400, yValue)
         } else {
-            var reward = Math.round(result.voiceScore / maxValue * maxReward)
-            createText(ctx, textColor, '36px Boldsand', `${Math.round(reward + (reward * bonusPercentage)).withCommas()} ${bonusPercentageString}`, 600, USER_DATA_HEIGHT * (index + 2))
-            createText(ctx, textColor, '36px Boldsand', `${result.voiceScore.withCommas()}`, 400, USER_DATA_HEIGHT * (index + 2))
+            createText(ctx, textColor, '36px Boldsand', `${result.voiceScore.withCommas()}`, 400, yValue)
         }
     }
 
@@ -102,11 +128,11 @@ async function runDailies(guildId: string, intervalType: string) {
         if(!(await checkIfUserExistsUseCase(user.id, loungeApi))) continue
         var userData = await getUserFullDataUseCase(user.id, loungeApi)
         if (intervalType == 'daily') {
-            awards.push(new Result(user.id, user.nickname !== null ? user.nickname : user.displayName, userData.stats.dailyStats.messagesSent, userData.stats.dailyStats.secondsVoice))
+            awards.push(new Result(user.id, user.nickname !== null ? user.nickname : user.displayName, userData.stats.dailyStats.messagesSent, userData.stats.dailyStats.secondsVoice, userData.attributes.house))
         } else if (intervalType == 'weekly') {
-            awards.push(new Result(user.id, user.nickname !== null ? user.nickname : user.displayName, userData.stats.weeklyStats.messagesSent, userData.stats.weeklyStats.secondsVoice))
+            awards.push(new Result(user.id, user.nickname !== null ? user.nickname : user.displayName, userData.stats.weeklyStats.messagesSent, userData.stats.weeklyStats.secondsVoice, userData.attributes.house))
         } else {
-            awards.push(new Result(user.id, user.nickname !== null ? user.nickname : user.displayName, userData.stats.monthlyStats.messagesSent, userData.stats.monthlyStats.secondsVoice))
+            awards.push(new Result(user.id, user.nickname !== null ? user.nickname : user.displayName, userData.stats.monthlyStats.messagesSent, userData.stats.monthlyStats.secondsVoice, userData.attributes.house))
         }
     }
 
@@ -115,6 +141,31 @@ async function runDailies(guildId: string, intervalType: string) {
     awards.forEach((result: Result) => {
         messageMax = Math.max(messageMax, result.messagesSent)
         voiceMax = Math.max(voiceMax, result.voiceScore)
+    })
+
+    var houseAwards : HouseResult[] = []
+    var houseDataList : House[] = [
+        await getHouseDetailsUseCase(1, loungeApi),
+        await getHouseDetailsUseCase(2, loungeApi),
+        await getHouseDetailsUseCase(3, loungeApi),
+        await getHouseDetailsUseCase(4, loungeApi)
+    ]
+    houseDataList.forEach((house: House) => {
+        var totalMessages = 0
+        var totalVoice = 0
+        var totalMembers = 0
+        awards.forEach((result: Result) => {
+            if (result.house == house.id) {
+                totalMembers += 1
+                totalMessages += result.messagesSent
+                totalVoice += result.voiceScore
+            }
+        })
+        var avgMessages = totalMessages / totalMembers
+        var avgVoice = totalVoice / totalMembers
+        if (isNaN(avgMessages)) avgMessages = 0
+        if (isNaN(avgVoice)) avgVoice = 0
+        houseAwards.push(new HouseResult(house, avgMessages, avgVoice))
     })
 
     var messageTitle = ""
@@ -141,8 +192,7 @@ async function runDailies(guildId: string, intervalType: string) {
         maxReward = MONTHLY_COIN_AWARD
     }
 
-    var xpBonus = guildConfig.xpModifier
-
+    var xpBonus = parseFloat(guildConfig.xpModifier)
     if (guildConfig.birthdayActive == 1) {
         xpBonus = xpBonus + 1
     }
@@ -152,18 +202,15 @@ async function runDailies(guildId: string, intervalType: string) {
         xpBonus = 0
     }
 
-    maxReward = maxReward + (maxReward * guildConfig.xpModifier)
+    maxReward = maxReward + (maxReward * parseFloat(guildConfig.xpModifier))
 
     var competitionChannel = await client.channels.fetch(guildConfig.competitionChannel) as TextChannel
-
     resultCanvas(
         awards
-        .filter((result: Result) => {
-            return result.messagesSent !== 0
-        })
         .sort((a: Result, b: Result) => {
             return b.messagesSent - a.messagesSent
         }),
+        houseAwards,
         messageTitle,
         messageMax,
         'message',
@@ -177,12 +224,10 @@ async function runDailies(guildId: string, intervalType: string) {
 
     resultCanvas(
         awards
-        .filter((result: Result) => {
-            return result.voiceScore !== 0
-        })
         .sort((a: Result, b: Result) => {
             return b.voiceScore - a.voiceScore
         }),
+        houseAwards,
         voiceTitle,
         voiceMax,
         'voice',
@@ -200,17 +245,14 @@ async function runDailies(guildId: string, intervalType: string) {
         var allServerMessages = 0
         var allServerVoice = 0
         awards.forEach(async (result: Result) => {
-            var botFavor = await getPersonalityFavorUseCase(botConfig.id, result.userId, botApi)
-            var userStats = await getUserStatsUseCase(result.userId, loungeApi)
-            var favorMultiplier = +(botFavor.favor / 100) + +1 + +(userStats.cha * 0.0025) + +xpBonus
             allServerMessages = allServerMessages + result.messagesSent
             allServerVoice = allServerVoice + result.voiceScore
             addUserRecordUseCase(result.userId, timestamp, result.messagesSent, result.voiceScore, loungeApi)
             if (messageMax !== 0) {
-                incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward) * favorMultiplier, loungeApi)
+                incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward), loungeApi)
             }
             if (voiceMax !== 0) {
-                incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward) * favorMultiplier, loungeApi)
+                incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward), loungeApi)
             }
             setUserPropertyUseCase(result.userId, StatType.DailyMessages, 0, loungeApi)
             setUserPropertyUseCase(result.userId, StatType.DailyVoice, 0, loungeApi)
@@ -218,28 +260,22 @@ async function runDailies(guildId: string, intervalType: string) {
         await addServerRecordUseCase(timestamp, allServerMessages, allServerVoice, loungeApi)
     } else if (intervalType == 'weekly') {
         awards.forEach(async (result: Result) => {
-            var botFavor = await getPersonalityFavorUseCase(botConfig.id, result.userId, botApi)
-            var userStats = await getUserStatsUseCase(result.userId, loungeApi)
-            var favorMultiplier = +(botFavor.favor / 100) + +1 + +(userStats.cha * 0.0025) + +xpBonus
             if (messageMax !== 0) {
-                incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward) * favorMultiplier, loungeApi)
+                incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward) , loungeApi)
             }
             if (voiceMax !== 0) {
-                incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward) * favorMultiplier, loungeApi)
+                incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward), loungeApi)
             }
             setUserPropertyUseCase(result.userId, StatType.WeeklyMessages, 0, loungeApi)
             setUserPropertyUseCase(result.userId, StatType.WeeklyVoice, 0, loungeApi)
         });
     } else {
         awards.forEach(async (result: Result) => {
-            var botFavor = await getPersonalityFavorUseCase(botConfig.id, result.userId, botApi)
-            var userStats = await getUserStatsUseCase(result.userId, loungeApi)
-            var favorMultiplier = +(botFavor.favor / 100) + +1 + +(userStats.cha * 0.0025) + +xpBonus
             if (messageMax !== 0) {
-                incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward) * favorMultiplier, loungeApi)
+                incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.messagesSent / messageMax * maxReward), loungeApi)
             }
             if (voiceMax !== 0) {
-                incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward) * favorMultiplier, loungeApi)
+                incrementUserStatUseCase(result.userId, StatType.Coins, Math.round(result.voiceScore / voiceMax * maxReward), loungeApi)
             }
             setUserPropertyUseCase(result.userId, StatType.MonthlyMessages, 0, loungeApi)
             setUserPropertyUseCase(result.userId, StatType.MonthlyVoice, 0, loungeApi)

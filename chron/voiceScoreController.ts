@@ -27,7 +27,7 @@ export default function(guildId: string) {
                 })
 
                 members.forEach(async (member: GuildMember) => {
-                    var voiceXp = Math.round(score + (score * guildConfig.xpModifier))
+                    var voiceXp = Math.round(score + (score * parseFloat(guildConfig.xpModifier)))
                     var userData = await getUserFullDataUseCase(member.id, loungeApi)
                     if (userData.attributes.stunned == 1) {
                         voiceXp = 0

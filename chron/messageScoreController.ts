@@ -19,7 +19,7 @@ export default function(guildId: string) {
         if (userData.attributes.stunned == 1) {
             messageXp = 0
         } else {
-            messageXp = XP_PER_MESSAGE + (XP_PER_MESSAGE * guildConfig.xpModifier)
+            messageXp = XP_PER_MESSAGE + (XP_PER_MESSAGE * parseFloat(guildConfig.xpModifier))
         }
         addMessageUseCase(message.member.id, messageXp, loungeApi)
     })
