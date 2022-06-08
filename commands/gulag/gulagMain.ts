@@ -14,7 +14,7 @@ import addslapresponse from './addSlapResponse'
 const command = new SlashCommand(
     new SlashCommandBuilder()
         .setName('gulag')
-        .setDescription('Contains commands related gulag features')
+        .setDescription('Contains commands related to gulag features')
         .addSubcommand(subcommand =>
             subcommand.setName('checkgulag')
                 .setDescription('Displays a list of active gulag members')

@@ -101,6 +101,22 @@ class TheLoungeApi {
         return apiCall(`/house?id=${houseId}`)
             .then((data: any) => House.toDomainModel(data[0]))
     }
+
+    async getAllHouseDetails() : Promise<House[]> {
+        return apiCall(`/house/allHouses`)
+            .then((data: any) => {
+                var houseList: House[] = []
+                data.forEach((house: any) => {
+                    houseList.push(House.toDomainModel(house))
+                });
+                return houseList
+            })
+    }
+
+    async addHousePointEvent(discordId: string, headmasterId: string, points: number, reason: string, houseId: number, timestamp: number) : Promise<SqlResponse> {
+        return apiCall(`/house/addPointEvent?discordId=${discordId}&headmasterId=${headmasterId}&points=${points}&reason=${reason}&houseId=${houseId}&timestamp=${timestamp}`)
+            .then((data: any) => SqlResponse.dataToModel(data))
+    }
 }
 
 export default new TheLoungeApi

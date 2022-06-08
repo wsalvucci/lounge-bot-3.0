@@ -23,6 +23,7 @@ import gulagCommands from './commands/gulag'
 import betsCommands from './commands/bets'
 import stocksCommands from './commands/stocks'
 import shopCommands from './commands/shop'
+import houseCommands from './commands/house'
 import { Routes } from 'discord-api-types/v9'
 import { startPersonalityController, startTimedResultsController, startTrialController, startVoiceScoreController, startMessageScoreController, startLevelUpController, startActiveRoleController, startBirthdayController } from './chron'
 import { updateUserValue } from './domain/databaseRequests'
@@ -33,7 +34,8 @@ var commandModules = [
     gulagCommands,
     betsCommands,
     stocksCommands,
-    shopCommands
+    shopCommands,
+    houseCommands
 ]
 
 const token: string = process.env.BOT_TOKEN || ""

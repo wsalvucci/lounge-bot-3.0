@@ -55,3 +55,13 @@ export function addServerRecord(timestamp: number, messages: number, voice: numb
 export function getHouseDetails(houseId: number) {
     return query(`SELECT * FROM houses WHERE houseId = ${houseId}`)
 }
+
+export function getAllHouseDetails() {
+    return query(`SELECT * FROM houses`)
+}
+
+export function addPointEvent(discordId: string, headmasterId: string, points: number, reason: string, houseId: number, timestamp: number) {
+    return query(`INSERT INTO house_point_events (discordId, headmasterId, points, reason, house, timestamp) VALUES(${discordId}, ${headmasterId}, ${points}, '${reason}', ${houseId}, ${timestamp})`)
+}
+
+//export function getHousePoints()
