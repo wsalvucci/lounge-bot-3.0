@@ -8,7 +8,7 @@ import House from "../../models/house/House";
 import SlashCommand from "../../models/SlashCommand";
 import getGuildConfigUseCase from "../../useCases/bot/getGuildConfigUseCase";
 import addHousePointEventUseCase from "../../useCases/house/addHousePointEventUseCase";
-import getHouseDetailsUseCase from "../../useCases/house/getAllHouseDetailsUseCase";
+import getAllHouseDetailsUseCase from "../../useCases/house/getAllHouseDetailsUseCase";
 import checkIfUserExistsUseCase from "../../useCases/user/checkIfUserExistsUseCase";
 import getUserFullDataUseCase from "../../useCases/user/getUserFullDataUseCase";
 
@@ -22,7 +22,7 @@ const command = new SlashCommand(
             return
         }
         var userData = await getUserFullDataUseCase(member.id, loungeApi)
-        var allHouseData = await getHouseDetailsUseCase(loungeApi)
+        var allHouseData = await getAllHouseDetailsUseCase(loungeApi)
         if (allHouseData.find((house: House) => house.headmaster == userData.attributes.discordId) == undefined) {
             interaction.reply({content: 'You have to be a housemaster to do that.', ephemeral: true})
             return

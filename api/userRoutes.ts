@@ -1,4 +1,4 @@
-import { addMessage, addPersonalRecord, addPointEvent, addServerRecord, addVoice, createUser, getAllHouseDetails, getAllUsers, getHouseDetails, getLeaderboard, getPersonalRecord, getTitle, getUser, incrementUserValue, updateUserValue } from "../domain/databaseRequests";
+import { addMessage, addPersonalRecord, addPointEvent, addServerRecord, addVoice, createUser, getAllHouseDetails, getAllUsers, getHouseDetails, getHousePoints, getLeaderboard, getPersonalRecord, getTitle, getUser, getUserPoints, incrementUserValue, updateUserValue } from "../domain/databaseRequests";
 import app from "../domain/expressModule";
 
 function processDatabaseRequest(request: Promise<any>, res: any) {
@@ -129,6 +129,10 @@ app.get(`/house/addPointEvent`, (req: any, res: any) => {
     processDatabaseRequest(addPointEvent(req.query.discordId, req.query.headmasterId, req.query.points, req.query.reason, req.query.houseId, req.query.timestamp), res)
 })
 
-// app.get(`/house/points`, (req: any, res: any) => {
-//     processDatabaseRequest()
-// })
+app.get(`/house/points`, (req: any, res: any) => {
+    processDatabaseRequest(getHousePoints(req.query.houseId, req.query.startTime, req.query.endTime), res)
+})
+
+app.get(`/user/points`, (req: any, res: any) => {
+    processDatabaseRequest(getUserPoints(req.query.discordId, req.query.startTime, req.query.endTime), res)
+})

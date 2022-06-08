@@ -117,6 +117,20 @@ class TheLoungeApi {
         return apiCall(`/house/addPointEvent?discordId=${discordId}&headmasterId=${headmasterId}&points=${points}&reason=${reason}&houseId=${houseId}&timestamp=${timestamp}`)
             .then((data: any) => SqlResponse.dataToModel(data))
     }
+
+    async getHousePoints(houseId: number, startTime: number, endTime: number) : Promise<{house: House, points: number}> {
+        return apiCall(`/house/points?houseId=${houseId}&startTime=${startTime}&endTime=${endTime}`)
+            .then((data: any) => {
+                return {house: House.toDomainModel(data[0]), points: parseInt(data[0].points)}
+            })
+    }
+
+    async getUserPoints(discordId: string, startTime: number, endTime: number) : Promise<{user: LoungeUser, points: number}> {
+        return apiCall(`/user/points?discordId=${discordId}&startTime=${startTime}&endTime=${endTime}`)
+            .then((data: any) => {
+                return {user: LoungeUser.toDomainModel(data[0]), points: parseInt(data[0].points)}
+            })
+    }
 }
 
 export default new TheLoungeApi

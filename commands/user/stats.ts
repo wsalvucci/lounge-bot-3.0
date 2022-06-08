@@ -17,6 +17,8 @@ import getHouseDetailsUseCase from "../../useCases/house/getHouseDetails"
 import loungeApi from "../../api/loungeApi"
 import LoungeUser from "../../models/LoungeUser"
 import getUserFullDataUseCase from "../../useCases/user/getUserFullDataUseCase"
+import getUserPointsUseCase from "../../useCases/house/getUserPointsUseCase"
+import { DateTime } from "luxon"
 
 function createDivider(
     ctx: NodeCanvasRenderingContext2D,
@@ -78,15 +80,29 @@ async function getCanvas(user: User, loungeUser: LoungeUser) : Promise<Buffer> {
         textColor = '#ffffff'
     }
 
-    createText(ctx, textColor, `24px Quicksand`, houseDetails.name, 300, (canvas.height / 2) + 150, 'center')
-    createText(ctx, textColor, `18px Quicksand`, `${loungeUser.stats.coins.withCommas()} Points`, 300, (canvas.height / 2) + 170, 'center')
+    var annualPoints = await getUserPointsUseCase(loungeUser.attributes.discordId, DateTime.now().startOf('year').toSeconds(), DateTime.now().toSeconds(), loungeApi)
+    createText(ctx, textColor, `36px Quicksand`, houseDetails.name, 300, (canvas.height / 2) - 150, 'center')
+    createText(ctx, textColor, `18px Quicksand`, `${DateTime.now().year}`, 300, (canvas.height / 2) + 125, 'center')
+    createText(ctx, textColor, `24px Quicksand`, `${annualPoints.points.withCommas()} Points`, 300, (canvas.height / 2) + 150, 'center')
 
     createText(ctx, textColor, '72px Quicksand', loungeUser.stats.level.level.toString(), 25, 100)
 
     createText(ctx, textColor, '32px Quicksand', loungeUser.stats.tier.title, 550, 75)
     createText(ctx, textColor, '38px Quicksand', loungeUser.attributes.nickname.toUpperCase(), 550, 120, 'left', 350)
 
-    createDivider(ctx, "#C0C0C0", 150, (canvas.height / 2) + 175, 300, textColor)
+    createDivider(ctx, "#C0C0C0", 150, (canvas.height / 2) + 160, 300, textColor)
+
+    var dailyPoints = await getUserPointsUseCase(loungeUser.attributes.discordId, DateTime.now().startOf('day').toSeconds(), DateTime.now().toSeconds(), loungeApi)
+    var weeklyPoints = await getUserPointsUseCase(loungeUser.attributes.discordId, DateTime.now().startOf('week').toSeconds(), DateTime.now().toSeconds(), loungeApi)
+    var monthlyPoints = await getUserPointsUseCase(loungeUser.attributes.discordId, DateTime.now().startOf('month').toSeconds(), DateTime.now().toSeconds(), loungeApi)
+    createText(ctx, textColor, '18px Quicksand', `Daily`, 200, 465, 'left')
+    createText(ctx, textColor, '18px Quicksand', `Weekly`, 200, 490, 'left')
+    createText(ctx, textColor, '18px Quicksand', `Monthly`, 200, 515, 'left')
+    createText(ctx, textColor, '18px Quicksand', dailyPoints.points.withCommas(), 400, 465, 'right')
+    createText(ctx, textColor, '18px Quicksand', weeklyPoints.points.withCommas(), 400, 490, 'right')
+    createText(ctx, textColor, '18px Quicksand', monthlyPoints.points.withCommas(), 400, 515, 'right')
+
+
 
     createDivider(ctx, '#C0C0C0', 525, 145, 425, textColor, 1, 'Progression')
 
@@ -145,12 +161,13 @@ async function getCanvas(user: User, loungeUser: LoungeUser) : Promise<Buffer> {
     createText(ctx, textColor, statsTextStyle, `Messages Sent`, 550, 300)
     createText(ctx, textColor, statsTextStyle, `Voice Chat`, 550, 330)
     createText(ctx, textColor, statsTextStyle, `House Points`, 550, 360)
-    createText(ctx, textColor, statsTextStyle, `Kudos`, 550, 390)
+    //createText(ctx, textColor, statsTextStyle, `Kudos`, 550, 390)
 
+    var allPoints = await getUserPointsUseCase(loungeUser.attributes.discordId, 0, DateTime.now().toSeconds(), loungeApi)
     createText(ctx, textColor, statsTextStyle, `${loungeUser.stats.level.messagesSent.withCommas()}`, 900, 300, 'right')
     createText(ctx, textColor, statsTextStyle, `${secondsToTimeString(loungeUser.stats.level.secondsVoice)}`, 900, 330, 'right')
-    createText(ctx, textColor, statsTextStyle, `${loungeUser.stats.points}`, 900, 360, 'right')
-    createText(ctx, textColor, statsTextStyle, `${loungeUser.stats.kudos}`, 900, 390, 'right')
+    createText(ctx, textColor, statsTextStyle, `${allPoints.points}`, 900, 360, 'right')
+    //createText(ctx, textColor, statsTextStyle, `${loungeUser.stats.kudos}`, 900, 390, 'right')
     
     createDivider(ctx, '#C0C0C0', 525, 415, 425, textColor, 1, 'Rankings')
 

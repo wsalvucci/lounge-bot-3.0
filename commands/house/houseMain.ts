@@ -2,6 +2,8 @@ import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 import SlashCommand from "../../models/SlashCommand";
 import addPointEvent from './addPointEvent'
+import myPoints from './myPoints'
+import housePoints from './housePoints'
 
 const command = new SlashCommand(
     new SlashCommandBuilder()
@@ -25,10 +27,18 @@ const command = new SlashCommand(
                         .setDescription('The reason for adding/subtracting points')
                         .setRequired(true)
                 )
-        ),
+        )
+        .addSubcommand(subcommand =>
+            subcommand.setName('mypoints')
+                .setDescription('See the status of your house points'))
+        .addSubcommand(subcommand =>
+            subcommand.setName('housepoints')
+                .setDescription('See the status of the house\'s points')),
     async (interaction: CommandInteraction) => {
         switch(interaction.options.getSubcommand(true)) {
             case 'addpoints': addPointEvent.method(interaction); break
+            case 'mypoints': myPoints.method(interaction); break
+            case 'housepoints': housePoints.method(interaction); break
         }
     }
 )
