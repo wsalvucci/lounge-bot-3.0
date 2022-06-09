@@ -15,24 +15,39 @@ async function getCanvas(list: {details: House, annualPoints: number, monthlyPoi
     const ctx = canvas.getContext('2d')
     createDefaultBackground(canvas, ctx)
 
+    // list.forEach((house: {details: House, annualPoints: number, monthlyPoints: number, weeklyPoints: number, dailyPoints: number}, index: number) => {
+    //     //Randomizer for testing
+    //     house.annualPoints = Math.round(Math.random() * 100000)
+    //     house.monthlyPoints = Math.round(Math.random() * house.annualPoints)
+    //     house.weeklyPoints = Math.round(Math.random() * house.monthlyPoints)
+    //     house.dailyPoints = Math.round(Math.random() * house.weeklyPoints)
+    // })
+
+    var leaderPoints = 0
+    list.forEach((house: {details: House, annualPoints: number, monthlyPoints: number, weeklyPoints: number, dailyPoints: number}, index: number) => {
+        leaderPoints = Math.max(leaderPoints, isNaN(house.annualPoints) ? 0 : house.annualPoints)
+    })
+
     list.forEach((house: {details: House, annualPoints: number, monthlyPoints: number, weeklyPoints: number, dailyPoints: number}, index: number) => {
         if (isNaN(house.annualPoints)) house.annualPoints = 0
         if (isNaN(house.monthlyPoints)) house.monthlyPoints = 0
         if (isNaN(house.weeklyPoints)) house.weeklyPoints = 0
         if (isNaN(house.dailyPoints)) house.dailyPoints = 0
 
+
+        var yAdjustment = canvas.height * 0.15 * (house.annualPoints / leaderPoints)
         var xPos = 100 + (800 * (index / 3))
 
-        var grd = ctx.createLinearGradient(xPos, canvas.height * 0.40, xPos, canvas.height * 0.9)
+        var grd = ctx.createLinearGradient(xPos, canvas.height * 0.40 - yAdjustment, xPos, canvas.height * 0.9)
         grd.addColorStop(0, `#${house.details.primaryColor}`)
         grd.addColorStop(1, `#${house.details.primaryColor}00`)
         ctx.fillStyle = grd
-        ctx.fillRect(xPos - 100, canvas.height * 0.40, 200, canvas.height)
+        ctx.fillRect(xPos - 100, canvas.height * 0.40 - yAdjustment, 200, canvas.height)
 
-        createText(ctx, `#ffffff`, '36px Boldsand', house.details.name, xPos, canvas.height * 0.25, 'center')
-        createText(ctx, `#ffffff`, '24px Boldsand', `${house.annualPoints.withCommas()}pts`, xPos, canvas.height * 0.35, 'center')
+        createText(ctx, `#ffffff`, '36px Boldsand', house.details.name, xPos, canvas.height * 0.25 - yAdjustment, 'center')
+        createText(ctx, `#ffffff`, '24px Boldsand', `${house.annualPoints.withCommas()}pts`, xPos, canvas.height * 0.35 - yAdjustment, 'center')
     
-        createDivider(ctx, '#ffffff', xPos - 100, canvas.height * 0.40, 200)
+        createDivider(ctx, '#ffffff', xPos - 100, canvas.height * 0.40 - yAdjustment, 200)
     
         createText(ctx, `#ffffff`, `24px Quicksand`, `Monthly`, xPos, canvas.height * 0.50, 'center')
         createText(ctx, `#ffffff`, `24px Quicksand`, `Weekly`, xPos, canvas.height * 0.65, 'center')

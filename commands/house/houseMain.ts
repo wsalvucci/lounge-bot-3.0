@@ -29,15 +29,11 @@ const command = new SlashCommand(
                 )
         )
         .addSubcommand(subcommand =>
-            subcommand.setName('mypoints')
-                .setDescription('See the status of your house points'))
-        .addSubcommand(subcommand =>
             subcommand.setName('housepoints')
                 .setDescription('See the status of the house\'s points')),
     async (interaction: CommandInteraction) => {
         switch(interaction.options.getSubcommand(true)) {
             case 'addpoints': addPointEvent.method(interaction); break
-            case 'mypoints': myPoints.method(interaction); break
             case 'housepoints': housePoints.method(interaction); break
         }
     }
