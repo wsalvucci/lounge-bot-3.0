@@ -18,7 +18,6 @@ client.once('ready', () => {
 })
 
 import userCommands from './commands/user'
-import weatherCommands from './commands/weather'
 import gulagCommands from './commands/gulag'
 import betsCommands from './commands/bets'
 import stocksCommands from './commands/stocks'
@@ -30,7 +29,6 @@ import { updateUserValue } from './domain/databaseRequests'
 
 var commandModules = [
     userCommands,
-    weatherCommands,
     gulagCommands,
     betsCommands,
     stocksCommands,

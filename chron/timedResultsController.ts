@@ -305,8 +305,7 @@ async function runDailies(guildId: string) {
 }
 
 function checkTimedResults(guildId: string) {
-    //schedule.scheduleJob(`0 3 * * *`, async function() {
-    schedule.scheduleJob(`*/10 * * * * *`, async function() {
+    schedule.scheduleJob(`0 3 * * *`, async function() {
         runDailies(guildId)
     })
 }
