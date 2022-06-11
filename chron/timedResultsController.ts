@@ -99,9 +99,10 @@ async function resultCanvas(rankings: Result[], houseRankings: HouseResult[], xp
     createDefaultBackground(canvas, ctx)
     createText(ctx, '#ffffff', '48px Boldsand', 'Daily Results', 50, 60, 'left')
     if (xpModifier > 0) {
-        createText(ctx, '#FFD700', '24px Boldsand', `${Math.round(xpModifier * 100)}% Bonus!`, 500, 100, 'center')
+        createText(ctx, '#FFD700', '36px Boldsand', `${Math.round(xpModifier * 100)}% Bonus!`, 500, 60, 'center')
     }
 
+    createText(ctx, '#ffffff', '36px Boldsand', 'House Points', 800, 60, 'center')
     houseRankings.sort((a, b) => 
         b.points - a.points
     ).forEach((data, index) => {
@@ -304,7 +305,8 @@ async function runDailies(guildId: string) {
 }
 
 function checkTimedResults(guildId: string) {
-    schedule.scheduleJob(`0 3 * * *`, async function() {
+    //schedule.scheduleJob(`0 3 * * *`, async function() {
+    schedule.scheduleJob(`*/10 * * * * *`, async function() {
         runDailies(guildId)
     })
 }
