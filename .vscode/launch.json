@@ -5,16 +5,15 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "node",
+            "type": "pwa-node",
             "request": "launch",
             "name": "Launch Program",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\bot.ts",
-            "preLaunchTask": "tsc: build - tsconfig.json",
+            "program": "${workspaceFolder}/bot.ts",
             "outFiles": [
-                "${workspaceFolder}/build/*.js"
+                "${workspaceFolder}/**/*.js"
             ]
         }
     ]

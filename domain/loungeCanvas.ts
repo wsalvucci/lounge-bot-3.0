@@ -1,4 +1,4 @@
-import Canvas, { NodeCanvasRenderingContext2D } from 'canvas'
+import Canvas, { CanvasRenderingContext2D } from 'canvas'
 import Color from 'color'
 
 Canvas.registerFont('./build/assets/fonts/Quicksand-Regular.ttf', {
@@ -10,7 +10,7 @@ Canvas.registerFont('./build/assets/fonts/Quicksand-Bold.ttf', {
 })
 
 export function createText(
-    ctx: NodeCanvasRenderingContext2D,
+    ctx: CanvasRenderingContext2D,
     fillStyle: string,
     font: string,
     text: string,
@@ -26,7 +26,7 @@ export function createText(
 }
 
 export function createDivider(
-    ctx: NodeCanvasRenderingContext2D,
+    ctx: CanvasRenderingContext2D,
     color: string,
     x: number,
     y: number,
@@ -46,7 +46,7 @@ export function createDivider(
 
 export function createDefaultBackground(
     canvas: Canvas.Canvas,
-    ctx: NodeCanvasRenderingContext2D,
+    ctx: CanvasRenderingContext2D,
     primaryColor: string = '#33303C',
     secondaryColor: string = '#282430',
     blur: number = 0

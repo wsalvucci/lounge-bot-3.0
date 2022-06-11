@@ -6,7 +6,7 @@ import Canvas from "../../domain/loungeCanvas"
 import UserStats from "../../models/UserStats"
 import getUserStatsUseCase from "../../useCases/user/getUserStatsUseCase"
 import getStatLeaderboardUseCase from "../../useCases/user/getStatLeaderboardUseCase"
-import { NodeCanvasRenderingContext2D } from "canvas"
+import { CanvasRenderingContext2D } from "canvas"
 import { OrderType, secondsToTimeString, StatType, UserStat } from '../../domain/loungeFunctions'
 import Color from 'color'
 import '../../domain/numberExtensions' //Can this be imported once from a central module?
@@ -21,7 +21,7 @@ import getUserPointsUseCase from "../../useCases/house/getUserPointsUseCase"
 import { DateTime } from "luxon"
 
 function createDivider(
-    ctx: NodeCanvasRenderingContext2D,
+    ctx: CanvasRenderingContext2D,
     color: string,
     x: number,
     y: number,
