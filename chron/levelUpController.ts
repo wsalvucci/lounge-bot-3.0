@@ -15,7 +15,7 @@ function levelUpUsers(guildId: string) {
 
         allUserData.forEach(async (user: LoungeUser) => {
             var actualLevel = Math.floor(Math.pow(user.stats.xp / 0.6, 0.284))
-            var currentLevel = user.stats.level.level
+            var currentLevel = user.stats.level.storedLevel
 
             if (actualLevel > currentLevel) {
                 var guildConfig = await getGuildConfigUseCase(guildId, botApi)

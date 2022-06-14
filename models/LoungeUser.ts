@@ -30,6 +30,7 @@ class LoungeUser {
                 getLevelStats(
                     data.discordId,
                     data.xp,
+                    data.currentLevel,
                     data.secondsVoice,
                     data.messagesSent,
                     data.usersSlapped,

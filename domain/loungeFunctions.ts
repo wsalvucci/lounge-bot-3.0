@@ -15,6 +15,7 @@ export class LevelStats {
     beenGulaged: number
     exp: number
     level: number
+    storedLevel: number
     nextLevel: number
     currentLevelExp: number
     nextLevelExp: number
@@ -37,6 +38,7 @@ export class LevelStats {
         beenGulaged: number,
         exp: number,
         level: number,
+        storedLevel: number,
         nextLevel: number,
         currentLevelExp: number,
         nextLevelExp: number,
@@ -58,6 +60,7 @@ export class LevelStats {
         this.beenGulaged = beenGulaged
         this.exp = exp
         this.level = level
+        this.storedLevel = storedLevel
         this.nextLevel = nextLevel
         this.currentLevelExp = currentLevelExp
         this.nextLevelExp = nextLevelExp
@@ -287,6 +290,7 @@ export function expProgress(exp: number, target: number) : number {return Math.f
 export function getLevelStats(
     discordId: string,
     exp: number,
+    currentLevel: number,
     secondsVoice: number,
     messagesSent: number,
     usersSlapped: number,
@@ -339,6 +343,7 @@ export function getLevelStats(
         beenGulaged,
         exp,
         level,
+        currentLevel,
         level + 1,
         currentLevelExpReq,
         nextLevelExpReq,
