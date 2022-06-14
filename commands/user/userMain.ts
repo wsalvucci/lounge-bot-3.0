@@ -109,7 +109,7 @@ const command = new SlashCommand(
                         .setRequired(true)
                         .addChoices([
                             ['Nīkyura', 1],
-                            ['House 2 (OfficialChillAx)', 2],
+                            ['Chillax', 2],
                             ['Crownguard', 3],
                             ['Imposter', 4]
                         ]))),
