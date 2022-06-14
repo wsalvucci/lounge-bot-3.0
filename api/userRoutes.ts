@@ -1,4 +1,4 @@
-import { addMessage, addPersonalRecord, addServerRecord, addVoice, createUser, getAllUsers, getLeaderboard, getPersonalRecord, getTitle, getUser, incrementUserValue, updateUserValue } from "../domain/databaseRequests";
+import { addMessage, addPersonalRecord, addPointEvent, addServerRecord, addVoice, createUser, getAllHouseDetails, getAllUsers, getHouseDetails, getHousePoints, getLeaderboard, getPersonalRecord, getTitle, getUser, getUserPoints, incrementUserValue, updateUserValue } from "../domain/databaseRequests";
 import app from "../domain/expressModule";
 
 function processDatabaseRequest(request: Promise<any>, res: any) {
@@ -90,7 +90,7 @@ app.get(`/updateUserProperty`, (req: any, res: any) => {
 })
 
 app.get(`/createUser`, (req: any, res: any) => {
-    processDatabaseRequest(createUser(req.query.discordId, req.query.name, req.query.timeAdded), res)
+    processDatabaseRequest(createUser(req.query.discordId, req.query.name, req.query.timeAdded, req.query.house), res)
 })
 
 app.get(`/personalRecords`, (req: any, res: any) => {
@@ -115,4 +115,24 @@ app.get(`/user/addPersonalRecord`, (req: any, res: any) => {
 
 app.get(`/user/addServerRecord`, (req: any, res: any) => {
     processDatabaseRequest(addServerRecord(req.query.timestamp, req.query.messages, req.query.voice), res)
+})
+
+app.get(`/house`, (req: any, res: any) => {
+    processDatabaseRequest(getHouseDetails(req.query.id), res)
+})
+
+app.get(`/house/allHouses`, (req: any, res: any) => {
+    processDatabaseRequest(getAllHouseDetails(), res)
+})
+
+app.get(`/house/addPointEvent`, (req: any, res: any) => {
+    processDatabaseRequest(addPointEvent(req.query.discordId, req.query.headmasterId, req.query.points, req.query.reason, req.query.houseId, req.query.timestamp), res)
+})
+
+app.get(`/house/points`, (req: any, res: any) => {
+    processDatabaseRequest(getHousePoints(req.query.houseId, req.query.startTime, req.query.endTime), res)
+})
+
+app.get(`/user/points`, (req: any, res: any) => {
+    processDatabaseRequest(getUserPoints(req.query.discordId, req.query.startTime, req.query.endTime), res)
 })

@@ -6,16 +6,22 @@ import Canvas from "../../domain/loungeCanvas"
 import UserStats from "../../models/UserStats"
 import getUserStatsUseCase from "../../useCases/user/getUserStatsUseCase"
 import getStatLeaderboardUseCase from "../../useCases/user/getStatLeaderboardUseCase"
-import { NodeCanvasRenderingContext2D } from "canvas"
+import { CanvasRenderingContext2D } from "canvas"
 import { OrderType, secondsToTimeString, StatType, UserStat } from '../../domain/loungeFunctions'
 import Color from 'color'
 import '../../domain/numberExtensions' //Can this be imported once from a central module?
 import { LeaderboardResponse, LeaderboardUserResponse } from "../../models/response/LeaderboardResponse"
 import { SlashCommandBuilder } from "@discordjs/builders"
 import { createText } from "../../domain/loungeCanvas"
+import getHouseDetailsUseCase from "../../useCases/house/getHouseDetails"
+import loungeApi from "../../api/loungeApi"
+import LoungeUser from "../../models/LoungeUser"
+import getUserFullDataUseCase from "../../useCases/user/getUserFullDataUseCase"
+import getUserPointsUseCase from "../../useCases/house/getUserPointsUseCase"
+import { DateTime } from "luxon"
 
 function createDivider(
-    ctx: NodeCanvasRenderingContext2D,
+    ctx: CanvasRenderingContext2D,
     color: string,
     x: number,
     y: number,
@@ -34,22 +40,30 @@ function createDivider(
     createText(ctx, labelTextColor, `18px Quicksand`, header, x, y-2)
 }
 
-async function getCanvas(user: User, stats: UserStats) : Promise<Buffer> {
+async function getCanvas(user: User, loungeUser: LoungeUser) : Promise<Buffer> {
     const canvas = Canvas.createCanvas(1000, 560)
     const ctx = canvas.getContext('2d')
+    var houseDetails = await getHouseDetailsUseCase(loungeUser.attributes.house, loungeApi)
 
     var grd = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
-    grd.addColorStop(0, stats.tier.primaryColor)
-    grd.addColorStop(0.15, stats.tier.primaryColor)
-    grd.addColorStop(0.16, stats.tier.secondaryColor)
-    grd.addColorStop(0.60, stats.tier.secondaryColor)
-    grd.addColorStop(0.61, stats.tier.primaryColor)
-    grd.addColorStop(1, stats.tier.primaryColor)
+    grd.addColorStop(0, loungeUser.stats.tier.primaryColor)
+    grd.addColorStop(0.15, loungeUser.stats.tier.primaryColor)
+    if (loungeUser.attributes.house != null) {
+        grd.addColorStop(0.16, `#${houseDetails.primaryColor}`)
+        grd.addColorStop(0.30, `#${houseDetails.primaryColor}00`)
+        grd.addColorStop(0.44, `#${houseDetails.primaryColor}00`)
+        grd.addColorStop(0.59, `#${houseDetails.primaryColor}`)
+    } else {
+        grd.addColorStop(0.16, loungeUser.stats.tier.secondaryColor)
+        grd.addColorStop(0.59, loungeUser.stats.tier.secondaryColor)
+    }
+    grd.addColorStop(0.60, loungeUser.stats.tier.primaryColor)
+    grd.addColorStop(1, loungeUser.stats.tier.primaryColor)
 
     ctx.fillStyle = grd
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-    ctx.fillStyle = `${Color(stats.tier.secondaryColor).darken(0.5).alpha(0.5)}`
+    ctx.fillStyle = `${Color(loungeUser.stats.tier.secondaryColor).darken(0.5).alpha(0.5)}`
     ctx.fillRect(500, 20, 450, 530)
 
     const avatar = await Canvas.loadImage(user.displayAvatarURL({format: 'png'}))
@@ -60,72 +74,65 @@ async function getCanvas(user: User, stats: UserStats) : Promise<Buffer> {
     ctx.restore()
 
     var textColor : string
-    if (Color(stats.tier.secondaryColor).isLight()) {
+    if (Color(loungeUser.stats.tier.secondaryColor).isLight()) {
         textColor = '#000000'
     } else {
         textColor = '#ffffff'
     }
 
-    createText(ctx, textColor, `24px Quicksand`, stats.titleString, 300, (canvas.height / 2) + 150, 'center')
-    createText(ctx, textColor, `18px Quicksand`, `${stats.coins.withCommas()} Lounge Coins`, 300, (canvas.height / 2) + 170, 'center')
+    var annualPoints = await getUserPointsUseCase(loungeUser.attributes.discordId, DateTime.now().startOf('year').toSeconds(), DateTime.now().toSeconds(), loungeApi)
+    createText(ctx, textColor, `36px Quicksand`, houseDetails.name, 300, (canvas.height / 2) - 150, 'center')
+    createText(ctx, textColor, `18px Quicksand`, `${DateTime.now().year}`, 300, (canvas.height / 2) + 125, 'center')
+    createText(ctx, textColor, `24px Quicksand`, `${annualPoints.points.withCommas()} Points`, 300, (canvas.height / 2) + 150, 'center')
 
-    createText(ctx, textColor, '72px Quicksand', stats.levelStats.level.toString(), 25, 100)
+    createText(ctx, textColor, '72px Quicksand', loungeUser.stats.level.level.toString(), 25, 100)
 
-    createText(ctx, textColor, '32px Quicksand', stats.tier.title, 550, 75)
-    createText(ctx, textColor, '38px Quicksand', stats.nickname.toUpperCase(), 550, 120, 'left', 350)
+    createText(ctx, textColor, '32px Quicksand', loungeUser.stats.tier.title, 550, 75)
+    createText(ctx, textColor, '38px Quicksand', loungeUser.attributes.nickname.toUpperCase(), 550, 120, 'left', 350)
 
-    createDivider(ctx, "#C0C0C0", 150, (canvas.height / 2) + 175, 300, textColor)
+    createDivider(ctx, "#C0C0C0", 150, (canvas.height / 2) + 160, 300, textColor)
 
-    const userStatsTextStyle = '18px Quicksand'
-    const userStatsNameY = (canvas.height / 2) + 200
-    const userStatsValueY = (canvas.height / 2) + 225
-    createText(ctx, textColor, userStatsTextStyle, "ATK", 150, userStatsNameY, 'center')
-    createText(ctx, textColor, userStatsTextStyle, stats.atk.toString(), 150, userStatsValueY, 'center')
-    createText(ctx, textColor, userStatsTextStyle, "DEF", 200, userStatsNameY, 'center')
-    createText(ctx, textColor, userStatsTextStyle, stats.def.toString(), 200, userStatsValueY, 'center')
-    createText(ctx, textColor, userStatsTextStyle, "MAT", 250, userStatsNameY, 'center')
-    createText(ctx, textColor, userStatsTextStyle, stats.matk.toString(), 250, userStatsValueY, 'center')
-    createText(ctx, textColor, userStatsTextStyle, "MDE", 300, userStatsNameY, 'center')
-    createText(ctx, textColor, userStatsTextStyle, stats.mdef.toString(), 300, userStatsValueY, 'center')
-    createText(ctx, textColor, userStatsTextStyle, "AGI", 350, userStatsNameY, 'center')
-    createText(ctx, textColor, userStatsTextStyle, stats.agi.toString(), 350, userStatsValueY, 'center')
-    createText(ctx, textColor, userStatsTextStyle, "HP", 400, userStatsNameY, 'center')
-    createText(ctx, textColor, userStatsTextStyle, stats.hp.toString(), 400, userStatsValueY, 'center')
-    createText(ctx, textColor, userStatsTextStyle, "CHA", 450, userStatsNameY, 'center')
-    createText(ctx, textColor, userStatsTextStyle, stats.cha.toString(), 450, userStatsValueY, 'center')
+    var dailyPoints = await getUserPointsUseCase(loungeUser.attributes.discordId, DateTime.now().startOf('day').toSeconds(), DateTime.now().toSeconds(), loungeApi)
+    var weeklyPoints = await getUserPointsUseCase(loungeUser.attributes.discordId, DateTime.now().startOf('week').toSeconds(), DateTime.now().toSeconds(), loungeApi)
+    var monthlyPoints = await getUserPointsUseCase(loungeUser.attributes.discordId, DateTime.now().startOf('month').toSeconds(), DateTime.now().toSeconds(), loungeApi)
+    createText(ctx, textColor, '18px Quicksand', `Daily`, 200, 465, 'left')
+    createText(ctx, textColor, '18px Quicksand', `Weekly`, 200, 490, 'left')
+    createText(ctx, textColor, '18px Quicksand', `Monthly`, 200, 515, 'left')
+    createText(ctx, textColor, '18px Quicksand', dailyPoints.points.withCommas(), 400, 465, 'right')
+    createText(ctx, textColor, '18px Quicksand', weeklyPoints.points.withCommas(), 400, 490, 'right')
+    createText(ctx, textColor, '18px Quicksand', monthlyPoints.points.withCommas(), 400, 515, 'right')
 
-    createText(ctx, textColor, userStatsTextStyle, `Spec Points Available: ${stats.specPoints}`, 300, userStatsValueY + 25, 'center')
 
 
     createDivider(ctx, '#C0C0C0', 525, 145, 425, textColor, 1, 'Progression')
 
 
     //XP Bar backgrounds
-    if (Color(stats.tier.secondaryColor).isLight()) {
-        ctx.fillStyle = `${Color(stats.tier.primaryColor).whiten(0.75).hex()}`
+    if (Color(loungeUser.stats.tier.secondaryColor).isLight()) {
+        ctx.fillStyle = `${Color(loungeUser.stats.tier.primaryColor).whiten(0.75).hex()}`
     } else {
-        ctx.fillStyle = `${Color(stats.tier.primaryColor).blacken(0.75).hex()}`
+        ctx.fillStyle = `${Color(loungeUser.stats.tier.primaryColor).blacken(0.75).hex()}`
     }
     ctx.fillRect(550, 175, 350, 15)
     ctx.fillRect(550, 225, 350, 15)
 
 
     //XP Bars
-    ctx.fillStyle = `${Color(stats.tier.primaryColor).lighten(0.2)}`
-    var levelXpPercent = stats.levelStats.currentLevelProgress / (stats.levelStats.nextLevelExp - stats.levelStats.currentLevelExp)
-    var tierXpPercent = stats.levelStats.currentTitleProgress / (stats.levelStats.nextTitleExp - stats.levelStats.currentTitleExp)
+    ctx.fillStyle = `${Color(loungeUser.stats.tier.primaryColor).lighten(0.2)}`
+    var levelXpPercent = loungeUser.stats.level.currentLevelProgress / (loungeUser.stats.level.nextLevelExp - loungeUser.stats.level.currentLevelExp)
+    var tierXpPercent = loungeUser.stats.level.currentTitleProgress / (loungeUser.stats.level.nextTitleExp - loungeUser.stats.level.currentTitleExp)
     ctx.fillRect(550, 175, 350 * levelXpPercent, 15)
     ctx.fillRect(550, 225, 350 * tierXpPercent, 15)
 
     //Current and next levels and titles
     ctx.fillStyle = textColor
     ctx.font = '24px Quicksand'
-    ctx.fillText(`${stats.levelStats.level}`, 550, 170)
-    ctx.fillText(`${stats.tier.title}`, 550, 220)
+    ctx.fillText(`${loungeUser.stats.level.level}`, 550, 170)
+    ctx.fillText(`${loungeUser.stats.tier.title}`, 550, 220)
 
     ctx.textAlign = 'right'
-    ctx.fillText(`${stats.levelStats.nextLevel}`, 900, 170)
-    ctx.fillText(`${stats.tier.nextTitleName}`, 900, 220)
+    ctx.fillText(`${loungeUser.stats.level.nextLevel}`, 900, 170)
+    ctx.fillText(`${loungeUser.stats.tier.nextTitleName}`, 900, 220)
 
     createDivider(ctx, '#C0C0C0', 525, 275, 425, textColor, 1, 'All Time')
 
@@ -153,17 +160,22 @@ async function getCanvas(user: User, stats: UserStats) : Promise<Buffer> {
     var statsTextStyle = `20px Quicksand`
     createText(ctx, textColor, statsTextStyle, `Messages Sent`, 550, 300)
     createText(ctx, textColor, statsTextStyle, `Voice Chat`, 550, 330)
+    createText(ctx, textColor, statsTextStyle, `House Points`, 550, 360)
+    //createText(ctx, textColor, statsTextStyle, `Kudos`, 550, 390)
 
-    createText(ctx, textColor, statsTextStyle, `${stats.levelStats.messagesSent.withCommas()}`, 900, 300, 'right')
-    createText(ctx, textColor, statsTextStyle, `${secondsToTimeString(stats.levelStats.secondsVoice)}`, 900, 330, 'right')  
+    var allPoints = await getUserPointsUseCase(loungeUser.attributes.discordId, 0, DateTime.now().toSeconds(), loungeApi)
+    createText(ctx, textColor, statsTextStyle, `${loungeUser.stats.level.messagesSent.withCommas()}`, 900, 300, 'right')
+    createText(ctx, textColor, statsTextStyle, `${secondsToTimeString(loungeUser.stats.level.secondsVoice)}`, 900, 330, 'right')
+    createText(ctx, textColor, statsTextStyle, `${allPoints.points}`, 900, 360, 'right')
+    //createText(ctx, textColor, statsTextStyle, `${loungeUser.stats.kudos}`, 900, 390, 'right')
     
-    createDivider(ctx, '#C0C0C0', 525, 355, 425, textColor, 1, 'Rankings')
+    createDivider(ctx, '#C0C0C0', 525, 415, 425, textColor, 1, 'Rankings')
 
 
     //Rankings
-    createText(ctx, textColor, statsTextStyle, `Level`, 550, 380)
-    createText(ctx, textColor, statsTextStyle, `Messages`, 550, 410)
-    createText(ctx, textColor, statsTextStyle, `Voice`, 550, 440)
+    createText(ctx, textColor, statsTextStyle, `Level`, 550, 440)
+    createText(ctx, textColor, statsTextStyle, `Messages`, 550, 470)
+    createText(ctx, textColor, statsTextStyle, `Voice`, 550, 500)
 
     var messagePromise = getStatLeaderboardUseCase(StatType.TotalMessages, OrderType.DESC, Repository)
     var voicePromise = getStatLeaderboardUseCase(StatType.TotalVoice, OrderType.DESC, Repository)
@@ -178,18 +190,10 @@ async function getCanvas(user: User, stats: UserStats) : Promise<Buffer> {
         var xpRank = value[2].members.findIndex((leaderboardUser: LeaderboardUserResponse) => {
             return leaderboardUser.discordId == user.id.toString()
         }) + 1
-        createText(ctx, textColor, statsTextStyle, `${xpRank}`, 900, 380, 'right')
-        createText(ctx, textColor, statsTextStyle, `${messageRank}`, 900, 410, 'right')
-        createText(ctx, textColor, statsTextStyle, `${voiceRank}`, 900, 440, 'right') 
+        createText(ctx, textColor, statsTextStyle, `${xpRank}`, 900, 440, 'right')
+        createText(ctx, textColor, statsTextStyle, `${messageRank}`, 900, 470, 'right')
+        createText(ctx, textColor, statsTextStyle, `${voiceRank}`, 900, 500, 'right') 
     })
-
-    createDivider(ctx, '#C0C0C0', 525, 475, 425, textColor, 1, 'Abuse')
-
-    //Slaps and Gulags
-    createText(ctx, textColor, statsTextStyle, `People Slapped`, 550, 500)
-    createText(ctx, textColor, statsTextStyle, `People Gulaged`, 550, 530) 
-    createText(ctx, textColor, statsTextStyle, `${stats.levelStats.usersSlapped}`, 900, 500, 'right')
-    createText(ctx, textColor, statsTextStyle, `${stats.levelStats.usersGulaged}`, 900, 530, 'right')  
 
 
     return canvas.toBuffer()
@@ -211,9 +215,9 @@ const command = new SlashCommand(
             if (optionalTarget !== null) {
                 targetId = optionalTarget.id
             }
-            getUserStatsUseCase(targetId, Repository)
-                .then((response: UserStats | ErrorMessage) => {
-                    if (response instanceof UserStats && interaction.member?.user instanceof User) {
+            getUserFullDataUseCase(targetId, Repository)
+                .then((response: LoungeUser | ErrorMessage) => {
+                    if (response instanceof LoungeUser && interaction.member?.user instanceof User) {
                         var canvasBuffer : Promise<Buffer>
                         if (optionalTarget !== null) {
                             canvasBuffer = getCanvas(optionalTarget, response)

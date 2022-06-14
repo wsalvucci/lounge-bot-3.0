@@ -3,6 +3,7 @@ import { LevelStats, TierData } from "../domain/loungeFunctions"
 class UserStats {
     username: string
     nickname: string
+    house: number
     titleString: string
     levelStats: LevelStats
     tier: TierData
@@ -21,6 +22,7 @@ class UserStats {
     constructor(
         username: string,
         nickanme: string,
+        house: number,
         titleString: string,
         levelStats: LevelStats,
         tier: TierData,
@@ -38,6 +40,7 @@ class UserStats {
     ) {
         this.username = username
         this.nickname = nickanme
+        this.house = house
         this.titleString = titleString
         this.levelStats = levelStats
         this.tier = tier

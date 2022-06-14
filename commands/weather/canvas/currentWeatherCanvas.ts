@@ -1,10 +1,10 @@
 import CurrentWeather from "../../../models/response/CurrentWeather";
 import Canvas, { createDefaultBackground, createText } from "../../../domain/loungeCanvas"
 import Color from "color";
-import { NodeCanvasRenderingContext2D } from "canvas";
+import { CanvasRenderingContext2D } from "canvas";
 
 function createWeatherGuage(
-    ctx: NodeCanvasRenderingContext2D,
+    ctx: CanvasRenderingContext2D,
     x: number,
     y: number,
     title: string,

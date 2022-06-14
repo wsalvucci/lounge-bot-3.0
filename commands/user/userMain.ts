@@ -11,6 +11,7 @@ import personalRecords from './personalRecords'
 import spec from './spec'
 import respec from './respec'
 import birthday from './birthday'
+import sethouse from './sethouse'
 import { StatType } from "../../domain/loungeFunctions";
 
 const command = new SlashCommand(
@@ -92,75 +93,26 @@ const command = new SlashCommand(
                 )
         )
         .addSubcommand(subcommand =>
-            subcommand.setName('respec')
-                .setDescription('Respec your stats to regain points and asign them elsewhere')
-                .addIntegerOption(option => 
-                    option.setName('atk')
-                        .setDescription('What you want to reset your Attack stat to')
-                        .setRequired(true)
-                    )
-                .addIntegerOption(option => 
-                    option.setName('def')
-                        .setDescription('What you want to reset your Defense stat to')
-                        .setRequired(true)
-                    )
-                .addIntegerOption(option => 
-                    option.setName('matk')
-                        .setDescription('What you want to reset your Magic Attack stat to')
-                        .setRequired(true)
-                    )
-                .addIntegerOption(option => 
-                    option.setName('mdef')
-                        .setDescription('What you want to reset your Magic Defense stat to')
-                        .setRequired(true)
-                    )
-                .addIntegerOption(option => 
-                    option.setName('agi')
-                        .setDescription('What you want to reset your Agility stat to')
-                        .setRequired(true)
-                    )
-                .addIntegerOption(option => 
-                    option.setName('hp')
-                        .setDescription('What you want to reset your Health stat to')
-                        .setRequired(true)
-                    )
-                .addIntegerOption(option => 
-                    option.setName('cha')
-                        .setDescription('What you want to reset your Charisma stat to')
-                        .setRequired(true)
-                    )
-        )
-        .addSubcommand(subcommand =>
-            subcommand.setName('spec')
-                .setDescription('Adds your spec points to the provided stat')
-                .addStringOption(option =>
-                    option.setName('stat')
-                        .setDescription('The stat you want to add your spec points to')
-                        .setRequired(true)
-                        .addChoices([
-                            ['Attack', 'atk'],
-                            ['Defense', 'def'],
-                            ['Magic Attack', 'matk'],
-                            ['Magic Defense', 'mdef'],
-                            ['Agility', 'agi'],
-                            ['Health', 'hp'],
-                            ['Charisma', 'cha']
-                        ])
-                )
-                .addIntegerOption(option =>
-                    option.setName('points')
-                        .setDescription('The amount of spec points you want to invest into the stat')
-                        .setRequired(true)
-                )
-        )
-        .addSubcommand(subcommand =>
             subcommand.setName('stats')
                 .setDescription('Retrives Lounge stats for either you or an indicated user')
                 .addUserOption(option => 
                     option.setName('user')
                         .setDescription('A specific user to get Lounge Stats for')
                 )
-        ),
+        )
+        .addSubcommand(subCommand => 
+            subCommand.setName('sethouse')
+                .setDescription('THIS IS IRREVERSABLE! CHOOSE WISELY!')
+                .addIntegerOption(option =>
+                    option.setName('house')
+                        .setDescription('The house you want to permanently join.')
+                        .setRequired(true)
+                        .addChoices([
+                            ['House 1 (Sealith)', 1],
+                            ['House 2 (OfficialChillAx)', 2],
+                            ['House 3 (GrumpyGungan)', 3],
+                            ['House 4 (Starkey)', 4]
+                        ]))),
     async (interaction: CommandInteraction) => {
         switch(interaction.options.getSubcommand(true)) {
             case 'birthday': birthday.method(interaction); break
@@ -169,9 +121,8 @@ const command = new SlashCommand(
             case 'leaderboard': leaderboard.method(interaction); break
             case 'nickname': nickname.method(interaction); break
             case 'personalrecords': personalRecords.method(interaction); break
-            case 'respec': respec.method(interaction); break
-            case 'spec': spec.method(interaction); break
             case 'stats': stats.method(interaction); break
+            case 'sethouse': sethouse.method(interaction); break
         }
     }
 )

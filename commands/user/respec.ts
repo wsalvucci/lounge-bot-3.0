@@ -4,9 +4,10 @@ import SlashCommand from "../../models/SlashCommand";
 import checkIfUserExistsUseCase from "../../useCases/user/checkIfUserExistsUseCase";
 import Repository from "../../api/loungeApi"
 import getUserStatsUseCase from "../../useCases/user/getUserStatsUseCase";
-import { APIMessage } from "discord.js/node_modules/discord-api-types";
+
 import respecUserUseCase from "../../useCases/user/respecUserUseCase";
 import { DateTime } from "luxon";
+import { APIMessage } from "discord-api-types";
 
 const COST_PER_SPEC_POINT = 1000
 const TIME_BETWEEN_RESPECS = 604800
@@ -136,35 +137,35 @@ const command = new SlashCommand(
             
             var previewMessage = await interaction.channel?.send({embeds: [respecPreview]})
 
-            interaction.reply({content: `${member.user}, confirm your respec. This will auto-deny if no response is given for 30 seconds.`, fetchReply: true}).then(async (message: Message | APIMessage) => {
-                if (message instanceof Message) {
-                    await message.react('⬆️')
-                    await message.react('⬇️')
+            // interaction.reply({content: `${member.user}, confirm your respec. This will auto-deny if no response is given for 30 seconds.`, fetchReply: true}).then(async (message: Message | APIMessage) => {
+            //     if (message instanceof Message) {
+            //         await message.react('⬆️')
+            //         await message.react('⬇️')
 
-                    const filter = (reaction : MessageReaction, user: User) => {
-                        return (reaction.emoji.name === '⬆️' || reaction.emoji.name === '⬇️') && user.id === member?.user.id
-                    }
+            //         const filter = (reaction : MessageReaction, user: User) => {
+            //             return (reaction.emoji.name === '⬆️' || reaction.emoji.name === '⬇️') && user.id === member?.user.id
+            //         }
 
-                    const collector = message.createReactionCollector({filter, time: 30000})
+            //         const collector = message.createReactionCollector({filter, time: 30000})
 
-                    collector.on('collect', (reaction: MessageReaction, user: User) => {
-                        if (reaction.emoji.name == '⬆️') {
-                            collector.stop('Confirmed')
-                        } else if (reaction.emoji.name == '⬇️') {
-                            collector.stop('Denied')
-                        }
-                    })
+            //         collector.on('collect', (reaction: MessageReaction, user: User) => {
+            //             if (reaction.emoji.name == '⬆️') {
+            //                 collector.stop('Confirmed')
+            //             } else if (reaction.emoji.name == '⬇️') {
+            //                 collector.stop('Denied')
+            //             }
+            //         })
         
-                    collector.on('end', (collected: Collection<string, MessageReaction>, reason: string) => {
-                        if (reason == 'Confirmed') {
-                            if (member == null) return
-                            respecUserUseCase(member?.user.id, atk, def, matk, mdef, agi, hp, cha, totalCost, totalPoints, DateTime.now().toSeconds(), Repository)
-                        }
-                        message?.delete()
-                        previewMessage?.delete()
-                    })
-                }
-            })
+            //         collector.on('end', (collected: Collection<string, MessageReaction>, reason: string) => {
+            //             if (reason == 'Confirmed') {
+            //                 if (member == null) return
+            //                 respecUserUseCase(member?.user.id, atk, def, matk, mdef, agi, hp, cha, totalCost, totalPoints, DateTime.now().toSeconds(), Repository)
+            //             }
+            //             message?.delete()
+            //             previewMessage?.delete()
+            //         })
+            //     }
+            // })
         }
 )
 

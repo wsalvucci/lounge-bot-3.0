@@ -11,6 +11,7 @@ export default function getUserStatsUseCase(discordId: string, repository: typeo
             var stats = new UserStats(
                 user.attributes.name,
                 user.attributes.nickname,
+                user.attributes.house,
                 "",
                 getLevelStats(
                     discordId,
@@ -21,7 +22,7 @@ export default function getUserStatsUseCase(discordId: string, repository: typeo
                     user.stats.beenSlapped,
                     user.stats.usersGulaged,
                     user.stats.timesGulaged),
-                levelToTitle(user.stats.level),
+                levelToTitle(user.stats.level.level),
                 user.stats.coins,
                 user.stats.atk,
                 user.stats.def,

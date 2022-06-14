@@ -13,6 +13,7 @@ export default function(guildId: string) {
             var fetchedChannel = await client.channels.fetch(channel.id)
             if (fetchedChannel instanceof VoiceChannel) {
                 var members = fetchedChannel.members
+                if (members.size <= 1) return // No point in running
                 var score = fetchedChannel.members.size - 1
 
                 var guildConfig = await getGuildConfigUseCase(guildId, botApi)
@@ -27,7 +28,7 @@ export default function(guildId: string) {
                 })
 
                 members.forEach(async (member: GuildMember) => {
-                    var voiceXp = Math.round(score + (score * guildConfig.xpModifier))
+                    var voiceXp = Math.round(score + (score * parseFloat(guildConfig.xpModifier)))
                     var userData = await getUserFullDataUseCase(member.id, loungeApi)
                     if (userData.attributes.stunned == 1) {
                         voiceXp = 0

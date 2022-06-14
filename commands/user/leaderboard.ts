@@ -6,11 +6,11 @@ import Repository from "../../api/loungeApi"
 import { LeaderboardResponse, LeaderboardUserResponse } from "../../models/response/LeaderboardResponse"
 import { SlashCommandBuilder } from "@discordjs/builders"
 import Canvas from "../../domain/loungeCanvas"
-import { NodeCanvasRenderingContext2D } from "canvas"
+import { CanvasRenderingContext2D } from "canvas"
 import Color from "color"
 
 function createText(
-    ctx: NodeCanvasRenderingContext2D,
+    ctx: CanvasRenderingContext2D,
     fillStyle: string,
     font: string,
     text: string,
@@ -24,7 +24,7 @@ function createText(
 }
 
 function createDivider(
-    ctx: NodeCanvasRenderingContext2D,
+    ctx: CanvasRenderingContext2D,
     color: string,
     x: number,
     y: number,

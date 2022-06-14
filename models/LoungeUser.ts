@@ -1,3 +1,5 @@
+import { getLevelStats, LevelStats, levelToTitle, TierData } from "../domain/loungeFunctions"
+
 class LoungeUser {
     attributes: LoungeUserAttributes
     stats: LoungeUserStats
@@ -20,11 +22,22 @@ class LoungeUser {
                 data.color,
                 data.activeTitleId,
                 data.birthday,
-                data.stunned
+                data.stunned,
+                data.house
             ),
             new LoungeUserStats(
                 data.xp,
-                data.currentLevel,
+                getLevelStats(
+                    data.discordId,
+                    data.xp,
+                    data.secondsVoice,
+                    data.messagesSent,
+                    data.usersSlapped,
+                    data.beenSlapped,
+                    data.usersGulaged,
+                    data.timesGulaged
+                ),
+                levelToTitle(data.currentLevel),
                 data.messagesSent,
                 data.secondsVoice,
                 data.usersSlapped,
@@ -54,7 +67,13 @@ class LoungeUser {
                 data.cha,
                 data.respecTimestamp,
                 data.specPoints,
-                data.accusationTimestamp
+                data.accusationTimestamp,
+                data.points,
+                data.dailyPoints,
+                data.weeklyPoints,
+                data.monthlyPoints,
+                data.annualPoints,
+                data.kudos
             )
         )
     }
@@ -69,6 +88,7 @@ class LoungeUserAttributes {
     titleId: number
     birthday: number
     stunned: number
+    house: number
 
     constructor(
         discordId: string,
@@ -78,7 +98,8 @@ class LoungeUserAttributes {
         color: string,
         titleId: number,
         birthday: number,
-        stunned: number
+        stunned: number,
+        house: number
     ) {
         this.discordId = discordId
         this.name = name
@@ -88,12 +109,14 @@ class LoungeUserAttributes {
         this.titleId = titleId
         this.birthday = birthday
         this.stunned = stunned
+        this.house = house
     }
 }
 
 class LoungeUserStats {
     xp: number
-    level: number
+    level: LevelStats
+    tier: TierData
     messagesSent: number
     secondsVoice: number
     usersSlapped: number
@@ -115,10 +138,17 @@ class LoungeUserStats {
     respecTimestamp: number
     specPoints: number
     accusationTimestamp: number
+    points: number
+    dailyPoints: number
+    weeklyPoints: number
+    monthlyPoints: number
+    annualPoints: number
+    kudos: number
 
     constructor(
         xp: number,
-        level: number,
+        level: LevelStats,
+        tier: TierData,
         messagesSent: number,
         secondsVoice: number,
         usersSlapped: number,
@@ -139,10 +169,17 @@ class LoungeUserStats {
         cha: number,
         respecTimestamp: number,
         specPoints: number,
-        accusationTimestamp: number
+        accusationTimestamp: number,
+        points: number,
+        dailyPoints: number,
+        weeklyPoints: number,
+        monthlyPoints: number,
+        annualPoints: number,
+        kudos: number
     ) {
         this.xp = xp
         this.level = level
+        this.tier = tier
         this.messagesSent = messagesSent
         this.secondsVoice = secondsVoice
         this.usersSlapped = usersSlapped
@@ -164,6 +201,12 @@ class LoungeUserStats {
         this.respecTimestamp = respecTimestamp
         this.specPoints = specPoints
         this.accusationTimestamp = accusationTimestamp
+        this.points = points
+        this.dailyPoints = dailyPoints
+        this.weeklyPoints = weeklyPoints
+        this.monthlyPoints = monthlyPoints
+        this.annualPoints = annualPoints
+        this.kudos = kudos
     }
 }
 

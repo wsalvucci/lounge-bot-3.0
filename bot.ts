@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-import { Client, Guild, Intents, Interaction, Message } from 'discord.js'
+import { Client, Guild, GuildMember, Intents, Interaction, Message, PartialGuildMember } from 'discord.js'
 import CommandModule from './models/CommandModule'
 import SlashCommand from './models/SlashCommand'
 import { REST } from '@discordjs/rest'
@@ -18,21 +18,22 @@ client.once('ready', () => {
 })
 
 import userCommands from './commands/user'
-import weatherCommands from './commands/weather'
 import gulagCommands from './commands/gulag'
 import betsCommands from './commands/bets'
 import stocksCommands from './commands/stocks'
 import shopCommands from './commands/shop'
+import houseCommands from './commands/house'
 import { Routes } from 'discord-api-types/v9'
-import { startPersonalityController, startTimedResultsController, startTrialController, startVoiceScoreController, startMessageScoreController, startLevelUpController, startActiveRoleController } from './chron'
+import { startPersonalityController, startTimedResultsController, startTrialController, startVoiceScoreController, startMessageScoreController, startLevelUpController, startActiveRoleController, startBirthdayController } from './chron'
+import { updateUserValue } from './domain/databaseRequests'
 
 var commandModules = [
     userCommands,
-    weatherCommands,
     gulagCommands,
     betsCommands,
     stocksCommands,
-    shopCommands
+    shopCommands,
+    houseCommands
 ]
 
 const token: string = process.env.BOT_TOKEN || ""
@@ -80,6 +81,16 @@ client.on('interactionCreate', (interaction : Interaction) => {
     })
 })
 
+client.on('guildMemberUpdate', (oldMember: GuildMember | PartialGuildMember, newMember: GuildMember) => {
+    if (oldMember.nickname !== newMember.nickname) {
+        if (newMember.nickname != null) {
+            updateUserValue(newMember.id, 'nickname', newMember.nickname)
+        } else {
+            updateUserValue(newMember.id, 'nickname', newMember.user.username)
+        }
+    }
+})
+
 client.login(process.env.BOT_TOKEN).then((value: string) => {
     // Load Chron Tasks
     client.guilds.cache.forEach((guild: Guild) => {
@@ -89,6 +100,7 @@ client.login(process.env.BOT_TOKEN).then((value: string) => {
         startMessageScoreController(guild.id)
         startLevelUpController(guild.id)
         startActiveRoleController(guild.id)
+        startBirthdayController(guild.id)
     })
     startTrialController()
 })

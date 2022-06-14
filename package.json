@@ -4,7 +4,7 @@
   "description": "A bot for The Lounge discord server",
   "main": "index.js",
   "scripts": {
-    "start": "tsc && copyfiles assets/**/* build/ && node build/bot.js",
+    "start": "tsc && cp assets/**/* build/ && node build/bot.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -44,6 +44,7 @@
     "mysql2": "^2.2.5",
     "node-fetch": "^2.6.1",
     "node-schedule": "^2.0.0",
+    "ordinal": "^1.0.3",
     "tscpaths": "^0.0.9",
     "zipcodes": "^8.0.0"
   }

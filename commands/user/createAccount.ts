@@ -16,6 +16,7 @@ const command = new SlashCommand(
             interaction.member.user.id,
             interaction.member.user.username,
             Math.floor(DateTime.now().toSeconds()),
+            1,
             Repository
         ).then((response: SqlResponse) => {
             if (response.errno !== undefined) {
