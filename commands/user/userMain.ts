@@ -108,10 +108,10 @@ const command = new SlashCommand(
                         .setDescription('The house you want to permanently join.')
                         .setRequired(true)
                         .addChoices([
-                            ['House 1 (Sealith)', 1],
+                            ['Nīkyura', 1],
                             ['House 2 (OfficialChillAx)', 2],
-                            ['House 3 (GrumpyGungan)', 3],
-                            ['House 4 (Starkey)', 4]
+                            ['Crownguard', 3],
+                            ['Imposter', 4]
                         ]))),
     async (interaction: CommandInteraction) => {
         switch(interaction.options.getSubcommand(true)) {

@@ -43,6 +43,10 @@ function createDivider(
 async function getCanvas(user: User, loungeUser: LoungeUser) : Promise<Buffer> {
     const canvas = Canvas.createCanvas(1000, 560)
     const ctx = canvas.getContext('2d')
+    if (loungeUser.attributes.house == null) {
+        createText(ctx, '#ffffff', '48px Boldsand', 'You need to be part of a house before using that command', canvas.width / 2, canvas.height / 2, 'center', 800)
+        return canvas.toBuffer()
+    }
     var houseDetails = await getHouseDetailsUseCase(loungeUser.attributes.house, loungeApi)
 
     var grd = ctx.createLinearGradient(0, 0, canvas.width, canvas.height)
@@ -95,6 +99,9 @@ async function getCanvas(user: User, loungeUser: LoungeUser) : Promise<Buffer> {
     var dailyPoints = await getUserPointsUseCase(loungeUser.attributes.discordId, DateTime.now().startOf('day').toSeconds(), DateTime.now().toSeconds(), loungeApi)
     var weeklyPoints = await getUserPointsUseCase(loungeUser.attributes.discordId, DateTime.now().startOf('week').toSeconds(), DateTime.now().toSeconds(), loungeApi)
     var monthlyPoints = await getUserPointsUseCase(loungeUser.attributes.discordId, DateTime.now().startOf('month').toSeconds(), DateTime.now().toSeconds(), loungeApi)
+    dailyPoints.points = isNaN(dailyPoints.points) ? 0 : dailyPoints.points
+    weeklyPoints.points = isNaN(weeklyPoints.points) ? 0 : weeklyPoints.points
+    monthlyPoints.points = isNaN(monthlyPoints.points) ? 0 : monthlyPoints.points
     createText(ctx, textColor, '18px Quicksand', `Daily`, 200, 465, 'left')
     createText(ctx, textColor, '18px Quicksand', `Weekly`, 200, 490, 'left')
     createText(ctx, textColor, '18px Quicksand', `Monthly`, 200, 515, 'left')
