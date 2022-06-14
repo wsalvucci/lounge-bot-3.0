@@ -54,8 +54,8 @@ async function getCanvas(user: User, loungeUser: LoungeUser) : Promise<Buffer> {
     grd.addColorStop(0.15, loungeUser.stats.tier.primaryColor)
     if (loungeUser.attributes.house != null) {
         grd.addColorStop(0.16, `#${houseDetails.primaryColor}`)
-        grd.addColorStop(0.30, `#${houseDetails.primaryColor}00`)
-        grd.addColorStop(0.44, `#${houseDetails.primaryColor}00`)
+        grd.addColorStop(0.30, `${loungeUser.stats.tier.secondaryColor}`)
+        grd.addColorStop(0.44, `${loungeUser.stats.tier.secondaryColor}`)
         grd.addColorStop(0.59, `#${houseDetails.primaryColor}`)
     } else {
         grd.addColorStop(0.16, loungeUser.stats.tier.secondaryColor)
@@ -92,7 +92,7 @@ async function getCanvas(user: User, loungeUser: LoungeUser) : Promise<Buffer> {
     createText(ctx, textColor, '72px Quicksand', loungeUser.stats.level.level.toString(), 25, 100)
 
     createText(ctx, textColor, '32px Quicksand', loungeUser.stats.tier.title, 550, 75)
-    createText(ctx, textColor, '38px Quicksand', loungeUser.attributes.nickname.toUpperCase(), 550, 120, 'left', 350)
+    createText(ctx, textColor, '38px Quicksand', loungeUser.attributes.nickname != null ? loungeUser.attributes.nickname.toUpperCase() : loungeUser.attributes.name.toUpperCase(), 550, 120, 'left', 350)
 
     createDivider(ctx, "#C0C0C0", 150, (canvas.height / 2) + 160, 300, textColor)
 
