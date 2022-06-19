@@ -83,24 +83,24 @@ class LoungeUser {
 class LoungeUserAttributes {
     discordId: string
     name: string
-    nickname: string
+    nickname: string | null
     timeAdded: number
     color: string
-    titleId: number
+    titleId: number | null
     birthday: number
     stunned: number
-    house: number
+    house: number | null
 
     constructor(
         discordId: string,
         name: string,
-        nickname: string,
+        nickname: string | null,
         timeAdded: number,
         color: string,
-        titleId: number,
+        titleId: number | null,
         birthday: number,
         stunned: number,
-        house: number
+        house: number | null
     ) {
         this.discordId = discordId
         this.name = name

@@ -2,8 +2,8 @@ import { LevelStats, TierData } from "../domain/loungeFunctions"
 
 class UserStats {
     username: string
-    nickname: string
-    house: number
+    nickname: string | null
+    house: number | null
     titleString: string
     levelStats: LevelStats
     tier: TierData
@@ -21,8 +21,8 @@ class UserStats {
 
     constructor(
         username: string,
-        nickanme: string,
-        house: number,
+        nickname: string | null,
+        house: number | null,
         titleString: string,
         levelStats: LevelStats,
         tier: TierData,
@@ -39,7 +39,7 @@ class UserStats {
         accusationTimestamp: number
     ) {
         this.username = username
-        this.nickname = nickanme
+        this.nickname = nickname
         this.house = house
         this.titleString = titleString
         this.levelStats = levelStats

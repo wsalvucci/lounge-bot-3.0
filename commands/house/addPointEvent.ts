@@ -29,6 +29,10 @@ const command = new SlashCommand(
         }
         var target = interaction.options.getUser('user', true)
         var targetData = await getUserFullDataUseCase(target.id, loungeApi)
+        if (targetData.attributes.house == null) {
+            interaction.reply({content: 'That person does not belong to a house', ephemeral: true})
+            return
+        }
         var points = interaction.options.getInteger('points', true)
         var reason = interaction.options.getString('reason', true)
 

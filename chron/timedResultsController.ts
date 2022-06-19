@@ -117,12 +117,12 @@ async function resultCanvas(rankings: Result[], houseRankings: HouseResult[], xp
         createText(ctx, `#000000`, `36px Boldsand`, `${data.points.withCommas()}`, 800, USER_DATA_START + (USER_DATA_HEIGHT * index) + 45, 'center')
     })
 
-    var messageLeader = [...rankings].sort((a, b) => b.messagesSent - a.messagesSent)[0]
-    var voiceLeader = [...rankings].sort((a, b) => b.voiceScore - a.voiceScore)[0]
+    var messageLeader = [...rankings].sort((a, b) => b.messagesSent - a.messagesSent).filter((result: Result) => result.house != null).at(0)
+    var voiceLeader = [...rankings].sort((a, b) => b.voiceScore - a.voiceScore).filter((result: Result) => result.house != null).at(0)
 
     if (messageLeader !== undefined && messageLeader.messagesSent > 0) {
         var userData = await getUserFullDataUseCase(messageLeader.userId, loungeApi)
-        var userHouseData = await getHouseDetailsUseCase(userData.attributes.house, loungeApi)
+        var userHouseData = await getHouseDetailsUseCase(userData.attributes.house!, loungeApi)
         createText(ctx, `#ffffff`, '36px Boldsand', `#1 Messages Sent`, 50, 125)
         createText(ctx, `#${userData.attributes.color}`, '50px Boldsand', `${userData.attributes.nickname != null ? userData.attributes.nickname : userData.attributes.name}`, 175, 200, 'left', 400)
         createText(ctx, `#${userData.attributes.color}`, '36px Boldsand', `Messages - ${userData.stats.dailyStats.messagesSent}`, 175, 250, 'left', 400)
@@ -150,7 +150,7 @@ async function resultCanvas(rankings: Result[], houseRankings: HouseResult[], xp
     }
     if (voiceLeader !== undefined && voiceLeader.voiceScore > 0) {
         var userData = await getUserFullDataUseCase(voiceLeader.userId, loungeApi)
-        var userHouseData = await getHouseDetailsUseCase(userData.attributes.house, loungeApi)
+        var userHouseData = await getHouseDetailsUseCase(userData.attributes.house!, loungeApi)
         createText(ctx, `#ffffff`, '36px Boldsand', `#1 Voice Score`, 50, 325)
         createText(ctx, `#${userData.attributes.color}`, '50px Boldsand', `${userData.attributes.nickname != null ? userData.attributes.nickname : userData.attributes.name}`, 175, 400, 'left', 400)
         createText(ctx, `#${userData.attributes.color}`, '36px Boldsand', `Voice Score - ${userData.stats.dailyStats.secondsVoice}`, 175, 450, 'left', 400)
