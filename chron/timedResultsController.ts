@@ -270,7 +270,7 @@ async function runDailies(guildId: string) {
     console.log(houseAwards)
 
     var competitionChannel = await client.channels.fetch(guildConfig.competitionChannel) as TextChannel
-    resultCanvas(
+    await resultCanvas(
         individualAwards
         .sort((a: Result, b: Result) => {
             return b.messagesSent - a.messagesSent
