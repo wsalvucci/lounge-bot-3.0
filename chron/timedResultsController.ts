@@ -239,18 +239,18 @@ async function runDailies(guildId: string) {
         individualAwards.push(resultData)
     }
 
-    var messageAvgTotal = 0
-    var voiceAvgTotal = 0
+    var messageTotal = 0
+    var voiceTotal = 0
     houseAwards.forEach((houseResult: HouseResult) => {
-        messageAvgTotal += houseResult.messagesSentAvg()
-        voiceAvgTotal += houseResult.voiceScoreAvg()
+        messageTotal += houseResult.totalMessagesSent
+        voiceTotal += houseResult.totalVoiceScore
     })
 
     // Calculate Points Region
     for (var i = 0; i < houseAwards.length; i++) {
         var house = houseAwards[i]
-        var houseMessageWeight = house.messagesSentAvg() / messageAvgTotal
-        var houseVoiceWeight = house.voiceScoreAvg() / voiceAvgTotal
+        var houseMessageWeight = house.totalMessagesSent / messageTotal
+        var houseVoiceWeight = house.totalVoiceScore / voiceTotal
         var houseMessagePoints = houseMessageWeight * adjustedReward
         var houseVoicePoints = houseVoiceWeight * adjustedReward
         houseMessagePoints = isNaN(houseMessagePoints) ? 0 : houseMessagePoints
@@ -287,7 +287,8 @@ async function runDailies(guildId: string) {
     var allServerMessages = 0
     var allServerVoice = 0
     houseAwards.forEach((houseResult: HouseResult) => {
-        houseResult.members.forEach((result: Result) => {allServerMessages = allServerMessages + result.messagesSent
+        houseResult.members.forEach((result: Result) => {
+            allServerMessages = allServerMessages + result.messagesSent
             allServerVoice = allServerVoice + result.voiceScore
             addUserRecordUseCase(result.userId, timestamp, result.messagesSent, result.voiceScore, loungeApi)
             setUserPropertyUseCase(result.userId, StatType.DailyMessages, 0, loungeApi)
