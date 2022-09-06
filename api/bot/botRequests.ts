@@ -15,6 +15,10 @@ export function getCurrentPersonality() {
     return query(`SELECT p.* FROM bot_config c LEFT JOIN (SELECT * FROM bot_personalities) p ON c.personality = p.personalityId WHERE botId = 1`)
 }
 
+export function getBotConfig() {
+    return query(`SELECT * FROM bot_config WHERE botId = 1`)
+}
+
 export function getGuild(id: string) {
     return query(`SELECT * FROM guildconfig WHERE guildId = ${id}`)
 }

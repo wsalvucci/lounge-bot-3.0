@@ -3,13 +3,16 @@ import { getLevelStats, LevelStats, levelToTitle, TierData } from "../domain/lou
 class LoungeUser {
     attributes: LoungeUserAttributes
     stats: LoungeUserStats
+    recurringQuests: RecurringQuests
 
     constructor (
         attributes: LoungeUserAttributes,
-        stats: LoungeUserStats
+        stats: LoungeUserStats,
+        recurringQuests: RecurringQuests
     ) {
         this.attributes = attributes
         this.stats = stats
+        this.recurringQuests = recurringQuests
     }
 
     static toDomainModel(data: any) : LoungeUser {
@@ -75,6 +78,16 @@ class LoungeUser {
                 data.monthlyPoints,
                 data.annualPoints,
                 data.kudos
+            ),
+            new RecurringQuests(
+                data.dailyMessageAchieved,
+                data.dailyVoiceAchieved,
+                data.weeklyMessageAchieved,
+                data.weeklyVoiceAchieved,
+                data.dailySlapAchieved,
+                data.weeklySlapAchieved,
+                data.dailyKudoAchieved,
+                data.weeklyKudoAchieved
             )
         )
     }
@@ -208,6 +221,37 @@ class LoungeUserStats {
         this.monthlyPoints = monthlyPoints
         this.annualPoints = annualPoints
         this.kudos = kudos
+    }
+}
+
+class RecurringQuests {
+    dailyMessage: number
+    dailyVoice: number
+    weeklyMessage: number
+    weeklyVoice: number
+    dailySlap: number
+    weeklySlap: number
+    dailyKudo: number
+    weeklyKudo: number
+
+    constructor(
+        dailyMessage: number,
+        dailyVoice: number,
+        weeklyMessage: number,
+        weeklyVoice: number,
+        dailySlap: number,
+        weeklySlap: number,
+        dailyKudo: number,
+        weeklyKudo: number
+    ) {
+        this.dailyMessage = dailyMessage
+        this.dailyVoice = dailyVoice
+        this.weeklyMessage = weeklyMessage
+        this.weeklyVoice = weeklyVoice
+        this.dailySlap = dailySlap
+        this.weeklySlap = weeklySlap
+        this.dailyKudo = dailyKudo
+        this.weeklyKudo = weeklyKudo
     }
 }
 

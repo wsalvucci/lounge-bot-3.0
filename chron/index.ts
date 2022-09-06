@@ -6,6 +6,7 @@ import messageScoreController from './messageScoreController'
 import levelUpController from './levelUpController'
 import activeRoleController from './activeRoleController'
 import birthdayController from './birthdayController'
+import recurringQuestController from './recurringQuestController'
 
 export function startPersonalityController(guildId: string) {
     personalityController(guildId)
@@ -37,4 +38,8 @@ export function startActiveRoleController(guildId: string) {
 
 export function startBirthdayController(guildId: string) {
     birthdayController(guildId)
+}
+
+export function startRecurringQuestController(guildId: string) {
+    recurringQuestController(guildId)
 }

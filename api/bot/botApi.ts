@@ -7,6 +7,7 @@ import { TrialResultLine } from "../../models/bot/TrialResultLine";
 import SqlResponse from "../../responseModels/SqlResponse";
 import apiCall from "../apiCall"
 import ShopRole from "../../models/shop/ShopRole";
+import BotConfig from "models/bot/BotConfig";
 
 class BotApi {
     async getPersonalities() : Promise<BotPersonality[]> {
@@ -23,6 +24,11 @@ class BotApi {
     async getCurrentPersonality() : Promise<BotPersonality> {
         return apiCall('/bot/getPersonality')
             .then((data: any) => BotPersonality.toDomainModel(data[0]))
+    }
+
+    async getBotConfig() : Promise<BotConfig> {
+        return apiCall('/bot/getConfig')
+            .then((data: any) => BotConfig.toDomainModel(data[0]))
     }
 
     async updatePersonality(id: number) : Promise<SqlResponse> {

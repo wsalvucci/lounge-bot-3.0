@@ -24,7 +24,7 @@ import stocksCommands from './commands/stocks'
 import shopCommands from './commands/shop'
 import houseCommands from './commands/house'
 import { Routes } from 'discord-api-types/v9'
-import { startPersonalityController, startTimedResultsController, startTrialController, startVoiceScoreController, startMessageScoreController, startLevelUpController, startActiveRoleController, startBirthdayController } from './chron'
+import { startPersonalityController, startTimedResultsController, startTrialController, startVoiceScoreController, startMessageScoreController, startLevelUpController, startActiveRoleController, startBirthdayController, startRecurringQuestController } from './chron'
 import { updateUserValue } from './domain/databaseRequests'
 
 var commandModules = [
@@ -101,6 +101,7 @@ client.login(process.env.BOT_TOKEN).then((value: string) => {
         startLevelUpController(guild.id)
         startActiveRoleController(guild.id)
         startBirthdayController(guild.id)
+        startRecurringQuestController(guild.id)
     })
     startTrialController()
 })

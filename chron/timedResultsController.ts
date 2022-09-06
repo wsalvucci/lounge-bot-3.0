@@ -297,9 +297,6 @@ async function runDailies(guildId: string) {
             addHousePointEventUseCase(result.userId, "null", result.points, 'Daily Results', result.house.id, DateTime.now().toSeconds(), loungeApi)
         })
     })
-    individualAwards.forEach(async (result: Result) => {
-        
-    });
     await addServerRecordUseCase(timestamp, allServerMessages, allServerVoice, loungeApi)
 
     resetGuildXpUseCase(guildId, botApi)

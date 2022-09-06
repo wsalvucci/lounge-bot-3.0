@@ -1,6 +1,6 @@
 import app from "../../domain/expressModule";
 import processDatabaseRequest from "../processDatabaseRequest";
-import { addActiveUserRole, adjustGuildXp, adjustPersonalityFavor, getActiveUserRoles, getAllActiveRoles, getBotPersonalities, getCurrentPersonality, getGuild, getIntroLines, getPersonalityFavor, getRoleShop, getShopRoleInfo, getSlapResponseLines, getTrialResultLines, removeActiveUserRole, resetGuildXp, setBirthdayActive, updateBotPersonality } from "./botRequests";
+import { addActiveUserRole, adjustGuildXp, adjustPersonalityFavor, getActiveUserRoles, getAllActiveRoles, getBotConfig, getBotPersonalities, getCurrentPersonality, getGuild, getIntroLines, getPersonalityFavor, getRoleShop, getShopRoleInfo, getSlapResponseLines, getTrialResultLines, removeActiveUserRole, resetGuildXp, setBirthdayActive, updateBotPersonality } from "./botRequests";
 
 app.get(`/bot/personalities`, (req: any, res: any) => {
     processDatabaseRequest(getBotPersonalities(), res)
@@ -12,6 +12,10 @@ app.get(`/bot/updatePersonality`, (req: any, res: any) => {
 
 app.get(`/bot/getPersonality`, (req: any, res: any) => {
     processDatabaseRequest(getCurrentPersonality(), res)
+})
+
+app.get(`/bot/getConfig`, (req: any, res: any) => {
+    processDatabaseRequest(getBotConfig(), res)
 })
 
 app.get(`/bot/guild`, (req: any, res: any) => {
